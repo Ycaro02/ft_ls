@@ -10,6 +10,7 @@ void classic_ls(char **tab)
             ft_putstr_fd("  ", 1);
         i++;
     }
+    printf("\n");
 }
 
 void reverse_ls(char **tab)
@@ -24,6 +25,7 @@ void reverse_ls(char **tab)
             ft_putstr_fd("  ", 1);
         len--;
     }
+    printf("\n");
 }
 
 
@@ -83,7 +85,7 @@ void ft_ls(char **dir_lst, int flag_nb)
         ft_list_dir(list, flag_nb);
         free_all(list);
         i++;
-        printf("\n\n");
+        printf("\n");
     }
     free_all(dir_lst);
 }
