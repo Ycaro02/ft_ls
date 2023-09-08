@@ -32,16 +32,17 @@ void reverse_ls(char **tab)
 void ls_no_args()
 {
     char **list = get_all_file_name(".");
+    int flag = 0;
     if (list == NULL)
     {
         printf("Error for read current directory\n");
         return ;
     }
-    ft_list_dir(list, -1);
+    ft_list_dir(list, &flag);
     free_all(list);
 }
 
-void ft_list_dir(char **tab, int flag_nb)
+void ft_list_dir(char **tab, int *flag_nb)
 {
 
     int i = 0;
@@ -55,23 +56,22 @@ void ft_list_dir(char **tab, int flag_nb)
         free(tmp);
         i++;
     }
-    if (flag_nb == -1)
+    if (*flag_nb == 0)
+        classic_ls(save);
+    else if (*flag_nb == REVERSE_OPTION)
     {
-        classic_ls(save);
-        free_all(save);
-        return;
-    }
-    if (flag_nb == 0)
-        classic_ls(save);
-    else if (flag_nb == REVERSE_OPTION)
+        *flag_nb -= REVERSE_OPTION;
         reverse_ls(save);
+    }
+        
     free_all(save);
 }
 
-void ft_ls(char **dir_lst, int flag_nb)
+void ft_ls(char **dir_lst, int *flag_nb)
 {
     int i = 0;
     int dir_lst_len = count_char_tab(dir_lst);
+    dir_lst = parse_dir_lst(dir_lst);
     while (dir_lst && dir_lst[i])
     {
         char **list = get_all_file_name(dir_lst[i]);

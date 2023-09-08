@@ -12,13 +12,14 @@
 
 CC		= gcc
 
-CFLAGS	= -Wall -Wextra -Werror -g 
+CFLAGS	= -Wall -Wextra -Werror -g3 
 
 SRCS	=	src/main.c\
 			src/utils.c\
 			src/flag_gestion.c\
 			src/parse.c\
 			src/ft_ls.c\
+			src/recurcive.c\
 
 NAME	= ft_ls
 

@@ -1,17 +1,36 @@
 #include "../ft_ls.h"
 
-int count_files(const char *directory_name)
+char    **parse_dir_lst(char **dir_lst)
+{
+    char **new = NULL;
+    for (int i = 0; dir_lst && dir_lst[i]; i++)
+    {
+        if (access(dir_lst[i], F_OK) != 0)
+            printf("\nft_ls: cannot access '%s': No such file or directory\n", dir_lst[i]);
+        else if (is_directory(dir_lst[i]) == 1)
+            printf("\n%s\n", dir_lst[i]);
+        else if (access(dir_lst[i], R_OK) == 0)
+            new = ft_realloc_str(new, dir_lst[i]);
+    }
+    free_all(dir_lst);
+    return (new);
+}
+
+static int count_file(const char *directory_name)
 {
     struct dirent *my_dir;
     DIR *dir = opendir(directory_name);
     int nb = 0;
-	if (access(directory_name, F_OK) != 0)
+    if (access(directory_name, R_OK | F_OK) == 0 && is_directory(directory_name) == 0)
     {
-        printf("\nft_ls: cannot access '%s': No such file or directory\n", directory_name);
-		return (-1);
+        while ((my_dir = readdir(dir)) != NULL)
+            nb++;
     }
-    while ((my_dir = readdir(dir)) != NULL)
-        nb++;
+    else 
+    {
+        printf("reject in count _file access F/X_OK and isdir is checked for %s\n", directory_name);
+        return (-1);
+    }
     closedir(dir);
     return (nb);
 }
@@ -19,7 +38,7 @@ int count_files(const char *directory_name)
 char **get_all_file_name(const char *directory_name)
 {
     char **all = NULL;
-    int nb = count_files(directory_name);
+    int nb = count_file(directory_name);
 	if (nb == -1)
 		return (NULL);
     all = malloc(sizeof(char *) * (nb + 1));
@@ -46,8 +65,8 @@ char **get_dir(char **argv)
             new = ft_realloc_str(new, argv[i]);
         i++;
     }
-    if (new == NULL)
-        printf("nice c null\n\n");
+    // if (new == NULL)
+        // printf("nice c null\n\n");
     return (new);
 }
 

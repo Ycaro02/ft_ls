@@ -59,7 +59,7 @@ int already_add(enum e_flag *tab, enum e_flag to_check)
     return (0);
 }
 
-int check_flag(char c, enum e_flag *used)
+int flag_already_add(char c, enum e_flag *used)
 {
     if (c == L_FLAG_CHAR && already_add(used, L_OPTION) == 1)
         return (1);
@@ -76,25 +76,25 @@ int check_flag(char c, enum e_flag *used)
 
 int add_flag(char c, enum e_flag *used)
 {
-    int tmp = check_flag(c, used);
+    int tmp = flag_already_add(c, used);
     if (tmp == 1)
         return (0);
-    if (c == L_FLAG_CHAR && already_add(used, L_OPTION) == 0)
+    if (c == L_FLAG_CHAR)
     {
         fill_used_flag(used, L_OPTION);
         return (L_OPTION);
     }
-    else if (c == R_FLAG_CHAR && already_add(used, R_OPTION) == 0)
+    else if (c == R_FLAG_CHAR)
     {
         fill_used_flag(used, R_OPTION);
         return (R_OPTION);
     }
-    else if (c == REVERSE_FLAG_CHAR && already_add(used, REVERSE_OPTION) == 0)
+    else if (c == REVERSE_FLAG_CHAR)
     {
         fill_used_flag(used, REVERSE_OPTION);
         return (REVERSE_OPTION);
     }
-    else if (c == A_FLAG_CHAR && already_add(used, A_OPTION) == 0)
+    else if (c == A_FLAG_CHAR)
     {
         fill_used_flag(used, A_OPTION);
         return (A_OPTION);
@@ -105,9 +105,11 @@ int add_flag(char c, enum e_flag *used)
         return (T_OPTION);
     }
     else
-        printf("\nError end parsing flag, invalid flag found %c\n", c);
-    for (int i = 0; i < 6; i++)
-        printf("used de [%d] = %d\n", i, used[i]);
+    {
+        printf("\nft_ls: unrecognized option  %c\n", c);
+    }
+    // for (int i = 0; i < 6; i++)
+    //     printf("used de [%d] = %d\n", i, used[i]);
     return -1;
 }
 
@@ -125,6 +127,8 @@ enum e_flag *parse_flag(char **argv, enum e_flag *used)
         if (argv[i][0] == '-')
         {
             int j = 1;
+            if (argv[i][1] == '\0')
+                printf("ft_ls: cannot access '%s': No such file or directory\n", argv[i]);
             while (argv[i] && argv[i][j])
             {
                 int check = add_flag(argv[i][j], used);
