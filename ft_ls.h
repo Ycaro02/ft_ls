@@ -24,6 +24,9 @@ enum e_flag  {
     R_OPTION=50,
 };
 
+/// TODO -t : time, -a : hiden_file, -l: all info
+//// Remplace all of possible char** array by linked list
+
 // utils.c
 void        free_all(char **array);
 void        print_tab(char **tab);
