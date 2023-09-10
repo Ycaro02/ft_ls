@@ -1,32 +1,5 @@
 #include "../ft_ls.h"
 
-// enum e_flag  {
-//     UNKNOW=-1,
-//     L_OPTION=1,
-//     R_OPTION=2,
-//     REVERSE_OPTION=4,
-//     A_OPTION=8,
-//     T_OPTION=10,
-// };
-
-
-// int flag_gestion(char **lst, int flag)
-// {
-//       if (flag == 0)
-//         classic_ls(lst);
-//     else if (flag == L_OPTION)
-//         reverse_ls(lst);
-//     else if (flag == R_OPTION)
-//         reverse_ls(lst);
-//     else if (flag == REVERSE_OPTION)
-//         reverse_ls(lst);
-//     else if (flag == A_OPTION)
-//         reverse_ls(lst);
-//     else if (flag == T_OPTION)
-//         reverse_ls(lst);
-//     return (-1);
-// }
-
 int get_flag(enum e_flag *flag)
 {
     int i = 0;
@@ -39,12 +12,13 @@ int get_flag(enum e_flag *flag)
     return (nb);
 }
 
-void fill_used_flag(enum e_flag *tab, enum e_flag flag)
+static enum e_flag fill_used_flag(enum e_flag *tab, enum e_flag flag)
 {
     int i = 0;
     while (tab && tab[i] != UNKNOW)
         i++;
     tab[i] =  flag;
+    return (flag);
 }
 
 int already_add(enum e_flag *tab, enum e_flag to_check)
@@ -74,48 +48,33 @@ int flag_already_add(char c, enum e_flag *used)
     return (0);
 }
 
+static void put_error(char c)
+{
+   ft_putstr_fd("\nft_ls: unrecognized option ", 2);
+    char cc[2];
+    cc[0] = c;
+    cc[1] = '\0';
+    ft_putstr_fd(cc, 2);
+    ft_putstr_fd("\n", 2);
+}
+
 int add_flag(char c, enum e_flag *used)
 {
     int tmp = flag_already_add(c, used);
     if (tmp == 1)
         return (0);
     if (c == L_FLAG_CHAR)
-    {
-        fill_used_flag(used, L_OPTION);
-        return (L_OPTION);
-    }
+        return (fill_used_flag(used, L_OPTION));
     else if (c == R_FLAG_CHAR)
-    {
-        fill_used_flag(used, R_OPTION);
-        return (R_OPTION);
-    }
+        return (fill_used_flag(used, R_OPTION));
     else if (c == REVERSE_FLAG_CHAR)
-    {
-        fill_used_flag(used, REVERSE_OPTION);
-        return (REVERSE_OPTION);
-    }
+        return (fill_used_flag(used, REVERSE_OPTION));
     else if (c == A_FLAG_CHAR)
-    {
-        fill_used_flag(used, A_OPTION);
-        return (A_OPTION);
-    }
+        return (fill_used_flag(used, A_OPTION));
     else if (c == T_FLAG_CHAR && already_add(used, T_OPTION) == 0)
-    {
-        fill_used_flag(used, T_OPTION);
-        return (T_OPTION);
-    }
-    else
-    {
-        ft_putstr_fd("\nft_ls: unrecognized option ", 2);
-        char cc[2];
-        cc[0] = c;
-        cc[1] = '\0';
-        ft_putstr_fd(cc, 2);
-        ft_putstr_fd("\n", 2);
-    }
-    // for (int i = 0; i < 6; i++)
-    //     printf("used de [%d] = %d\n", i, used[i]);
-    return -1;
+        return (fill_used_flag(used, T_OPTION));
+    put_error(c);
+    return (-1);
 }
 
 enum e_flag *parse_flag(char **argv, enum e_flag *used)

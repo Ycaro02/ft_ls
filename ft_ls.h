@@ -37,7 +37,6 @@ int my_strcmp(char *s1, char *s2);
 
 //flag_gestion.c
 int         already_add(enum e_flag *tab, enum e_flag to_check);
-void        fill_used_flag(enum e_flag *tab, enum e_flag flag);
 int         get_flag(enum e_flag *flag);
 int         check_flag(char c, enum e_flag *used);
 int         add_flag(char c, enum e_flag *used);
@@ -47,7 +46,7 @@ enum e_flag *parse_flag(char **argv, enum e_flag *used);
 char        **get_all_file_name(const char *directory_name);
 char        **get_dir(char **argv);
 char        *get_lower_string(char **tab, char **used);
-char    **parse_dir_lst(char **dir_lst);
+char        **parse_dir_lst(char **dir_lst);
 
 // ft_ls.c
 void        classic_ls(char **tab);
