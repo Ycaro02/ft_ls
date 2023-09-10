@@ -33,10 +33,10 @@ void        print_tab(char **tab);
 char        **ft_realloc_str(char **strs, char *str);
 int         count_char_tab(char **tab);
 int         already_use(char *str, char** used);
-int      is_directory(const char *path);
-char    *ft_strjoin_free(char *s1, char *s2, char option);
-int my_strcmp(char *s1, char *s2);
-
+int         is_directory(const char *path);
+char        *ft_strjoin_free(char *s1, char *s2, char option);
+int         my_strcmp(char *s1, char *s2);
+void        free_lst(t_list *lst);
 
 //flag_gestion.c
 int         already_add(enum e_flag *tab, enum e_flag to_check);

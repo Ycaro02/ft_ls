@@ -47,7 +47,7 @@ t_list * char_tab_to_lst(char** tab)
 {
     t_list *new = NULL;
     for (int i = 0; tab && tab[i]; i++)
-        ft_lstadd_back(&new, ft_lstnew(tab[i]));
+        ft_lstadd_back(&new, ft_lstnew(ft_strdup(tab[i])));
     free_all(tab);
     return (new);
 }
@@ -86,6 +86,7 @@ int main (int argc, char** argv)
     {
         flag_nb -= R_OPTION;
         search_recurcive_dir(cc, flag_nb, 0);
+        ft_lstclear(&cc, free);
         return (0);
     }
     return (0);

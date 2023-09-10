@@ -8,6 +8,19 @@ static void     free_str_join(char *s1, char *s2, char option)
                 free(s2);
 }
 
+void free_lst(t_list *lst)
+{
+    if (lst == NULL)
+        return ;
+    t_list *tmp = lst;
+    while (tmp)
+    {
+        tmp = lst->next;
+        free(lst->content);
+        free(lst);
+    }
+}
+
 char    *ft_strjoin_free(char *s1, char *s2, char option)
 {
         int             len_new_s;
