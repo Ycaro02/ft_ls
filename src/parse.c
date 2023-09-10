@@ -83,7 +83,7 @@ char *get_lower_string(char **tab, char **used)
             {
                 if (lower == NULL)
                     lower = tab[i];
-                if (strcmp(lower, tab[i]) >= 0)
+                if (my_strcmp(lower, tab[i]) >= 0)
                 {
                     lower = tab[i];
                     if (save)

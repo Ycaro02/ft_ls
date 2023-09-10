@@ -1,6 +1,8 @@
 #include "../ft_ls.h"
 
 
+
+
 static char *get_string(char **tab, char **used)
 {
 	int i = 0;
@@ -13,7 +15,7 @@ static char *get_string(char **tab, char **used)
         {
             if (lower == NULL)
                 lower = tab[i];
-            if (strcmp(lower, tab[i]) >= 0)
+            if (my_strcmp(lower, tab[i]) >= 0)
             {
                 lower = tab[i];
                 if (save)
@@ -53,14 +55,14 @@ int main (int argc, char** argv)
     enum e_flag *used = malloc(sizeof(int) * 6);
     if (!used)
     {
-        printf("Error malloc failed\n");
+        ft_putstr_fd("Error malloc failed\n", 2);
         return (1);
     }
     void *flag_ptr = used;
     used = parse_flag(argv, used);
     if (used == NULL)
     {
-        printf("parse flag return -1");
+        ft_putstr_fd("parse flag return -1", 2);
         free(flag_ptr);
         return (1);
     }

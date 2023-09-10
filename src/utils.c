@@ -48,6 +48,20 @@ void free_all(char **array)
         free(array);
 }
 
+int my_strcmp(char *s1, char *s2)
+{
+    int i = 0;
+    while (s1 && s1[i] && s2 && s2[i])
+    {
+        char first = ft_tolower(s1[i]);
+        char two = ft_tolower(s2[i]);
+        if (first != two)
+            return (first - two);
+        i++;
+    }
+    return (0);
+}
+
 int already_use(char *str, char** used)
 {
     int i = 0;

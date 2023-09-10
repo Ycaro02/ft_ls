@@ -106,7 +106,12 @@ int add_flag(char c, enum e_flag *used)
     }
     else
     {
-        printf("\nft_ls: unrecognized option  %c\n", c);
+        ft_putstr_fd("\nft_ls: unrecognized option ", 2);
+        char cc[2];
+        cc[0] = c;
+        cc[1] = '\0';
+        ft_putstr_fd(cc, 2);
+        ft_putstr_fd("\n", 2);
     }
     // for (int i = 0; i < 6; i++)
     //     printf("used de [%d] = %d\n", i, used[i]);
