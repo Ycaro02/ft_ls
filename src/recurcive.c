@@ -21,31 +21,6 @@ static char **get_dir_without_point(char **dir_lst)
     return (new);
 }
 
-
-static char **join_str_tab(char **tab1, char** tab2)
-{
-    int i = 0;
-    int len1 = count_char_tab(tab1);
-    int len2 = count_char_tab(tab2);
-    if (len1 + len2 == 0)
-        return (NULL);
-    char **new = malloc(sizeof(char *) * (len1 + len2 + 1));
-    while (tab1 && tab1[i])
-    {
-        new[i] = ft_strdup(tab1[i]);
-        i++;
-    }
-    for (int j = 0; tab2 && tab2[j]; j++)
-    {
-        new[i] = ft_strdup(tab2[j]);
-        i++;
-    }
-    new[i] = NULL;
-    free_all(tab1);
-    free_all(tab2);
-    return (new);
-}
-
 static char **add_parent_path(char *parent, char** path)
 {
     int len = count_char_tab(path);
@@ -69,7 +44,7 @@ static char **add_parent_path(char *parent, char** path)
     return (new);
 }
 
-static char    **parse_rec_dir_lst(char **dir_lst)
+static char    **parse_rec_dir_lst(char **dir_lst, int first)
 {
     char **new = NULL;
     for (int i = 0; dir_lst && dir_lst[i]; i++)
@@ -77,17 +52,18 @@ static char    **parse_rec_dir_lst(char **dir_lst)
         if (access(dir_lst[i], F_OK | R_OK) == 0 && is_directory(dir_lst[i]) == 0)
             new = ft_realloc_str(new, dir_lst[i]);
     }
+    (void)first;
     free_all(dir_lst);
     return (new);
 }
 
-static char **build_local_list(char *str)
+static char **build_local_list(char *str, int first)
 {
     char **local_list = NULL;
     local_list = get_all_file_name(str);
     local_list = get_dir_without_point(local_list);
     local_list = add_parent_path(str, local_list);
-    local_list = parse_rec_dir_lst(local_list);
+    local_list = parse_rec_dir_lst(local_list, first);
 //    ft_putstr_fd("\nlocal lst for str ", 2);
 //    ft_putstr_fd(str, 2);
 //    ft_putstr_fd("\n\n", 2);
@@ -96,43 +72,19 @@ static char **build_local_list(char *str)
     return (local_list);
 }
 
-// char **search_dir(char **dir_lst)
-// {
-//     char** new = NULL;
-//     for (int i = 0; dir_lst && dir_lst[i]; i++)
-//     {
-//         char **local_list = build_local_list(dir_lst[i]);
-//         if (local_list == NULL)
-//             return (dir_lst);
-//         local_list = search_recurcive_dir(local_list);
 
-//         new = join_str_tab(dir_lst, local_list);
-//     }
-//     return (new);
-// }
-
-char **search_recurcive_dir(char **dir_lst)
+void search_recurcive_dir(char **dir_lst, int flag_nb, int first)
 {
     int len = count_char_tab(dir_lst);
     for (int i = 0; dir_lst && dir_lst[i] && i < len; i++)
     {
-        // if (is_point_dir(dir_lst[i]) == 0)
-        // {
-        char **local_list = build_local_list(dir_lst[i]);
-   //     if (local_list == NULL)
-     //       return (dir_lst);
-        local_list = search_recurcive_dir(local_list);
-
-        dir_lst = join_str_tab(dir_lst, local_list);
-        // if (dir_lst == NULL)
-        // {
-        //     printf("error locallist is NULL\n");
-        //     return(NULL);
-        // }
-            // return (new);
-            // printf("\nlocal list\n");
-            // print_tab(local_list);
-        // }
+        ls_one_dir(dir_lst[i], flag_nb);
+        char **local_list = build_local_list(dir_lst[i], first);
+        search_recurcive_dir(local_list, flag_nb, 1);
+        free_all(local_list);
     }
-    return (dir_lst);
+    (void)first;
+    // if (dir_lst && first == 0)
+    //     ft_ls(dir_lst, flag_nb, 1);
+    // return (dir_lst);
 }

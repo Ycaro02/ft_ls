@@ -107,7 +107,7 @@ int      is_directory(const char *path)
 {
         struct stat     sb;
 
-        stat(path, &sb);
+        lstat(path, &sb);
         if ((sb.st_mode & S_IFMT) != S_IFDIR)
                 return (1);
         // if (access(path, X_OK) != 0)

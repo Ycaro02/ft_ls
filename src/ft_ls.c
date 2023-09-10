@@ -38,11 +38,11 @@ void ls_no_args()
         printf("Error for read current directory\n");
         return ;
     }
-    ft_list_dir(list, &flag);
+    ft_list_dir(list, flag);
     free_all(list);
 }
 
-void ft_list_dir(char **tab, int *flag_nb)
+void ft_list_dir(char **tab, int flag_nb)
 {
 
     int i = 0;
@@ -56,21 +56,21 @@ void ft_list_dir(char **tab, int *flag_nb)
         free(tmp);
         i++;
     }
-    if (*flag_nb == 0)
+    if (flag_nb == 0)
         classic_ls(save);
-    else if (*flag_nb == REVERSE_OPTION)
+    else if (flag_nb == REVERSE_OPTION)
     {
-        *flag_nb -= REVERSE_OPTION;
+        flag_nb -= REVERSE_OPTION;
         reverse_ls(save);
     }
         
     free_all(save);
 }
 
-void ft_ls(char **dir_lst, int *flag_nb)
+void ft_ls(char **dir_lst, int flag_nb, int print_dir_name)
 {
     int i = 0;
-    int dir_lst_len = count_char_tab(dir_lst);
+    // int dir_lst_len = count_char_tab(dir_lst);
     dir_lst = parse_dir_lst(dir_lst);
     while (dir_lst && dir_lst[i])
     {
@@ -80,7 +80,7 @@ void ft_ls(char **dir_lst, int *flag_nb)
             i++;
             continue ;
         }
-        if (dir_lst_len > 1)
+        if (print_dir_name != 0)
             printf("%s:\n", dir_lst[i]);
         ft_list_dir(list, flag_nb);
         free_all(list);
@@ -88,4 +88,15 @@ void ft_ls(char **dir_lst, int *flag_nb)
         printf("\n");
     }
     free_all(dir_lst);
+}
+
+void ls_one_dir(char *str, int flag_nb)
+{
+    char **list = get_all_file_name(str);
+    if (list == NULL)
+        return ;
+    printf("%s:\n", str);
+    ft_list_dir(list, flag_nb);
+    free_all(list);
+    printf("\n");
 }

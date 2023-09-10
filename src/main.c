@@ -70,16 +70,15 @@ int main (int argc, char** argv)
     dir_lst = parse_dir_lst(dir_lst);
     if (dir_lst == NULL)
         dir_lst = ft_realloc_str(dir_lst, ".");
-    
-    char **new = NULL;
+    dir_lst = sort_dir(dir_lst);
     if (flag_nb >=  R_OPTION)
     {
-        new = search_recurcive_dir(dir_lst);
         flag_nb -= R_OPTION;
+        search_recurcive_dir(dir_lst, flag_nb, 0);
+        free_all(dir_lst);
+        return (0);
     }
-    if (!new)
-        new = dir_lst;
-    new = sort_dir(new);
-    ft_ls(new, &flag_nb);
+    int len = count_char_tab(dir_lst);
+    ft_ls(dir_lst, flag_nb, len);
     return (0);
 }

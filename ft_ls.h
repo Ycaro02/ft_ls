@@ -52,8 +52,10 @@ char    **parse_dir_lst(char **dir_lst);
 void        classic_ls(char **tab);
 void        reverse_ls(char **tab);
 void        ls_no_args();
-void        ft_list_dir(char **tab, int *flag_nb);
-void        ft_ls(char **dir_lst, int *flag_nb);
+void        ft_list_dir(char **tab, int flag_nb);
+void        ft_ls(char **dir_lst, int flag_nb, int);
+void        ls_one_dir(char *str, int flag_nb);
+
 
 //recurcive.c
-char **search_recurcive_dir(char **dir_lst);
+void        search_recurcive_dir(char **dir_lst, int flag_nb, int first);

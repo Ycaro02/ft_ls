@@ -28,7 +28,8 @@ static int count_file(const char *directory_name)
     }
     else 
     {
-        printf("reject in count _file access F/X_OK and isdir is checked for %s\n", directory_name);
+        printf("ft_ls: cannot open directory '%s': Permission denied\n", directory_name);
+        // printf("reject in count _file access F/X_OK and isdir is checked for %s\n", directory_name);
         return (-1);
     }
     closedir(dir);
@@ -65,8 +66,6 @@ char **get_dir(char **argv)
             new = ft_realloc_str(new, argv[i]);
         i++;
     }
-    // if (new == NULL)
-        // printf("nice c null\n\n");
     return (new);
 }
 
