@@ -1,7 +1,20 @@
 #include "../ft_ls.h"
 
 
-static char *get_string(char **tab, char **used)
+int lst_already_use(char *str, t_list* used)
+{
+    t_list *current = used;
+    while (current)
+    {
+        if (strcmp(str, (char *)current->content) == 0)
+            return (1);
+        current = current->next;
+    }
+    return(0);
+}
+
+
+static char *get_string(char **tab, t_list *used)
 {
 	int i = 0;
 	char *lower = NULL;
@@ -9,7 +22,7 @@ static char *get_string(char **tab, char **used)
 
     while (tab && tab[i])
 	{
-        if (already_use(tab[i], used) == 0)
+        if (lst_already_use(tab[i], used) == 0)
         {
             if (lower == NULL)
                 lower = tab[i];
@@ -26,24 +39,24 @@ static char *get_string(char **tab, char **used)
     return (save);
 }
 
-static char **sort_dir(char **tab)
+t_list *ft_sort_dir(char **tab)
 {
     int i = 0;
-    char **save = NULL;
+    t_list *save = NULL;
     char *tmp = NULL;
     while (tab && tab[i])
     {
         tmp = get_string(tab, save);
         if (tmp != NULL)
-            save = ft_realloc_str(save, tmp);
-        free(tmp);
+            ft_lstadd_back(&save, ft_lstnew(tmp));
+        // free(tmp);
         i++;
     }
     free_all(tab);
     return(save);
 }
 
-t_list * char_tab_to_lst(char** tab)
+t_list *char_tab_to_lst(char** tab)
 {
     t_list *new = NULL;
     for (int i = 0; tab && tab[i]; i++)
@@ -79,15 +92,21 @@ int main (int argc, char** argv)
     dir_lst = parse_dir_lst(dir_lst);
     if (dir_lst == NULL)
         dir_lst = ft_realloc_str(dir_lst, ".");
-    dir_lst = sort_dir(dir_lst);
 
-    t_list *cc = char_tab_to_lst(dir_lst);
+    t_list *list = ft_sort_dir(dir_lst);
     if (flag_nb >=  R_OPTION)
     {
         flag_nb -= R_OPTION;
-        search_recurcive_dir(cc, flag_nb, 0);
-        ft_lstclear(&cc, free);
+        search_recurcive_dir(list, flag_nb);
+        ft_lstclear(&list, free);
         return (0);
     }
+    t_list *current = list;
+    while (current)
+    {
+        ls_one_dir(current->content, flag_nb);
+        current = current->next;
+    }
+    ft_lstclear(&list, free);
     return (0);
 }

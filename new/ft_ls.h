@@ -61,4 +61,4 @@ void        ls_one_dir(char *str, int flag_nb);
 
 
 //recurcive.c
-void        search_recurcive_dir(t_list *dir_lst, int flag_nb, int first);
+void        search_recurcive_dir(t_list *dir_lst, int flag_nb);

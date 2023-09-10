@@ -30,7 +30,7 @@ t_list *get_file_name(char *directory_name)
 
 
 
-void search_recurcive_dir(t_list *dir_lst, int flag_nb, int first)
+void search_recurcive_dir(t_list *dir_lst, int flag_nb)
 {
     t_list * local_list = NULL;
     while(dir_lst)
@@ -38,14 +38,9 @@ void search_recurcive_dir(t_list *dir_lst, int flag_nb, int first)
         ls_one_dir(dir_lst->content, flag_nb);
         // char **local_list = build_local_list(dir_lst[i], first);
         local_list = get_file_name(dir_lst->content);
-        search_recurcive_dir(local_list, flag_nb, 1);
+        search_recurcive_dir(local_list, flag_nb);
         dir_lst = dir_lst->next;
     }
     if (local_list)
         ft_lstclear(&local_list, free);
-    (void)first;
-    
-    // if (dir_lst && first == 0)
-    //     ft_ls(dir_lst, flag_nb, 1);
-    // return (dir_lst);
 }
