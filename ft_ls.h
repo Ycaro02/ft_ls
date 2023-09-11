@@ -43,7 +43,8 @@ t_list      *get_all_file_name(const char *directory_name, int hiden_file);
 t_list      *get_dir_no_hiden(char **argv);
 
 // ft_ls.c
-void        ls_no_args();
+void        reverse_lst(t_list *lst, t_list** new);
+void        ls_no_args(int);
 void        ls_one_dir(char *str, int flag_nb);
 
 //recurcive.c

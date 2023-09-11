@@ -1,6 +1,5 @@
 #include "../ft_ls.h"
 
-
 int is_point_dir(char *path)
 {
     if (path && path[0] == '.')

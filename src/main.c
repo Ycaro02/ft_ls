@@ -10,27 +10,44 @@ int main (int argc, char** argv)
     free(flag);
 
     t_list *dir_lst = get_dir_no_hiden(&argv[1]);
+    t_list *new = NULL;
     if (!dir_lst)
     {
-        ls_no_args();
+        ls_no_args(flag_nb);
+        ft_lstclear(&dir_lst, free);
         return (0);
     }
-
     sort_by_name(dir_lst);
+
     if (flag_nb >=  R_OPTION)
     {
         flag_nb -= R_OPTION;
+        if (flag_nb >= REVERSE_OPTION)
+        {
+            reverse_lst(dir_lst, &new);
+            ft_lstclear(&dir_lst, free);
+            dir_lst = new;
+        }
         search_recurcive_dir(dir_lst, flag_nb);
         ft_lstclear(&dir_lst, free);
         return (0);
     }
-
-    t_list *current = dir_lst;
-    while (current)
+    else
     {
-        ls_one_dir(current->content, flag_nb);
-        current = current->next;
+        if (flag_nb >= REVERSE_OPTION)
+        {
+            reverse_lst(dir_lst, &new);
+            ft_lstclear(&dir_lst, free);
+            dir_lst = new;
+        }
+        t_list *current = dir_lst;
+        while (current)
+        {
+            ls_one_dir(current->content, flag_nb);
+            current = current->next;
+        }
+        ft_lstclear(&dir_lst, free);
+
     }
-    ft_lstclear(&dir_lst, free);
     return (0);
 }

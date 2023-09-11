@@ -39,7 +39,7 @@ t_list *get_recurcive_file_name(char *directory_name)
     DIR *dir = opendir(directory_name);
     while ((my_dir = readdir(dir)) != NULL)
     {
-        if (my_dir->d_name[0] != '-' && is_point_dir(my_dir->d_name) == 1)
+        if (is_point_dir(my_dir->d_name) == 1)
         {
             char *str = NULL;
             if (strcmp("/", directory_name) == 0)
