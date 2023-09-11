@@ -1,98 +1,44 @@
 #include "../ft_ls.h"
 
-char    **parse_dir_lst(char **dir_lst)
+static int check_for_dir(char *dir_name)
 {
-    char **new = NULL;
-    for (int i = 0; dir_lst && dir_lst[i]; i++)
-    {
-        if (access(dir_lst[i], F_OK) != 0)
-            printf("\nft_ls: cannot access '%s': No such file or directory\n", dir_lst[i]);
-        else if (is_directory(dir_lst[i]) == 1)
-            printf("\n%s\n", dir_lst[i]);
-        else if (access(dir_lst[i], R_OK) == 0)
-            new = ft_realloc_str(new, dir_lst[i]);
-    }
-    free_all(dir_lst);
-    return (new);
-}
+    int nb = -1;
 
-static int count_file(const char *directory_name)
-{
-    struct dirent *my_dir;
-    DIR *dir = opendir(directory_name);
-    int nb = 0;
-    if (access(directory_name, R_OK | F_OK) == 0 && is_directory(directory_name) == 0)
-    {
-        while ((my_dir = readdir(dir)) != NULL)
-            nb++;
-    }
-    else 
-    {
-        printf("ft_ls: cannot open directory '%s': Permission denied\n", directory_name);
-        // printf("reject in count _file access F/X_OK and isdir is checked for %s\n", directory_name);
-        return (-1);
-    }
-    closedir(dir);
+    if (access(dir_name, F_OK) != 0)
+        printf("\nft_ls: cannot access '%s': No such file or directory\n", dir_name);
+    else if (is_directory(dir_name) == 1)
+        printf("\n%s\n", dir_name);
+    else if (is_directory(dir_name) == 0 && access(dir_name, R_OK) != 0)
+        printf("ft_ls: cannot open directory '%s': Permission denied\n", dir_name);
+    else if (is_directory(dir_name) == 0 && access(dir_name, R_OK) == 0)
+        nb = 0;
     return (nb);
 }
 
-char **get_all_file_name(const char *directory_name)
-{
-    char **all = NULL;
-    int nb = count_file(directory_name);
-	if (nb == -1)
-		return (NULL);
-    all = malloc(sizeof(char *) * (nb + 1));
-    struct dirent *my_dir;
-    DIR *dir = opendir(directory_name);
-    int i = 0;
-    while ((my_dir = readdir(dir)) != NULL)
-    {
-        all[i] = ft_strdup(my_dir->d_name);
-        i++;
-    }
-    all[i] = NULL;
-    closedir(dir);
-    return(all);
-}
-
-char **get_dir(char **argv)
+t_list *get_dir_no_hiden(char **argv)
 {
     int i = 0;
-    char **new = NULL;
+    t_list *new = NULL;
     while (argv && argv[i])
     {
-        if (argv[i][0] != '-')
-            new = ft_realloc_str(new, argv[i]);
+        if (argv[i][0] != '-' && check_for_dir(argv[i]) == 0)
+            ft_lstadd_back(&new, ft_lstnew(ft_strdup(argv[i])));
         i++;
     }
     return (new);
 }
 
-char *get_lower_string(char **tab, char **used)
+t_list *get_all_file_name(const char *dir_name, int hiden_file)
 {
-	int i = 0;
-	char *lower = NULL;
-    char *save = NULL;
-
-    while (tab && tab[i])
-	{
-        if (tab[i][0] != '.')
-        {
-            if (already_use(tab[i], used) == 0)
-            {
-                if (lower == NULL)
-                    lower = tab[i];
-                if (my_strcmp(lower, tab[i]) >= 0)
-                {
-                    lower = tab[i];
-                    if (save)
-                        free(save);
-                    save = ft_strdup(tab[i]);
-                }
-            }
-        }
-        i++;
-	}
-    return (save);
+    t_list *all = NULL;
+    struct dirent *my_dir;
+    DIR *dir = opendir(dir_name);
+    while ((my_dir = readdir(dir)) != NULL)
+    {
+        if (is_point_dir(my_dir->d_name) == hiden_file)
+                ft_lstadd_back(&all, ft_lstnew(ft_strdup(my_dir->d_name)));
+    }
+    sort_by_name(all);
+    closedir(dir);
+    return(all);
 }

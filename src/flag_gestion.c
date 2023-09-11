@@ -12,14 +12,6 @@ int get_flag(enum e_flag *flag)
     return (nb);
 }
 
-static enum e_flag fill_used_flag(enum e_flag *tab, enum e_flag flag)
-{
-    int i = 0;
-    while (tab && tab[i] != UNKNOW)
-        i++;
-    tab[i] =  flag;
-    return (flag);
-}
 
 int already_add(enum e_flag *tab, enum e_flag to_check)
 {
@@ -48,7 +40,7 @@ int flag_already_add(char c, enum e_flag *used)
     return (0);
 }
 
-static void put_error(char c)
+static void put_flag_error(char c)
 {
    ft_putstr_fd("\nft_ls: unrecognized option ", 2);
     char cc[2];
@@ -56,6 +48,15 @@ static void put_error(char c)
     cc[1] = '\0';
     ft_putstr_fd(cc, 2);
     ft_putstr_fd("\n", 2);
+}
+
+static enum e_flag fill_used_flag(enum e_flag *tab, enum e_flag flag)
+{
+    int i = 0;
+    while (tab && tab[i] != UNKNOW)
+        i++;
+    tab[i] =  flag;
+    return (flag);
 }
 
 int add_flag(char c, enum e_flag *used)
@@ -71,9 +72,9 @@ int add_flag(char c, enum e_flag *used)
         return (fill_used_flag(used, REVERSE_OPTION));
     else if (c == A_FLAG_CHAR)
         return (fill_used_flag(used, A_OPTION));
-    else if (c == T_FLAG_CHAR && already_add(used, T_OPTION) == 0)
+    else if (c == T_FLAG_CHAR)
         return (fill_used_flag(used, T_OPTION));
-    put_error(c);
+    put_flag_error(c);
     return (-1);
 }
 
@@ -92,7 +93,7 @@ enum e_flag *parse_flag(char **argv, enum e_flag *used)
         {
             int j = 1;
             if (argv[i][1] == '\0')
-                printf("ft_ls: cannot access '%s': No such file or directory\n", argv[i]);
+                printf("ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
             while (argv[i] && argv[i][j])
             {
                 int check = add_flag(argv[i][j], used);
@@ -104,4 +105,22 @@ enum e_flag *parse_flag(char **argv, enum e_flag *used)
         i++;
     }
     return(used);
+}
+
+enum e_flag *check_for_flag(char **argv)
+{
+    enum e_flag *used = malloc(sizeof(int) * 6);
+    if (!used)
+    {
+        ft_putstr_fd("Error malloc failed\n", 2);
+        return (NULL);
+    }
+    void *flag_ptr = used;
+    used = parse_flag(argv, used);
+    if (used == NULL)
+    {
+        free(flag_ptr);
+        return (NULL);
+    }
+    return (used);
 }

@@ -32,7 +32,7 @@ all:		${NAME}
 
 ${NAME}:	
 			@echo " \033[5;36m ----- Compiling libft...  ----- \033[0m\n"
-			@make -s -C src/libft
+			@make -s -C src/libft bonus
 			@echo "\033[7;32m -----  Compiling libft  ----- \033[0m\n"
 			@echo " \033[5;36m ----- Compiling ft_ls project...  ----- \033[0m\n"
 			@${CC} $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME)
