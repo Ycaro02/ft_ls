@@ -16,49 +16,36 @@
 #define T_FLAG_CHAR 't'
 
 enum e_flag  {
-    UNKNOW=-1,
+    UNKNOW=0,
     L_OPTION=1,
-    A_OPTION=4,
-    T_OPTION=10,
-    REVERSE_OPTION=20,
-    R_OPTION=50,
+    A_OPTION=2,
+    T_OPTION=4,
+    REVERSE_OPTION=8,
+    R_OPTION=16,
 };
 
 /// TODO -t : time, -a : hiden_file, -l: all info
 //// Remplace all of possible char** array by linked list
 
 // utils.c
-void        free_all(char **array);
-void        print_tab(char **tab);
-char        **ft_realloc_str(char **strs, char *str);
-int         count_char_tab(char **tab);
-int         already_use(char *str, char** used);
-int         is_directory(const char *path);
+int         is_point_dir(char *path);
 char        *ft_strjoin_free(char *s1, char *s2, char option);
-int         my_strcmp(char *s1, char *s2);
 void        free_lst(t_list *lst);
+int         lower_strcmp(char *s1, char *s2);
+int         is_directory(const char *path);
 
 //flag_gestion.c
-int         already_add(enum e_flag *tab, enum e_flag to_check);
 int         get_flag(enum e_flag *flag);
-int         check_flag(char c, enum e_flag *used);
-int         add_flag(char c, enum e_flag *used);
-enum e_flag *parse_flag(char **argv, enum e_flag *used);
+enum e_flag *check_for_flag(char **argv);
 
 //parse.c
-char        **get_all_file_name(const char *directory_name);
-char        **get_dir(char **argv);
-char        *get_lower_string(char **tab, char **used);
-char        **parse_dir_lst(char **dir_lst);
+t_list      *get_all_file_name(const char *directory_name, int hiden_file);
+t_list      *get_dir_no_hiden(char **argv);
 
 // ft_ls.c
-void        classic_ls(char **tab);
-void        reverse_ls(char **tab);
 void        ls_no_args();
-void        ft_list_dir(char **tab, int flag_nb);
-void        ft_ls(char **dir_lst, int flag_nb, int);
 void        ls_one_dir(char *str, int flag_nb);
-
 
 //recurcive.c
 void        search_recurcive_dir(t_list *dir_lst, int flag_nb);
+void        sort_by_name(t_list *lst);

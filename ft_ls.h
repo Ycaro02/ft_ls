@@ -39,11 +39,9 @@ int my_strcmp(char *s1, char *s2);
 
 
 //flag_gestion.c
-int         already_add(enum e_flag *tab, enum e_flag to_check);
+enum e_flag *check_for_flag(char **argv);
 int         get_flag(enum e_flag *flag);
-int         check_flag(char c, enum e_flag *used);
-int         add_flag(char c, enum e_flag *used);
-enum e_flag *parse_flag(char **argv, enum e_flag *used);
+
 
 //parse.c
 char        **get_all_file_name(const char *directory_name);

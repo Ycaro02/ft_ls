@@ -1,24 +1,19 @@
 #include "../ft_ls.h"
 
+
+int is_point_dir(char *path)
+{
+    if (path && path[0] == '.')
+        return (0);
+    return (1);
+}
+
 static void     free_str_join(char *s1, char *s2, char option)
 {
         if (option == 'f' || option == 'a')
                 free(s1);
         if (option == 's' || option == 'a')
                 free(s2);
-}
-
-void free_lst(t_list *lst)
-{
-    if (lst == NULL)
-        return ;
-    t_list *tmp = lst;
-    while (tmp)
-    {
-        tmp = lst->next;
-        free(lst->content);
-        free(lst);
-    }
 }
 
 char    *ft_strjoin_free(char *s1, char *s2, char option)
@@ -49,19 +44,20 @@ char    *ft_strjoin_free(char *s1, char *s2, char option)
         return (new_s);
 }
 
-void free_all(char **array)
+void free_lst(t_list *lst)
 {
-    int i = 0;
-    while (array && array[i])
+    if (lst == NULL)
+        return ;
+    t_list *tmp = lst;
+    while (tmp)
     {
-        free(array[i]);
-        i++;
+        tmp = lst->next;
+        free(lst->content);
+        free(lst);
     }
-    if (array)
-        free(array);
 }
 
-int my_strcmp(char *s1, char *s2)
+int lower_strcmp(char *s1, char *s2)
 {
     int i = 0;
     char first = '\0';
@@ -79,61 +75,6 @@ int my_strcmp(char *s1, char *s2)
     return (0);
 }
 
-int already_use(char *str, char** used)
-{
-    int i = 0;
-    while (used && used[i])
-    {
-        if (strcmp(str, used[i]) == 0)
-            return (1);
-        i++;
-    }
-    return (0);
-}
-
-void print_tab(char **tab)
-{
-    int i = 0;
-    while (tab && tab[i])
-    {
-        ft_putstr_fd(tab[i], 1);
-        ft_putstr_fd("\n", 1);
-        i++;
-    }
-}
-
-int count_char_tab(char **tab)
-{
-    int i= 0;
-    while (tab && tab[i])
-        i++;
-    return (i);
-}
-
-char	**ft_realloc_str(char **strs, char *str)
-{
-	char	**new;;
-	int		i;
-
-	i = 0;
-	while (strs && strs[i])
-		i++;
-	new = malloc(sizeof(char *) * (i + 2));
-	if (!new)
-		return (strs);
-	i = 0;
-	while (strs && strs[i])
-	{
-		new[i] = strs[i];
-		i++;
-	}
-	new[i] = ft_strdup(str);
-	new[i + 1] = NULL;
-	if (strs)
-		free(strs);
-	return (new);
-}
-
 int      is_directory(const char *path)
 {
         struct stat     sb;
@@ -141,7 +82,5 @@ int      is_directory(const char *path)
         lstat(path, &sb);
         if ((sb.st_mode & S_IFMT) != S_IFDIR)
                 return (1);
-        // if (access(path, X_OK) != 0)
-        //     printf("ft_ls: cannot open directory '%s': Permission denied", path);
         return (0);
 }
