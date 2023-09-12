@@ -1,5 +1,19 @@
 #include "../ft_ls.h"
 
+static int last_char_is_slash(char *str)
+{
+    if (!str)
+        return (-1);
+    int i = 0;
+    while (str[i])
+        i++;
+    if (i == 1 && str[0] == '/')
+        return (0);
+    if (str[i - 1] == '/')
+        return (0);
+    return (1);
+}
+
 static int check_recurcive_dir(char *dir_name)
 {
     int nb = -1;
@@ -33,36 +47,23 @@ void sort_by_name(t_list *lst)
     sort_by_name(head->next);
 }
 
-// void sort_by_name(t_list *lst)
-// {
-// 	char *tmp = NULL;
-//     t_list *current = lst;
-    
-//     while (current)
-// 	{
-//         if (current->next && lower_strcmp(current->content, current->next->content) > 0)
-//         {
-//             tmp = current->next->content;
-//             current->next->content = current->content;
-//             current->content = tmp;
-//             current = lst;
-//             continue ;
-//         }
-//         current = current->next;
-// 	}
-// }
-
 t_list *get_recurcive_file_name(char *directory_name)
 {
     t_list *all = NULL;
     struct dirent *my_dir;
     DIR *dir = opendir(directory_name);
-    while ((my_dir = readdir(dir)) != NULL)
+    do 
     {
-        if (is_point_dir(my_dir->d_name) == 1)
+        if (access(directory_name, F_OK) != 0)
+        {
+            printf("\nft_ls: (in get recurce file name) cannot access '%s': No such file or directory\n", directory_name);
+            break;
+        }
+        my_dir = readdir(dir);
+        if (my_dir && is_point_dir(my_dir->d_name) == 1)
         {
             char *str = NULL;
-            if (strcmp("/", directory_name) == 0)
+            if (last_char_is_slash(directory_name) == 0)
                 str = ft_strjoin(directory_name, my_dir->d_name);
             else
             {
@@ -74,11 +75,12 @@ t_list *get_recurcive_file_name(char *directory_name)
             if (str)
                 free(str);
         }
-    }
+    } while (my_dir != NULL);
     sort_by_name(all);
     closedir(dir);
     return(all);
 }
+
 
 void search_recurcive_dir(t_list *dir_lst, int flag_nb)
 {

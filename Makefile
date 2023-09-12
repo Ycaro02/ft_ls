@@ -6,7 +6,7 @@
 #    By: nfour <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/12 16:33:38 by nfour             #+#    #+#              #
-#    Updated: 2022/11/25 14:00:16 by nfour            ###   ########.fr        #
+#    Updated: 2023/09/12 13:37:15 by nfour            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ clean:
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
 fclean:		clean
-			@make -s -C src/libft clean
+			@make -s -C src/libft fclean
 			@${RM} ${B_NAME} ${B_OBJ}
 			@${RM} ${NAME}
 

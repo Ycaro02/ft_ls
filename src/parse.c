@@ -33,11 +33,17 @@ t_list *get_all_file_name(const char *dir_name, int hiden_file)
     t_list *all = NULL;
     struct dirent *my_dir;
     DIR *dir = opendir(dir_name);
-    while ((my_dir = readdir(dir)) != NULL)
+    do 
     {
-        if (is_point_dir(my_dir->d_name) == hiden_file)
+        if (access(dir_name, F_OK) != 0)
+        {
+            printf("\nft_ls: (get all file name) cannot access '%s': No such file or directory\n", dir_name);
+            break;
+        }
+        my_dir = readdir(dir);
+        if (my_dir && is_point_dir(my_dir->d_name) == hiden_file)
                 ft_lstadd_back(&all, ft_lstnew(ft_strdup(my_dir->d_name)));
-    }
+    } while (my_dir != NULL);
     sort_by_name(all);
     closedir(dir);
     return(all);
