@@ -15,22 +15,42 @@ static int check_recurcive_dir(char *dir_name)
 
 void sort_by_name(t_list *lst)
 {
-	char *tmp = NULL;
-    t_list *current = lst;
-    
-    while (current)
-	{
-        if (current->next && lower_strcmp(current->content, current->next->content) >= 0)
-        {
-            tmp = current->next->content;
-            current->next->content = current->content;
-            current->content = tmp;
-            current = lst;
-            continue ;
-        }
-        current = current->next;
-	}
+    if (!lst)
+        return ;
+    t_list *head = lst;
+    t_list *min = NULL;
+    while (lst)
+    {
+        if (!min)
+            min = lst;
+        else if (lower_strcmp(lst->content, min->content) < 0)
+            min = lst;
+        lst = lst->next;
+    }
+    char *tmp = head->content;
+    head->content = min->content;
+    min->content = tmp;
+    sort_by_name(head->next);
 }
+
+// void sort_by_name(t_list *lst)
+// {
+// 	char *tmp = NULL;
+//     t_list *current = lst;
+    
+//     while (current)
+// 	{
+//         if (current->next && lower_strcmp(current->content, current->next->content) > 0)
+//         {
+//             tmp = current->next->content;
+//             current->next->content = current->content;
+//             current->content = tmp;
+//             current = lst;
+//             continue ;
+//         }
+//         current = current->next;
+// 	}
+// }
 
 t_list *get_recurcive_file_name(char *directory_name)
 {
