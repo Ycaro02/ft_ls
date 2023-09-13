@@ -1,13 +1,22 @@
 #include "../ft_ls.h"
 
+t_buff g_buff;
+
+void finish_print_buffer()
+{
+    if (g_buff.i != 0)
+        write(1, g_buff.buffer, g_buff.i);
+}
+
 void ft_ls(char **argv, int flag_nb)
 {
-    t_list *dir_lst = get_dir_no_hiden(&argv[1]);
+    t_list *dir_lst = get_dir_args(&argv[1]);
     t_list *new = NULL;
     if (!dir_lst)
     {
         ls_no_args(flag_nb);
         ft_lstclear(&dir_lst, free);
+        finish_print_buffer();
         return ;
     }
     sort_by_name(dir_lst);
@@ -28,6 +37,7 @@ void ft_ls(char **argv, int flag_nb)
             current = current->next;
         }
     }
+    finish_print_buffer();
     ft_lstclear(&dir_lst, free);
 }
 
