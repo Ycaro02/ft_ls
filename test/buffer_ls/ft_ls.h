@@ -35,8 +35,17 @@ typedef struct s_buff
 
 extern t_buff g_buff;
 
-/// TODO -t : time(last change), -l: all info
-// change time display if file's last change is 6 month or greather
+/// TODO -t : time(last change), -l: all info : 
+// -total weight of dir
+// - first char : type
+// - perm : owner:samegroup:another ??
+// - owner name
+// - owner groups ??
+// - file weight
+ // - time (done)
+ // - name (done)
+// for l:
+// change time display if file's last change is 6 month or greather // 
 
 
 // utils.c

@@ -26,7 +26,7 @@ void fill_buffer(char *str)
     {
         g_buff.buffer[g_buff.i] = str[i];
         i++;
-        ( g_buff.i)++;
+        (g_buff.i)++;
         if (g_buff.i > PRINT_SIZE || (str[i] == '\n' && g_buff.i > PRINT_SIZE * 0.5))
             print_and_clear();
     }
