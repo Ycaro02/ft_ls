@@ -14,10 +14,12 @@ void ft_ls(char **argv, int flag_nb)
     t_list *new = NULL;
     if (!dir_lst)
     {
-        ls_no_args(flag_nb);
-        ft_lstclear(&dir_lst, free);
-        finish_print_buffer();
-        return ;
+        ft_lstadd_front(&dir_lst, ft_lstnew(ft_strdup(".")));
+        if (!dir_lst)
+        {
+            printf("Malloc error\n");
+            return ;
+        }
     }
     sort_by_name(dir_lst);
     if (flag_nb & REVERSE_OPTION)

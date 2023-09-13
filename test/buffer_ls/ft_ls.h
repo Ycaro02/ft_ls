@@ -35,7 +35,9 @@ typedef struct s_buff
 
 extern t_buff g_buff;
 
-/// TODO -t : time, -a : hiden_file, -l: all info
+/// TODO -t : time(last change), -l: all info
+// change time display if file's last change is 6 month or greather
+
 
 // utils.c
 int         is_point_dir(char *path, int flag_nb);

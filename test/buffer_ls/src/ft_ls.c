@@ -54,18 +54,6 @@ static void store_in_buffer(t_list *lst, int flag_nb)
     ft_lstclear(&new, free);
 }
 
-void ls_no_args(int flag_nb)
-{
-    t_list *lst = get_all_file_name(".", flag_nb);
-    if (lst == NULL)
-    {
-        ft_putstr_fd("Error for read current directory\n", 1);
-        return ;
-    }
-    store_in_buffer(lst, flag_nb);
-    ft_lstclear(&lst, free);
-}
-
 void ls_one_dir(char *str, int flag_nb)
 {
     (void)flag_nb;
