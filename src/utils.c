@@ -1,7 +1,13 @@
 #include "../ft_ls.h"
 
-int is_point_dir(char *path)
+int is_point_dir(char *path, int flag_nb)
 {
+    if (flag_nb & A_OPTION)
+    {
+        if (strcmp(path, ".") == 0 || strcmp(path, "..") == 0)
+            return (0);
+        return (1);
+    }
     if (path && path[0] == '.')
         return (0);
     return (1);
@@ -41,19 +47,6 @@ char    *ft_strjoin_free(char *s1, char *s2, char option)
         free_str_join(s1, s2, option);
         new_s[i] = '\0';
         return (new_s);
-}
-
-void free_lst(t_list *lst)
-{
-    if (lst == NULL)
-        return ;
-    t_list *tmp = lst;
-    while (tmp)
-    {
-        tmp = lst->next;
-        free(lst->content);
-        free(lst);
-    }
 }
 
 int lower_strcmp(char *s1, char *s2)

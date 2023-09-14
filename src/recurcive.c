@@ -47,7 +47,7 @@ void sort_by_name(t_list *lst)
     sort_by_name(head->next);
 }
 
-t_list *get_recurcive_file_name(char *directory_name)
+static t_list *get_recurcive_file_name(char *directory_name, int flag_nb)
 {
     t_list *all = NULL;
     struct dirent *my_dir;
@@ -60,7 +60,7 @@ t_list *get_recurcive_file_name(char *directory_name)
             break;
         }
         my_dir = readdir(dir);
-        if (my_dir && is_point_dir(my_dir->d_name) == 1)
+        if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
         {
             char *str = NULL;
             if (last_char_is_slash(directory_name) == 0)
@@ -76,19 +76,26 @@ t_list *get_recurcive_file_name(char *directory_name)
                 free(str);
         }
     } while (my_dir != NULL);
-    sort_by_name(all);
     closedir(dir);
+    sort_by_name(all);
+    if (all && flag_nb & REVERSE_OPTION)
+    {
+        t_list *new = NULL;
+        reverse_lst(all, &new);
+        ft_lstclear(&all, free);
+        return (new);
+    }
     return(all);
 }
 
 
 void search_recurcive_dir(t_list *dir_lst, int flag_nb)
 {
-    t_list * local_list = NULL;
+    t_list *local_list = NULL;
     while(dir_lst)
     {
         ls_one_dir(dir_lst->content, flag_nb);
-        local_list = get_recurcive_file_name(dir_lst->content);
+        local_list = get_recurcive_file_name(dir_lst->content, flag_nb);
         search_recurcive_dir(local_list, flag_nb);
         if (local_list)
             ft_lstclear(&local_list, free);

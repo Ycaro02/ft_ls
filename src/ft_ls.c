@@ -10,7 +10,29 @@ void reverse_lst(t_list *lst, t_list **new)
     }
 }
 
-static void print_dir(t_list *lst, int flag_nb)
+void    print_and_clear()
+{
+    write(1, g_buff.buffer, g_buff.i);
+    ft_bzero(g_buff.buffer, g_buff.i);
+    g_buff.i = 0;
+}
+
+void fill_buffer(char *str)
+{
+    if (!str)
+        return ;
+    int i = 0;
+    while (str[i])
+    {
+        g_buff.buffer[g_buff.i] = str[i];
+        i++;
+        (g_buff.i)++;
+        if (g_buff.i > PRINT_SIZE || (str[i] == '\n' && g_buff.i > PRINT_SIZE * 0.5))
+            print_and_clear();
+    }
+}
+
+static void store_in_buffer(t_list *lst, int flag_nb)
 {
     t_list *current = NULL;
     t_list *new = NULL;
@@ -23,37 +45,25 @@ static void print_dir(t_list *lst, int flag_nb)
         current = lst;
     while (current)
     {
-        ft_putstr_fd(current->content, 1);
+        fill_buffer(current->content);
         if (current->next)
-            ft_putstr_fd("  ", 1);
+            fill_buffer("  ");
         current = current->next;
     }
-    ft_putstr_fd("\n", 1);
+    fill_buffer("\n");
     ft_lstclear(&new, free);
-}
-
-void ls_no_args(int flag_nb)
-{
-    t_list *lst = get_all_file_name(".", 1);
-    if (lst == NULL)
-    {
-        ft_putstr_fd("Error for read current directory\n", 1);
-        return ;
-    }
-    print_dir(lst, flag_nb);
-    ft_lstclear(&lst, free);
 }
 
 void ls_one_dir(char *str, int flag_nb)
 {
     (void)flag_nb;
-    ft_putstr_fd(str, 1);
-    ft_putstr_fd(":\n", 1);
-    t_list *lst = get_all_file_name(str, 1);
+    fill_buffer(str);
+    fill_buffer(":\n");
+    t_list *lst = get_all_file_name(str, flag_nb);
     if (lst)
     {
-        print_dir(lst, flag_nb);
+        store_in_buffer(lst, flag_nb);
         ft_lstclear(&lst, free);
     }
-    ft_putstr_fd("\n", 1);
+    fill_buffer("\n");
 }

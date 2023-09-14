@@ -15,6 +15,9 @@
 #define A_FLAG_CHAR 'a'
 #define T_FLAG_CHAR 't'
 
+#define BUFFER_LEN 10000
+#define PRINT_SIZE 8000
+
 enum e_flag  {
     UNKNOW=0,
     L_OPTION=1,
@@ -24,13 +27,40 @@ enum e_flag  {
     R_OPTION=16,
 };
 
-/// TODO -t : time, -a : hiden_file, -l: all info
-//// Remplace all of possible char** array by linked list
+typedef struct s_buff
+{
+	char			buffer[BUFFER_LEN];
+	int	            i;
+}	t_buff;
+
+extern t_buff g_buff;
+
+// TODO -t : time(last change), -l: all info : 
+// For -l:
+// -total weight of dir :                       add all sb.st_size
+// - first char : type :                        like dir -> detect type.c
+// - perm : owner:samegroup:another :           ft_putnbr_base(sb.st_mode & 0777, "01234567"); 
+// - number link stat:                          sb.st_nlink
+// - owner name :                               getpwuid:struct user, (long) sb.st_uid, 
+// - owner groups ?? :                          getgrgid:groupe_id struct, (long) sb.st_gid); 
+// - file weight :                              sb.st_size
+// - time ( in working )
+//          -detect if last change time is more than 6 month
+//          -change time display if file's last change is 6 month or greather, done in time_gestion.c 
+// - name (done)
+
+// For -t:
+//  -sort function by change_time (newer first)
+// Check flag order ()
+//      - a : ( done ) ( toBeChecked )
+//      - t : update sort logic order, check flag -> alpha or time sort -> check reverse 
+//      - r : ( done )
+//      - R : ( done )
+//      - l : in working
 
 // utils.c
-int         is_point_dir(char *path);
+int         is_point_dir(char *path, int flag_nb);
 char        *ft_strjoin_free(char *s1, char *s2, char option);
-void        free_lst(t_list *lst);
 int         lower_strcmp(char *s1, char *s2);
 int         is_directory(const char *path);
 
@@ -39,8 +69,8 @@ int         get_flag(enum e_flag *flag);
 enum e_flag *check_for_flag(char **argv);
 
 //parse.c
-t_list      *get_all_file_name(const char *directory_name, int hiden_file);
-t_list      *get_dir_no_hiden(char **argv);
+t_list      *get_all_file_name(const char *directory_name, int flag_nb);
+t_list      *get_dir_args(char **argv);
 
 // ft_ls.c
 void        reverse_lst(t_list *lst, t_list** new);

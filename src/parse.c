@@ -15,7 +15,7 @@ static int check_for_dir(char *dir_name)
     return (nb);
 }
 
-t_list *get_dir_no_hiden(char **argv)
+t_list *get_dir_args(char **argv)
 {
     int i = 0;
     t_list *new = NULL;
@@ -28,7 +28,7 @@ t_list *get_dir_no_hiden(char **argv)
     return (new);
 }
 
-t_list *get_all_file_name(const char *dir_name, int hiden_file)
+t_list *get_all_file_name(const char *dir_name, int flag_nb)
 {
     t_list *all = NULL;
     struct dirent *my_dir;
@@ -41,7 +41,7 @@ t_list *get_all_file_name(const char *dir_name, int hiden_file)
             break;
         }
         my_dir = readdir(dir);
-        if (my_dir && is_point_dir(my_dir->d_name) == hiden_file)
+        if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
                 ft_lstadd_back(&all, ft_lstnew(ft_strdup(my_dir->d_name)));
     } while (my_dir != NULL);
     sort_by_name(all);

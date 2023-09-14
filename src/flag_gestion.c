@@ -8,7 +8,17 @@ int get_flag(enum e_flag *flag)
     {
         nb += flag[i];
         i++;
-    }   
+    }
+    // if (nb & L_OPTION)
+    //     printf("\nL_option enable\n");
+    // if (nb & A_OPTION)
+    //     printf("\nA_option enable\n");
+    // if (nb & T_OPTION)
+    //     printf("\nT_option enable\n");
+    // if (nb & REVERSE_OPTION)
+    //     printf("\nREVERSE_option enable\n");
+    // if (nb & R_OPTION)
+    //     printf("\nRecurse_option enable\n");
     return (nb);
 }
 
