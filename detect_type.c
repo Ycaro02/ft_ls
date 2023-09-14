@@ -55,6 +55,19 @@ char get_type(struct stat sb)
     return (UNDIFINED)
 }
 
+struct s_file {
+    int perm;
+    long long size;
+    long long total_size;
+    int nb_link;
+}   t_file;
+
+int get_permission(struct stat sb)
+{ return (sb.st_mode & 0777); }
+
+long long get_size(struct stat sb)
+{ return (sb.st_size);}
+
 int main(int argc, char**argv)
 {
     int j = 1;
