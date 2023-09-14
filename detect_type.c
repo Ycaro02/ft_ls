@@ -10,55 +10,50 @@
 #include <time.h>
 
 
-unsigned int    ft_check_base(char *str);
+#define    BLOCK        'b'
+#define    CHARACTER    'c'
+#define    DIRECTORY    'd'
+#define    FIFO         'p'
+#define    SYMLINK      'l'
+#define    REGULAR      '-'
+#define    SOCKET       's'
+#define    UNDIFINED    '?'
 
-void    ft_putchar(char c) { write(1, &c, 1); }
-
-unsigned int    ft_check_base(char *str)
+void    putnbr_decimal_to_octal(int nbr)
 {
-        int     i;
-        int     j;
+        int             b_size = 8;
+        long int        n = nbr;
+        char            *base = "01234567";
 
-        i = 0;
-        j = 0;
-        if (ft_strlen(str) <= 1)
-                return (1);
-        while (str[i])
-        {
-                if (str[i] < 32 || str[i] > 126 || str[i] == '+' || str[i] == '-')
-                        return (1);
-                j = i + 1;
-                while (str[j])
-                {
-                        if (str[i] != str[j])
-                                j++;
-                        else if (str[i] == str [j])
-                                return (1);
-                }
-                i++;
-        }
-        return (ft_strlen(str));
-}
-
-void    ft_putnbr_base(int nbr, char *base)
-{
-        int                     b_size;
-        long int        n;
-
-        n = nbr;
-        b_size = ft_check_base(base);
-        if (b_size == 1)
-                return ;
-        if (n < 0)
-        {
-                ft_putchar('-');
-                n = -n;
-        }
         if (n / b_size != 0)
-                ft_putnbr_base(n / b_size, base);
-        ft_putchar(base[n % b_size]);
+                putnbr_decimal_to_octal(n / b_size);
+        write(1, &base[n % b_size], 1);
 }
 
+
+char get_type(struct stat sb)
+{
+    switch (sb.t_mode & S_IFMT) 
+    {
+        case S_IFBLK:  
+            return (BLOCK);
+        case S_IFCHR:  
+            return (CHARACTER);
+        case S_IFDIR:
+            return (DIRECTORY)
+        case S_IFIFO:  
+            return (FIFO);
+        case S_IFLNK:  
+            return (SYMLINK);
+        case S_IFREG:  
+            return (REGULAR);
+        case S_IFSOCK: 
+            return (SOCKET);
+        default:
+            return (UNDIFINED)
+    }
+    return (UNDIFINED)
+}
 
 int main(int argc, char**argv)
 {
@@ -113,8 +108,10 @@ int main(int argc, char**argv)
         printf("Last file modification:   %s", ctime(&sb.st_mtime));
 
         write(1, "My res:\n", ft_strlen("my_res\n"));
-        ft_putnbr_base(sb.st_mode & 0777, "01234567");
+        putnbr_decimal_to_octal(sb.st_mode & 0777);
         j++;
     } 
+
+    
     return(0);
 }
