@@ -27,6 +27,9 @@ RM	= rm -f
 
 LIBFT = src/libft/libft.a
 
+TEST_NAME = test_name
+
+TEST_SRCS = detect_type.c
 
 all:		${NAME}
 
@@ -45,8 +48,16 @@ clean:
 
 fclean:		clean
 			@make -s -C src/libft fclean
-			@${RM} ${B_NAME} ${B_OBJ}
 			@${RM} ${NAME}
+
+test:
+			@echo " \033[5;36m ----- Compiling libft...  ----- \033[0m\n"
+			@make -s -C src/libft bonus
+			@echo " \033[5;36m ----- Compiling test project...  ----- \033[0m\n"
+			@${CC} $(CFLAGS) $(TEST_SRCS) $(LIBFT) -o $(TEST_NAME)
+			clear
+			./$(TEST_NAME) .
+			@$(RM) $(TEST_NAME) $(LIBFT) 
 
 re:			fclean all
 

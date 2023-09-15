@@ -148,7 +148,6 @@ int main(int argc, char**argv)
         printf("Last status change:       %s", ctime(&sb.st_ctime));
         printf("Last file access:         %s", ctime(&sb.st_atime));
         printf("Last file modification:   %s", ctime(&sb.st_mtime));
-
         write(1, "My res:\n", ft_strlen("my_res\n"));
         putnbr_decimal_to_octal(sb.st_mode & 0777);
         struct passwd* user = getpwuid(sb.st_uid);
@@ -173,8 +172,6 @@ int main(int argc, char**argv)
         j++;
     } 
 
-
-    
     return(0);
 }
 
