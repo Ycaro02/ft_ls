@@ -57,6 +57,7 @@ test:
 			@${CC} $(CFLAGS) $(TEST_SRCS) $(LIBFT) -o $(TEST_NAME)
 			clear
 			./$(TEST_NAME) .
+			@make -s -C src/libft fclean
 			@$(RM) $(TEST_NAME) $(LIBFT) 
 
 re:			fclean all
