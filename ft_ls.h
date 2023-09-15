@@ -9,14 +9,36 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#define BUFFER_LEN 10000
+#define PRINT_SIZE 8000
+
 #define L_FLAG_CHAR 'l'
 #define R_FLAG_CHAR 'R'
 #define REVERSE_FLAG_CHAR 'r'
 #define A_FLAG_CHAR 'a'
 #define T_FLAG_CHAR 't'
 
-#define BUFFER_LEN 10000
-#define PRINT_SIZE 8000
+#define    BLOCK        'b'
+#define    CHARACTER    'c'
+#define    DIRECTORY    'd'
+#define    FIFO         'p'
+#define    SYMLINK      'l'
+#define    REGULAR      '-'
+#define    SOCKET       's'
+#define    UNDIFINED    '?'
+
+typedef struct s_file 
+{
+    int perm;
+    long long size;
+    long long total_size;
+    int nb_link;
+    char type;
+    time_t last_change;
+    long user_id;
+    long group_id;
+} t_file;
+
 
 enum e_flag  {
     UNKNOW=0,

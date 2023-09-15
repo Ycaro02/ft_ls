@@ -12,7 +12,7 @@
 
 CC		= gcc
 
-CFLAGS	= -Wall -Wextra -Werror -g3 
+CFLAGS	= -Wall -Wextra -Werror 
 
 SRCS	=	src/main.c\
 			src/utils.c\
