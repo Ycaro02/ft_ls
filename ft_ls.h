@@ -2,9 +2,15 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <stdio.h>
-#include "src/libft/libft.h"
 #include <stdio.h>
 #include <string.h>
+
+
+#include <grp.h>
+#include <pwd.h>
+#include <time.h>
+
+#include "src/libft/libft.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -27,19 +33,6 @@
 #define    SOCKET       's'
 #define    UNDIFINED    '?'
 
-typedef struct s_file 
-{
-    int perm;
-    long long size;
-    long long total_size;
-    int nb_link;
-    char type;
-    time_t last_change;
-    long user_id;
-    long group_id;
-} t_file;
-
-
 enum e_flag  {
     UNKNOW=0,
     L_OPTION=1,
@@ -48,6 +41,19 @@ enum e_flag  {
     REVERSE_OPTION=8,
     R_OPTION=16,
 };
+
+typedef struct s_file 
+{
+    char type;
+    int perm;
+    int nb_link;
+    long long size;
+    long long total_size;
+    long user_id;
+    long group_id;
+    time_t last_change;
+    char *name;
+} t_file;
 
 typedef struct s_buff
 {
@@ -96,9 +102,15 @@ t_list      *get_dir_args(char **argv);
 
 // ft_ls.c
 void        reverse_lst(t_list *lst, t_list** new);
-void        ls_no_args(int);
 void        ls_one_dir(char *str, int flag_nb);
+void        fill_buffer(char *str);
 
 //recurcive.c
 void        search_recurcive_dir(t_list *dir_lst, int flag_nb);
 void        sort_by_name(t_list *lst);
+
+// l_options.c
+char get_type(struct stat sb);
+t_file *fill_file_struct(struct stat sb);
+void fill_buffer_l_option(t_file file);
+void display_file_struct(t_file file);

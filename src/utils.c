@@ -67,12 +67,18 @@ int lower_strcmp(char *s1, char *s2)
     return (0);
 }
 
+
+
 int      is_directory(const char *path)
 {
         struct stat     sb;
 
-        lstat(path, &sb);
-        if ((sb.st_mode & S_IFMT) != S_IFDIR)
-                return (1);
+        if (lstat(path, &sb) == -1)
+        {
+            perror("lsstat faillure");
+            return (-1);
+        }
+        if (get_type(sb) == DIRECTORY)
+            return (1);
         return (0);
 }

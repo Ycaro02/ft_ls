@@ -1,37 +1,4 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <dirent.h>
-#include <stdio.h>
-#include "src/libft/libft.h"
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <time.h>
-
-#include <grp.h>
-#include <pwd.h>
-
-#define    BLOCK        'b'
-#define    CHARACTER    'c'
-#define    DIRECTORY    'd'
-#define    FIFO         'p'
-#define    SYMLINK      'l'
-#define    REGULAR      '-'
-#define    SOCKET       's'
-#define    UNDIFINED    '?'
-
-typedef struct s_file 
-{
-    int perm;
-    long long size;
-    long long total_size;
-    int nb_link;
-    char type;
-    time_t last_change;
-    long user_id;
-    long group_id;
-} t_file;
+#include "ft_ls.h"
 
 void    putnbr_decimal_to_octal(int nbr)
 {
@@ -68,18 +35,24 @@ char get_type(struct stat sb)
     return (UNDIFINED);
 }
 
-t_file fill_file_struct(struct stat sb)
+t_file *fill_file_struct(struct stat sb)
 {
-    t_file file;
+    t_file *file;
 
-    file.total_size = -1;
-    file.type = get_type(sb);
-    file.perm = sb.st_mode & 0777;
-    file.size = sb.st_size;
-    file.nb_link = sb.st_nlink;
-    file.last_change = sb.st_mtime;
-    file.user_id = sb.st_uid;
-    file.group_id = sb.st_gid;
+    file = malloc(sizeof(t_file));
+    if (!file)
+    {
+        perror("Malloc");
+        return (NULL);
+    }
+    file->total_size = -1;
+    file->type = get_type(sb);
+    file->perm = sb.st_mode & 0777;
+    file->size = sb.st_size;
+    file->nb_link = sb.st_nlink;
+    file->last_change = sb.st_mtime;
+    file->user_id = sb.st_uid;
+    file->group_id = sb.st_gid;
     return (file);
 }
 
@@ -97,12 +70,25 @@ char *get_group_name(long group_id)
     return (name);
 }
 
+void display_file_struct(t_file file)
+{
+        printf("perm %d\n", file.perm);
+        printf("size %lld\n", file.size);
+        printf("size %lld\n", file.total_size);
+        printf("link %d\n", file.nb_link);
+        printf("type %c\n", file.type);
+        printf("last_change %s\n", ctime(&file.last_change));
+        printf("userId %ld\n", file.user_id);
+        printf("last_change %ld\n", file.group_id);
+}
+
 int main(int argc, char**argv)
 {
     int j = 1;
     if (argc == 1)
         return (1);
     struct stat     sb;
+    t_list *list = NULL;
     while (j < argc)   
     {
         if (lstat(argv[j], &sb) == -1)
@@ -160,18 +146,25 @@ int main(int argc, char**argv)
         printf("shell       = %s\n", user->pw_shell);
         struct group* tmp = getgrgid(sb.st_gid);
         printf("group name  = %s\n", tmp->gr_name);
-        struct s_file file = fill_file_struct(sb);
-        printf("perm %d\n", file.perm);
-        printf("size %lld\n", file.size);
-        printf("size %lld\n", file.total_size);
-        printf("link %d\n", file.nb_link);
-        printf("type %c\n", file.type);
-        printf("last_change %s\n", ctime(&file.last_change));
-        printf("userId %ld\n", file.user_id);
-        printf("last_change %ld\n", file.group_id);
+        struct s_file *file = fill_file_struct(sb);
+        if (!file)
+        {
+            printf("fill file return NULL\n");
+            return (1);
+        }
+        display_file_struct(*file);
+        ft_lstadd_back(&list, ft_lstnew(file));
         j++;
     } 
-
+    t_list *curr = list;
+    int i = 0;
+    while (curr)
+    {
+        printf("In lst node nb %d = \n", i);
+        display_file_struct(*(t_file *)curr->content);
+        curr = curr->next;
+        i++;
+    }
+    ft_lstclear(&list, free);
     return(0);
 }
-

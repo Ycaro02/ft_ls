@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nfour <marvin@42.fr>                       +#+  +:+       +#+         #
+#    By: nfour <nfour@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/12 16:33:38 by nfour             #+#    #+#              #
-#    Updated: 2023/09/12 13:37:15 by nfour            ###   ########.fr        #
+#    Updated: 2023/09/16 09:38:42 by nfour            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRCS	=	src/main.c\
 			src/parse.c\
 			src/ft_ls.c\
 			src/recurcive.c\
+			src/l_option.c\
 
 NAME	= ft_ls
 
@@ -56,7 +57,7 @@ test:
 			@echo " \033[5;36m ----- Compiling test project...  ----- \033[0m\n"
 			@${CC} $(CFLAGS) $(TEST_SRCS) $(LIBFT) -o $(TEST_NAME)
 			clear
-			./$(TEST_NAME) .
+			./$(TEST_NAME) . ..
 			@make -s -C src/libft fclean
 			@$(RM) $(TEST_NAME) $(LIBFT) 
 
