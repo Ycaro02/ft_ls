@@ -6,7 +6,7 @@
 #    By: nfour <nfour@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/12 16:33:38 by nfour             #+#    #+#              #
-#    Updated: 2023/09/16 09:38:42 by nfour            ###   ########.fr        #
+#    Updated: 2023/09/16 10:24:18 by nfour            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRCS	=	src/main.c\
 			src/ft_ls.c\
 			src/recurcive.c\
 			src/l_option.c\
+			src/time_gestion.c\
 
 NAME	= ft_ls
 

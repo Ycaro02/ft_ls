@@ -32,6 +32,16 @@ void fill_buffer(char *str)
     }
 }
 
+void fill_buffer_char(char c)
+{
+    g_buff.buffer[g_buff.i] = c;
+    (g_buff.i)++;
+    if (g_buff.i > PRINT_SIZE || (c == '\n' && g_buff.i > PRINT_SIZE * 0.5))
+        print_and_clear();
+}
+
+
+
 static void store_in_buffer(t_list *lst, int flag_nb)
 {
     t_list *current = NULL;
@@ -66,4 +76,21 @@ void ls_one_dir(char *str, int flag_nb)
         ft_lstclear(&lst, free);
     }
     fill_buffer("\n");
+}
+
+void ls_l_one_dir(char *str)
+{
+    struct stat sb;
+    if (lstat(str, &sb) == -1)
+    {
+        perror("lsstat faillure");
+        return ;
+    }
+    t_file *file = fill_file_struct(sb, str);
+    if (!file)
+    {
+        perror("malloc error\n");
+        return ;
+    }
+    fill_buffer_l_option(*file);
 }

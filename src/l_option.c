@@ -1,6 +1,24 @@
 #include "../ft_ls.h"
 
 
+static void fill_buffer_perm(char c)
+{
+    int nb = c - 48;
+    char r = '-';
+    char w = '-';
+    char x = '-';
+    if (nb & 4)
+        r = 'r';
+    if (nb & 2)
+        w = 'w';
+    if (nb & 1)
+        x = 'x';
+    fill_buffer_char(r);
+    fill_buffer_char(w);
+    fill_buffer_char(x);
+}
+
+
 static void putnbr_decimal_to_octal(int nbr)
 {
         int             b_size = 8;
@@ -10,7 +28,7 @@ static void putnbr_decimal_to_octal(int nbr)
         if (n / b_size != 0)
                 putnbr_decimal_to_octal(n / b_size);
         // write(1, &base[n % b_size], 1);
-        fill_buffer(&base[n % b_size]);
+        fill_buffer_perm(base[n % b_size]);
 }
 
 char get_type(struct stat sb)
@@ -74,29 +92,38 @@ static void write_group_name(long group_id)
 void fill_buffer_l_option(t_file file)
 {   
     fill_buffer(&file.type);
-    fill_buffer(" ");
     putnbr_decimal_to_octal(file.perm);
-    fill_buffer(" ");
-    char *tmp = ft_itoal((int)file.nb_link);
+    fill_buffer_char(' ');
+ 
+    char *tmp = ft_itoa((int)file.nb_link);
     fill_buffer(tmp);
     free(tmp);
-    fill_buffer(" ");
+   
+    fill_buffer_char(' ');
+    
     write_user_name(file.user_id);
-    fill_buffer(" ");
+   
+    fill_buffer_char(' ');
+    
     write_group_name(file.group_id);
-    fill_buffer(" ");
+    
+    fill_buffer_char(' ');
     tmp = ft_itoa((int)file.size);
     fill_buffer(tmp);
     free(tmp);
-    fill_buffer(" ");
+    fill_buffer_char(' ');
+    
     tmp = ft_itoa((int)file.total_size);
     fill_buffer(tmp);
-    fill_buffer(" ");
+    fill_buffer_char(' ');
     free(tmp);
-    fill_buffer(ctime(&file.last_change));
-    fill_buffer(" ");
+    
+    tmp = get_printable_date(&file.last_change, 0);
+    fill_buffer(tmp);
+    free(tmp);
+    fill_buffer_char(' ');
     fill_buffer(file.name);
-    fill_buffer("\n");
+    fill_buffer_char(' ');
 }
 
 

@@ -22,11 +22,25 @@ void ft_ls(char **argv, int flag_nb)
         }
     }
     sort_by_name(dir_lst);
+
+
     if (flag_nb & REVERSE_OPTION)
     {
         reverse_lst(dir_lst, &new);
         ft_lstclear(&dir_lst, free);
         dir_lst = new;
+    }
+    if (flag_nb & L_OPTION)
+    {
+        t_list *current = dir_lst;
+        while (current)
+        {
+            ls_l_one_dir(current->content);
+            current = current->next;
+        }
+        finish_print_buffer();
+        printf("l_option finish return to main\n");
+        return ;
     }
     if (flag_nb & R_OPTION)
         search_recurcive_dir(dir_lst, flag_nb);

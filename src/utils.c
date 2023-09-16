@@ -82,3 +82,25 @@ int      is_directory(const char *path)
             return (1);
         return (0);
 }
+
+
+void	new_lstclear(t_list **lst, void (*del)(void*))
+{
+	t_list	*tmp;
+	t_list	*current;
+
+	if (del == NULL || lst == NULL || *lst == NULL)
+		return ;
+	current = *lst;
+	tmp = current;
+	while (tmp != NULL)
+	{
+		tmp = current->next;
+        t_file *file = current->content;
+        del(file->name);
+        del(current->content);
+		free(current);
+		current = tmp;
+	}
+	*lst = NULL;
+}

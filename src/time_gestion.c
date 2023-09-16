@@ -1,22 +1,10 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <dirent.h>
-#include <stdio.h>
-#include "src/libft/libft.h"
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-
-#include <time.h>
+#include "../ft_ls.h"
 
 static int get_patern_index(char *str, int *start, int pos, char c)
 {
     int find = 0;
     int count = 0;
     int i = 0;
-    int stop = 0;
     if (pos == 1)
         find = 1;
     while (str && str[i])
@@ -98,44 +86,31 @@ char *get_printable_date(time_t *time, int old)
 }
 
 
-int main (int argc, char **argv)
-{
+// int main (int argc, char **argv)
+// {
 
-    int i = 1;
-    struct stat     sb;
-    while (i < argc)
-    {
-        lstat(argv[i], &sb);
-        if ((sb.st_mode & S_IFMT) != S_IFDIR)
-        {
-            printf("Not a directory");
-            return (1);
-        }
+//     int i = 1;
+//     struct stat     sb;
+//     while (i < argc)
+//     {
+//         lstat(argv[i], &sb);
+//         if ((sb.st_mode & S_IFMT) != S_IFDIR)
+//         {
+//             printf("Not a directory");
+//             return (1);
+//         }
         
-        char *str = get_printable_date(&sb.st_mtime, 0);
-        printf("m_time str = |%s|for %s\n", str, argv[i]);
-        free(str);
-        str = get_printable_date(&sb.st_mtime, 1);
-        printf("m_time str = |%s|for %s\n", str, argv[i]);
-        free(str);
-        // str = get_printable_date(&sb.st_ctime, 0);
-        // printf("c_time str = |%s|for %s\n", str, argv[i]);
-        // free(str);
-        // str = get_printable_date(&sb.st_ctime, 1);
-        // printf("c_time str = |%s|for %s\n", str, argv[i]);
-        // free(str);
+//         char *str = get_printable_date(&sb.st_mtime, 0);
+//         printf("m_time str = |%s|for %s\n", str, argv[i]);
+//         free(str);
+//         str = get_printable_date(&sb.st_mtime, 1);
+//         printf("m_time str = |%s|for %s\n", str, argv[i]);
+//         free(str);
+//         i++;
+//     }
         
-        // str = get_printable_date(&sb.st_atime, 0);
-        // printf("a_time str = |%s|for %s\n", str, argv[i]);
-        // free(str);
-        // str = get_printable_date(&sb.st_atime, 1);
-        // printf("a_time str = |%s|for %s\n", str, argv[i]);
-        // free(str);
-        i++;
-    }
-        
-    return (0);
-}
+//     return (0);
+// }
 
 // static char *str_trim_last(char* str, char c)
 // {
