@@ -18,7 +18,6 @@ static void fill_buffer_perm(char c)
     fill_buffer_char(x);
 }
 
-
 static void putnbr_decimal_to_octal(int nbr)
 {
         int             b_size = 8;
@@ -27,7 +26,6 @@ static void putnbr_decimal_to_octal(int nbr)
 
         if (n / b_size != 0)
                 putnbr_decimal_to_octal(n / b_size);
-        // write(1, &base[n % b_size], 1);
         fill_buffer_perm(base[n % b_size]);
 }
 
@@ -74,67 +72,67 @@ t_file *fill_file_struct(struct stat sb, char *path)
     file->user_id = sb.st_uid;
     file->group_id = sb.st_gid;
     file->name = ft_strdup(path);
+    file->nb_block = sb.st_blocks;
     return (file);
 }
 
 static void write_user_name(long user_id)
 {
     struct passwd* user = getpwuid(user_id);
-    fill_buffer(user->pw_name);
+    if (!user)
+    {
+        perror("getpwuid");
+        fill_buffer("unknow");
+        free(user);
+    }
+    else
+        fill_buffer(user->pw_name);
+    fill_buffer_char(' ');
 }
 
 static void write_group_name(long group_id)
 {
     struct group* group = getgrgid(group_id);
-    fill_buffer(group->gr_name);
+    if (!group)
+    {
+        perror("getgrgid");
+        fill_buffer("unknow");
+        free(group);
+    }
+    else
+        fill_buffer(group->gr_name);
+    fill_buffer_char(' ');
+}
+
+static void write_nb_link(long long nb_link)
+{
+    fill_buffer_char(' ');
+    char *tmp = ft_itoa((int)nb_link);
+    fill_buffer(tmp);
+    free(tmp);
+    fill_buffer_char(' ');
 }
 
 void fill_buffer_l_option(t_file file)
 {   
-    fill_buffer(&file.type);
+    fill_buffer_char(file.type);
     putnbr_decimal_to_octal(file.perm);
-    fill_buffer_char(' ');
- 
-    char *tmp = ft_itoa((int)file.nb_link);
-    fill_buffer(tmp);
-    free(tmp);
-   
-    fill_buffer_char(' ');
+    write_nb_link(file.nb_link);
     
     write_user_name(file.user_id);
-   
-    fill_buffer_char(' ');
-    
     write_group_name(file.group_id);
-    
-    fill_buffer_char(' ');
-    tmp = ft_itoa((int)file.size);
+
+    char *tmp = ft_itoa((int)file.size);
     fill_buffer(tmp);
     free(tmp);
     fill_buffer_char(' ');
-    
-    tmp = ft_itoa((int)file.total_size);
-    fill_buffer(tmp);
-    fill_buffer_char(' ');
-    free(tmp);
     
     tmp = get_printable_date(&file.last_change, 0);
     fill_buffer(tmp);
     free(tmp);
+    
     fill_buffer_char(' ');
     fill_buffer(file.name);
     fill_buffer_char(' ');
-}
-
-
-void display_file_struct(t_file file)
-{
-        printf("perm %d\n", file.perm);
-        printf("size %lld\n", file.size);
-        printf("size %lld\n", file.total_size);
-        printf("link %d\n", file.nb_link);
-        printf("type %c\n", file.type);
-        printf("last_change %s\n", ctime(&file.last_change));
-        printf("userId %ld\n", file.user_id);
-        printf("last_change %ld\n", file.group_id);
+    fill_buffer_char('\n');
 }

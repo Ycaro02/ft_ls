@@ -2,48 +2,43 @@
 
 t_buff g_buff;
 
-void finish_print_buffer()
-{
-    if (g_buff.i != 0)
-        write(1, g_buff.buffer, g_buff.i);
-}
-
 void ft_ls(char **argv, int flag_nb)
 {
     t_list *dir_lst = get_dir_args(&argv[1]);
-    t_list *new = NULL;
     if (!dir_lst)
     {
-        ft_lstadd_front(&dir_lst, ft_lstnew(ft_strdup(".")));
+        struct stat sb;
+        if (lstat(".", &sb) == -1)
+        {
+            perror("lstat for current dir");
+            return ;
+        }
+        ft_lstadd_front(&dir_lst, ft_lstnew(fill_file_struct(sb, ".")));
         if (!dir_lst)
         {
-            printf("Malloc error\n");
+            perror("Malloc Error ft_ls");
             return ;
         }
     }
-    sort_by_name(dir_lst);
-
-
+    sort_lst(dir_lst, flag_nb);
+    t_list *new = NULL;
     if (flag_nb & REVERSE_OPTION)
     {
         reverse_lst(dir_lst, &new);
-        ft_lstclear(&dir_lst, free);
+        free_node_ptr(&dir_lst);
         dir_lst = new;
     }
-    if (flag_nb & L_OPTION)
+    if (flag_nb & R_OPTION)
+        search_recurcive_dir(dir_lst, flag_nb);
+    else if (flag_nb & L_OPTION)
     {
         t_list *current = dir_lst;
         while (current)
         {
-            ls_l_one_dir(current->content);
+            ls_l_one_dir(current->content, flag_nb);
             current = current->next;
         }
-        finish_print_buffer();
-        printf("l_option finish return to main\n");
-        return ;
     }
-    if (flag_nb & R_OPTION)
-        search_recurcive_dir(dir_lst, flag_nb);
     else
     {
         t_list *current = dir_lst;
@@ -54,7 +49,7 @@ void ft_ls(char **argv, int flag_nb)
         }
     }
     finish_print_buffer();
-    ft_lstclear(&dir_lst, free);
+    new_lstclear(&dir_lst, free);
 }
 
 int main (int argc, char** argv)

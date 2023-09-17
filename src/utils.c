@@ -2,7 +2,9 @@
 
 int is_point_dir(char *path, int flag_nb)
 {
-    if (flag_nb & A_OPTION)
+    if (flag_nb & A_OPTION && !(flag_nb & R_OPTION))
+        return (1);
+    else if (flag_nb & R_OPTION && flag_nb & A_OPTION)
     {
         if (strcmp(path, ".") == 0 || strcmp(path, "..") == 0)
             return (0);
@@ -67,20 +69,44 @@ int lower_strcmp(char *s1, char *s2)
     return (0);
 }
 
+char *join_parent_name(char* parent_name, char* path)
+{
+    char *str = NULL;
+    if (last_char_is_slash(parent_name) == 0)
+        str = ft_strjoin(parent_name, path);
+    else
+    {
+        str = ft_strjoin(parent_name, "/");
+        str = ft_strjoin_free(str, path, 'f');
+    }
+    return (str);
+}
+
+int last_char_is_slash(char *str)
+{
+    if (!str)
+        return (-1);
+    int i = 0;
+    while (str[i])
+        i++;
+    if (i == 1 && str[0] == '/')
+        return (0);
+    if (str[i - 1] == '/')
+        return (0);
+    return (1);
+}
 
 
-int      is_directory(const char *path)
+char      is_directory(const char *path)
 {
         struct stat     sb;
 
         if (lstat(path, &sb) == -1)
         {
             perror("lsstat faillure");
-            return (-1);
+            return ('z');
         }
-        if (get_type(sb) == DIRECTORY)
-            return (1);
-        return (0);
+        return (get_type(sb));
 }
 
 

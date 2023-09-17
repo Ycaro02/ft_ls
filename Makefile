@@ -12,7 +12,7 @@
 
 CC		= gcc
 
-CFLAGS	= -Wall -Wextra -Werror 
+CFLAGS	= -Wall -Wextra -Werror -g
 
 SRCS	=	src/main.c\
 			src/utils.c\
@@ -22,6 +22,8 @@ SRCS	=	src/main.c\
 			src/recurcive.c\
 			src/l_option.c\
 			src/time_gestion.c\
+			src/sort.c\
+			src/buffer.c\
 
 NAME	= ft_ls
 
