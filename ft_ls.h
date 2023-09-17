@@ -62,13 +62,9 @@ typedef struct s_buff
 
 extern t_buff g_buff;
 
-// TODO -t : time(last change), -l: all info : 
-// For -l:
-// - time ( in working )
-//          -detect if last change time is more than 6 month
-//          -change time display if file's last change is 6 month or greather, done in time_gestion.c 
+// TODO -t :
+//  -- fix don't list empty dir
 
-// For -t:
 //  -sort function by change_time (newer first)
 // Check flag order ()
 //      - a : ( done ) ( toBeChecked )
