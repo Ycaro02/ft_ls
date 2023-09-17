@@ -50,7 +50,8 @@ t_file *fill_file_struct(struct stat sb)
     file->perm = sb.st_mode & 0777;
     file->size = sb.st_size;
     file->nb_link = sb.st_nlink;
-    file->last_change = sb.st_mtime;
+    file->last_change = sb.st_mtimespec.tvsec;
+    file->n_time = sb.st_mtimespec.tv_nsec;
     file->user_id = sb.st_uid;
     file->group_id = sb.st_gid;
     return (file);

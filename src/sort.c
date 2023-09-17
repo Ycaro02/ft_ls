@@ -20,13 +20,14 @@ void free_node_ptr(t_list **lst)
 
 void reverse_lst(t_list *lst, t_list **new)
 {
-    t_list *current = lst;
+    t_list *current;
+
+    current = lst;
     while (current)
     {
         ft_lstadd_front(new, ft_lstnew(current->content));
         current = current->next; 
     }
-    // free_node_ptr(&lst);
 }
 
 void sort_by_name(t_list *lst, int flag_nb)
@@ -45,7 +46,7 @@ void sort_by_name(t_list *lst, int flag_nb)
             min = lst;
         lst = lst->next;
     }
-    char *tmp = head->content;
+    t_file *tmp = head->content;
     head->content = min->content;
     min->content = tmp;
     sort_by_name(head->next, flag_nb);
@@ -63,20 +64,21 @@ void sort_by_time(t_list *lst, int flag_nb)
             min = lst;
         t_file *current = (t_file *)lst->content;
         t_file *min_file = (t_file *)min->content;
-        if (current->last_change < min_file->last_change)
+        if (current->last_change > min_file->last_change)
             min = lst;
+        lst = lst->next;
     }
-    lst = lst->next;
-    char *tmp = head->content;
+    t_file *tmp = head->content;
     head->content = min->content;
     min->content = tmp;
     sort_by_time(head->next, flag_nb);
 }
 
+
 void sort_lst(t_list *lst, int flag_nb)
 {
     if (flag_nb & T_OPTION)
         sort_by_time(lst, flag_nb);
-    sort_by_name(lst, flag_nb);
-
+    else
+        sort_by_name(lst, flag_nb);
 }

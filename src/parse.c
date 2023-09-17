@@ -1,45 +1,115 @@
 #include "../ft_ls.h"
 
+static t_file *default_file_struct()
+{
+    t_file *file;
+    struct stat sb;
+
+    file = NULL;
+    if (lstat(".", &sb) == -1)
+    {
+        perror("lstat for current dir");
+        return (NULL);
+    }
+    file = fill_file_struct(sb, ".");
+    if (!file || !(file->name))
+    {
+        perror("Malloc Error ft_ls");
+        return (NULL);
+    }
+    return (file);
+}
+
+static int build_file_lst(struct stat sb, char *str, t_list **new, int *found)
+{
+    t_file *file;
+    
+    file = fill_file_struct(sb, str);
+    if (!file || !file->name)
+    {
+        printf("Malloc error build file lst args\n");
+        return (1);
+    }
+    if (file->type == DIRECTORY)
+        ft_lstadd_back(new, ft_lstnew(file));
+    else
+    {
+        *found = 1;
+        printf("%s\n", str);
+        free(file->name);
+        free(file);
+    }
+    return (0);
+}
+
+
+static int check_args(char *str, t_list **new, int *found)
+{
+    struct stat sb;
+
+    if (lstat(str, &sb) == -1)
+    {
+        *found = 1;
+        perror(str);
+        return (0);
+    }
+    if (build_file_lst(sb, str, new, found) == 1)
+        return (1);
+    return (0);
+}
+
 t_list *get_dir_args(char **argv)
 {
-    int i = 0;
-    t_list *new = NULL;
+    int i;
+    t_list *new;
+    int found;
+
+    found = 0;
+    new = NULL;
+    i = 0;
     while (argv && argv[i])
     {
         if (argv[i][0] != '-')
         {
-            struct stat sb;
-            if (lstat(argv[i], &sb) == -1)
-            {
-                perror(argv[i]);
-                new_lstclear(&new, free);
+            if (check_args(argv[i], &new, &found) == 1)
                 return (NULL);
-            }
-            t_file *file = fill_file_struct(sb, argv[i]);
-            if (!file || !file->name)
-            {
-                printf("Malloc error get fir args\n");
-                return (NULL);
-            }
-            if (file->type == DIRECTORY)
-                ft_lstadd_back(&new, ft_lstnew(file));
-            else
-            {
-                printf("%s\n", argv[i]);
-                free(file->name);
-                free(file);
-            }
         }
         i++;
     }
+    if (!new && found == 0)
+        ft_lstadd_back(&new, ft_lstnew(default_file_struct()));
     return (new);
+}
+
+
+static int check_for_fill_struct(t_list **all, struct dirent *my_dir, int flag_nb, t_file *file)
+{
+    char *str;
+    struct stat sb;
+    t_file *new_file;
+
+    if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
+    {
+        str = join_parent_name(file->name, my_dir->d_name);
+        if (!str)
+            return (1);
+        if (lstat(str, &sb) == -1)
+        {
+            perror(str);
+            free(str);
+            return (0);
+        }
+        new_file = fill_file_struct(sb, my_dir->d_name);
+        if (!new_file)
+            return (1);
+        ft_lstadd_back(all, ft_lstnew(new_file));
+        free(str);
+    }
+    return (0);
 }
 
 t_list* get_all_file_struct(t_file *file, int flag_nb)
 {
-    (void)flag_nb;
-    if (file->type != 'd')
-        return NULL;
     t_list *all = NULL;
     struct dirent *my_dir;
     DIR *dir = opendir(file->name);
@@ -48,21 +118,8 @@ t_list* get_all_file_struct(t_file *file, int flag_nb)
     do 
     {
         my_dir = readdir(dir);
-        if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
-        {
-            char *str = join_parent_name(file->name, my_dir->d_name);
-            struct stat sb;
-            if (!str || lstat(str, &sb) == -1)
-            {
-                printf("Malloc error || ");
-                printf("ls stat faillure for %s\n", str);
-                continue ;
-            }
-            t_file *file = fill_file_struct(sb, my_dir->d_name);
-            ft_lstadd_back(&all, ft_lstnew(file));
-            if (str)
-                free(str);
-        }
+        if (check_for_fill_struct(&all, my_dir, flag_nb, file) == 1)
+            return (NULL);
     } while (my_dir != NULL);
     closedir(dir);
     if (!all)

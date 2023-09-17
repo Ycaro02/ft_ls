@@ -113,22 +113,20 @@ static void write_nb_link(long long nb_link)
 
 void fill_buffer_l_option(t_file file)
 {   
+    char *tmp;
+    
+    tmp = ft_itoa((int)file.size);
     fill_buffer_char(file.type);
     putnbr_decimal_to_octal(file.perm);
     write_nb_link(file.nb_link);
-    
     write_user_name(file.user_id);
     write_group_name(file.group_id);
-
-    char *tmp = ft_itoa((int)file.size);
     fill_buffer(tmp);
     free(tmp);
     fill_buffer_char(' ');
-    
-    tmp = get_printable_date(&file.last_change, 0);
+    tmp = get_printable_date(&file.last_change);
     fill_buffer(tmp);
     free(tmp);
-    
     fill_buffer_char(' ');
     fill_buffer(file.name);
     fill_buffer_char(' ');

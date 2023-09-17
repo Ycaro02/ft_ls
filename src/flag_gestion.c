@@ -41,10 +41,11 @@ int flag_already_add(char c, enum e_flag *used)
 
 static void put_flag_error(char c)
 {
-   ft_putstr_fd("\nft_ls: unrecognized option ", 2);
     char cc[2];
+    
     cc[0] = c;
     cc[1] = '\0';
+    ft_putstr_fd("\nft_ls: unrecognized option ", 2);
     ft_putstr_fd(cc, 2);
     ft_putstr_fd("\n", 2);
 }
@@ -77,7 +78,7 @@ int add_flag(char c, enum e_flag *used)
     return (-1);
 }
 
-enum e_flag *parse_flag(char **argv, enum e_flag *used)
+enum e_flag *parse_flag(int argc, char **argv, enum e_flag *used)
 {
     int i = 0;
     while (i < 6)
@@ -86,13 +87,13 @@ enum e_flag *parse_flag(char **argv, enum e_flag *used)
         i++;
     }
     i = 0;
-    while (argv && argv[i])
+    while (i < argc)
     {
         if (argv[i][0] == '-')
         {
             int j = 1;
-            if (argv[i][1] == '\0')
-                printf("ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
+            // if (argv[i][1] == '\0')
+                // printf("ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
             while (argv[i] && argv[i][j])
             {
                 int check = add_flag(argv[i][j], used);
@@ -106,7 +107,7 @@ enum e_flag *parse_flag(char **argv, enum e_flag *used)
     return(used);
 }
 
-enum e_flag *check_for_flag(char **argv)
+enum e_flag *check_for_flag(int argc, char **argv)
 {
     enum e_flag *used = malloc(sizeof(int) * 6);
     if (!used)
@@ -115,7 +116,7 @@ enum e_flag *check_for_flag(char **argv)
         return (NULL);
     }
     void *flag_ptr = used;
-    used = parse_flag(argv, used);
+    used = parse_flag(argc, argv, used);
     if (used == NULL)
     {
         free(flag_ptr);

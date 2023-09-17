@@ -67,11 +67,26 @@ static void remove_last_nchar(char* str, int nb)
     }
 }
 
-char *get_printable_date(time_t *time, int old)
+int check_six_month(time_t last_change)
 {
-    char *str = ctime(time);
+    time_t current = time(NULL);
+    time_t nb = (60 * 60 * 24 * 30 * 3) + (60 * 60 * 24 * 31 * 3);
+    time_t tmp = (current - nb);
+    if (tmp < last_change)
+        return (NEW);
+    else
+        return (OLD);
+    return (NEW);
+}
+
+char *get_printable_date(time_t *last_change)
+{
+    char *str = ctime(last_change);
     char * new = NULL;
-    if (old == 0)
+    int old;
+
+    old = check_six_month(*last_change);
+    if (old == NEW)
     {
         new = str_trim_patern(str_trim_patern(str, ' ', 1, 0), ' ', 3, 1);
         if (!new)
@@ -84,70 +99,3 @@ char *get_printable_date(time_t *time, int old)
         return (NULL);
     return (new);
 }
-
-
-// int main (int argc, char **argv)
-// {
-
-//     int i = 1;
-//     struct stat     sb;
-//     while (i < argc)
-//     {
-//         lstat(argv[i], &sb);
-//         if ((sb.st_mode & S_IFMT) != S_IFDIR)
-//         {
-//             printf("Not a directory");
-//             return (1);
-//         }
-        
-//         char *str = get_printable_date(&sb.st_mtime, 0);
-//         printf("m_time str = |%s|for %s\n", str, argv[i]);
-//         free(str);
-//         str = get_printable_date(&sb.st_mtime, 1);
-//         printf("m_time str = |%s|for %s\n", str, argv[i]);
-//         free(str);
-//         i++;
-//     }
-        
-//     return (0);
-// }
-
-// static char *str_trim_last(char* str, char c)
-// {
-//     int len = ft_strlen(str);
-//     len--;
-//     while (str && str[len])
-//     {
-//         if (str[len] == c)
-//             break;
-//         len--;
-//     }
-//     int i = 0;
-//     char *new = malloc(sizeof(char) * len + 1);
-//     while (i < len)
-//     {
-//         new[i] = str[i];
-//         i++;
-//     }
-//     new[i] = '\0';
-//     free(str);
-//     return (new);
-// }
-
-
-
-// char *str_trim_first_last(char* str, char c, int flag)
-// {
-//     int i = 0;
-//     while (str && str[i])
-//     {
-//         if (str[i] == c)
-//             break;
-//         i++;
-//     }
-//     char *new = ft_strdup(&str[i + 1]);
-//     if (flag == 0)
-//         new = str_trim_last(new, c);
-    
-//     return (new);
-// }

@@ -1,19 +1,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <dirent.h>
-#include <stdio.h>
-#include <stdio.h>
 #include <string.h>
-
-
 #include <grp.h>
 #include <pwd.h>
 #include <time.h>
-
-#include "src/libft/libft.h"
-
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "src/libft/libft.h"
 
 #define     BUFFER_LEN 10000
 #define     PRINT_SIZE 8000
@@ -33,6 +27,9 @@
 #define     SOCKET       's'
 #define     UNDIFINED    '?'
 
+#define NEW 0
+#define OLD 1
+
 enum e_flag  {
     UNKNOW=0,
     L_OPTION=1,
@@ -51,9 +48,10 @@ typedef struct s_file
     long        group_id;
     long long   size;
     long long   total_size;
-    time_t      last_change;
-    char        *name;
     long long   nb_block;
+    time_t      last_change;
+    long        n_time;
+    char        *name;
 } t_file;
 
 typedef struct s_buff
@@ -74,10 +72,14 @@ extern t_buff g_buff;
 //  -sort function by change_time (newer first)
 // Check flag order ()
 //      - a : ( done ) ( toBeChecked )
-//      - t : update sort logic order, check flag -> alpha or time sort -> check reverse 
+//      - t : ( done ), need to check 6 month 
 //      - r : ( done )
 //      - R : ( done )
 //      - l :  ( done )
+
+/////////////////////////////
+#include <stdio.h>///////////
+/////////////////////////////
 
 // utils.c
 int         is_point_dir(char *path, int flag_nb);
@@ -87,10 +89,11 @@ char         is_directory(const char *path);
 int         last_char_is_slash(char *str);
 void	    new_lstclear(t_list **lst, void (*del)(void*));
 char        *join_parent_name(char* parent_name, char* path);
+void display_file_lst(t_list *lst);
 
 // flag_gestion.c
 int         get_flag(enum e_flag *flag);
-enum e_flag *check_for_flag(char **argv);
+enum e_flag *check_for_flag(int argc, char **argv);
 
 // parse.c
 t_list      *get_all_file_name(const char *directory_name, int flag_nb);
@@ -111,12 +114,10 @@ void        fill_buffer_l_option(t_file file);
 void        display_file_struct(t_file file);
 
 // time gestion.c
-char        *get_printable_date(time_t *time, int old);
+char        *get_printable_date(time_t *time);
 
 // sort.c
 void        sort_lst(t_list *lst, int flag_nb);
-void        sort_by_time(t_list *lst, int flag_nb);
-void        sort_by_name(t_list *lst, int flag_nb);
 void        free_node_ptr(t_list **lst);
 void        reverse_lst(t_list *lst, t_list **new);
 
