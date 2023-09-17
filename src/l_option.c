@@ -83,7 +83,6 @@ static void write_user_name(long user_id)
     {
         perror("getpwuid");
         fill_buffer("unknow");
-        free(user);
     }
     else
         fill_buffer(user->pw_name);
@@ -97,7 +96,6 @@ static void write_group_name(long group_id)
     {
         perror("getgrgid");
         fill_buffer("unknow");
-        free(group);
     }
     else
         fill_buffer(group->gr_name);
