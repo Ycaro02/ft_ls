@@ -55,10 +55,12 @@ void ls_l_one_dir(t_file *file, int flag_nb)
         lst = new;
     }
     t_list *current = lst;
+    int *space = get_all_space(current);
     while (current)
     {
-        fill_buffer_l_option(*(t_file *)current->content);
+        fill_buffer_l_option(*(t_file *)current->content, space);
         current = current->next;
     }
+    free(space);
     new_lstclear(&lst, free);
 }

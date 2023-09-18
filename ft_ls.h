@@ -106,8 +106,11 @@ void        search_recurcive_dir(t_list *dir_lst, int flag_nb);
 // l_options.c
 char        get_type(struct stat sb);
 t_file      *fill_file_struct(struct stat sb, char *path);
-void        fill_buffer_l_option(t_file file);
+void        fill_buffer_l_option(t_file file, int* space);
 void        display_file_struct(t_file file);
+int *get_all_space(t_list *lst);
+
+
 
 // time gestion.c
 char        *get_printable_date(time_t *time);

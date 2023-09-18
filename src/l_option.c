@@ -76,7 +76,19 @@ t_file *fill_file_struct(struct stat sb, char *path)
     return (file);
 }
 
-static void write_user_name(long user_id)
+static void insert_space(int nb)
+{
+    if (nb > 0)
+    {
+        while (nb != 0)
+        {
+            fill_buffer_char(' ');
+            nb--;
+        }
+    }
+}
+
+static void write_user_name(long user_id, int space)
 {
     struct passwd* user = getpwuid(user_id);
     if (!user)
@@ -85,11 +97,14 @@ static void write_user_name(long user_id)
         fill_buffer("unknow");
     }
     else
+    {
+        insert_space(space - ft_strlen(user->pw_name));
         fill_buffer(user->pw_name);
+    }
     fill_buffer_char(' ');
 }
 
-static void write_group_name(long group_id)
+static void write_group_name(long group_id, int space)
 {
     struct group* group = getgrgid(group_id);
     if (!group)
@@ -98,7 +113,10 @@ static void write_group_name(long group_id)
         fill_buffer("unknow");
     }
     else
+    {
+        insert_space(space - ft_strlen(group->gr_name));
         fill_buffer(group->gr_name);
+    }
     fill_buffer_char(' ');
 }
 
@@ -111,7 +129,7 @@ static void write_nb_link(long long nb_link)
     fill_buffer_char(' ');
 }
 
-void fill_buffer_l_option(t_file file)
+void fill_buffer_l_option(t_file file, int *space)
 {   
     char *tmp;
     
@@ -119,16 +137,106 @@ void fill_buffer_l_option(t_file file)
     fill_buffer_char(file.type);
     putnbr_decimal_to_octal(file.perm);
     write_nb_link(file.nb_link);
-    write_user_name(file.user_id);
-    write_group_name(file.group_id);
+    write_user_name(file.user_id, space[0]);
+    write_group_name(file.group_id, space[1]);
+    insert_space(space[2] - ft_strlen(tmp));
     fill_buffer(tmp);
     free(tmp);
     fill_buffer_char(' ');
     tmp = get_printable_date(&file.last_change);
+    insert_space(space[3] - ft_strlen(tmp));
     fill_buffer(tmp);
     free(tmp);
     fill_buffer_char(' ');
     fill_buffer(file.name);
     fill_buffer_char(' ');
     fill_buffer_char('\n');
+}
+
+static int get_len_size(t_file file)
+{
+    char    *tmp;
+    int     max;
+
+    tmp = ft_itoa((int)file.size);
+    max = ft_strlen(tmp);
+    free(tmp);
+    return (max);
+}
+
+static int get_group_name_len(t_file file)
+{
+    struct group* group = getgrgid(file.group_id);
+    if (!group)
+    {
+        perror("getgrgid");
+        return (-1);
+    }
+    int nb = ft_strlen(group->gr_name);
+    return (nb);
+}
+
+static int get_user_name_len(t_file file)
+{
+    struct passwd* user = getpwuid(file.user_id);
+    if (!user)
+    {
+        perror("getpwuid");
+        return (-1);
+    }
+    int nb = ft_strlen(user->pw_name);
+    return (nb);
+}
+
+
+static int get_len_date(t_file file)
+{
+    char *tmp = get_printable_date(&file.last_change);
+    int nb = ft_strlen(tmp);
+    free(tmp);
+    return (nb);
+}
+
+int get_nb_space(t_list *lst, int(*get_len_info)(t_file))
+{
+    t_file *file;
+    t_list *current = lst;
+    int max = -1;
+
+    file = NULL;
+    while (current)
+    {
+        file = current->content;
+        int tmp = get_len_info(*file);
+        if (tmp > max)
+            max = tmp;
+        current = current->next;
+    }
+    return (max);
+}
+
+int *get_all_space(t_list *lst)
+{
+    int *array;
+    int user;
+    int group;
+    int size;
+    int date;
+
+    user = get_nb_space(lst, get_user_name_len);
+    group = get_nb_space(lst, get_group_name_len);
+    size = get_nb_space(lst, get_len_size);
+    date = get_nb_space(lst, get_len_date);
+    array = malloc(sizeof(int )* 4);
+    if (!array)
+    {
+        new_lstclear(&lst, free);
+        perror("Malloc");
+        exit(1);
+    }
+    array[0] = user;
+    array[1] = group;
+    array[2] = size;
+    array[3] = date;
+    return (array);
 }
