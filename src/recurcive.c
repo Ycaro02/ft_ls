@@ -36,29 +36,38 @@ static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new)
     if (lstat(str, &sb) == -1)
     {
         perror(str);
+        free(str);
         new_lstclear(new, free);
         return (1);
     }
     if (create_new_file(sb, new, str) == 1)
-        return (1);
-    if (str)
+    {
         free(str);
+        return (1);
+    }
+    free(str);
     return (0);
 }
 
 static int read_dir(t_file *file, t_list **new, int flag_nb)
 {
     struct dirent *my_dir;
+    DIR *dir;
 
-    DIR *dir = opendir(file->name);
+    dir = opendir(file->name);
     if (!dir)
         return (1);
     do 
     {
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
-            if ( parse_directory(file, my_dir, new) == 1)
+        {
+            if (parse_directory(file, my_dir, new) == 1)
+            {
+                closedir(dir);
                 return (1);
+            }
+        }
     } while (my_dir != NULL);
     closedir(dir);
     return (0);
@@ -72,7 +81,6 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb)
     if (file->type != DIRECTORY || read_dir(file, &new, flag_nb) == 1)
     {
         ft_putstr_fd("Open dir error\n", 2);
-        // new_lstclear(new);
         return (NULL);
     }
     sort_lst(new, flag_nb);

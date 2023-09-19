@@ -43,14 +43,13 @@ typedef struct s_file
 {
     char        type;
     int         perm;
-    int         nb_link;
-    long        user_id;
-    long        group_id;
-    long long   size;
-    long long   total_size;
-    long long   nb_block;
+    nlink_t     nb_link;
+    uid_t       user_id;
+    gid_t       group_id;
+    off_t       size;
+    off_t       total_size;
+    blkcnt_t    nb_block;
     time_t      last_change;
-    long        n_time;
     char        *name;
 } t_file;
 
@@ -85,7 +84,7 @@ char         is_directory(const char *path);
 int         last_char_is_slash(char *str);
 void	    new_lstclear(t_list **lst, void (*del)(void*));
 char        *join_parent_name(char* parent_name, char* path);
-void display_file_lst(t_list *lst);
+void        display_file_lst(t_list *lst);
 
 // flag_gestion.c
 int         get_flag(enum e_flag *flag);
@@ -108,8 +107,7 @@ char        get_type(struct stat sb);
 t_file      *fill_file_struct(struct stat sb, char *path);
 void        fill_buffer_l_option(t_file file, int* space);
 void        display_file_struct(t_file file);
-int *get_all_space(t_list *lst);
-
+int			*get_all_space(t_list *lst);
 
 
 // time gestion.c
@@ -121,8 +119,8 @@ void        free_node_ptr(t_list **lst);
 void        reverse_lst(t_list *lst, t_list **new);
 
 // buffer.c
-void        print_and_clear();
 void        fill_buffer(char *str);
 void        fill_buffer_char(char c);
 void        store_in_buffer(t_list *lst, int flag_nb);
+void        print_and_clear();
 void        finish_print_buffer();
