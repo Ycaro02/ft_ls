@@ -1,5 +1,18 @@
 #include "../ft_ls.h"
 
+int get_lst_len(t_list *lst)
+{
+    int i;
+
+    i = 0;
+    while(lst)
+    {
+        lst = lst->next;
+        i++;
+    }
+    return (i);
+}
+
 int is_point_dir(char *path, int flag_nb)
 {
     if (flag_nb & A_OPTION && !(flag_nb & R_OPTION))
@@ -124,6 +137,7 @@ void	new_lstclear(t_list **lst, void (*del)(void*))
 		tmp = current->next;
         t_file *file = current->content;
         del(file->name);
+        del(file->parrent);
         del(current->content);
 		free(current);
 		current = tmp;

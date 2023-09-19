@@ -2,12 +2,13 @@
 
 t_buff g_buff;
 
-void ls(t_list * lst, int flag_nb,  void (*ls_function)(t_file*, int))
+void ls(t_list * lst, int flag_nb,  void (*ls_function)(t_file*, int, int))
 {
     t_list *current = lst;
+    int lst_len = get_lst_len(lst);
     while (current)
     {
-        ls_function(current->content, flag_nb);
+        ls_function(current->content, flag_nb, lst_len);
         current = current->next;
     }
 }

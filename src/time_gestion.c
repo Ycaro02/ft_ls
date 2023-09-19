@@ -17,10 +17,14 @@ static int get_patern_index(char *str, int *start, int pos, char c)
                 *start = i;
                 find = 1;
             }
+            i++;
+            while (str[i] == c)
+                i++;
         }
         else if (str[i] == c && find == 1)
             break;
-        i++;
+        else
+            i++;
     }
     return (i);
 }

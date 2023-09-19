@@ -35,27 +35,27 @@ char get_type(struct stat sb)
     return (UNDIFINED);
 }
 
-t_file *fill_file_struct(struct stat sb)
-{
-    t_file *file;
+// t_file *fill_file_struct(struct stat sb)
+// {
+//     t_file *file;
 
-    file = malloc(sizeof(t_file));
-    if (!file)
-    {
-        perror("Malloc");
-        return (NULL);
-    }
-    file->total_size = -1;
-    file->type = get_type(sb);
-    file->perm = sb.st_mode & 0777;
-    file->size = sb.st_size;
-    file->nb_link = sb.st_nlink;
-    file->last_change = sb.st_mtimespec.tvsec;
-    file->n_time = sb.st_mtimespec.tv_nsec;
-    file->user_id = sb.st_uid;
-    file->group_id = sb.st_gid;
-    return (file);
-}
+//     file = malloc(sizeof(t_file));
+//     if (!file)
+//     {
+//         perror("Malloc");
+//         return (NULL);
+//     }
+//     file->total_size = -1;
+//     file->type = get_type(sb);
+//     file->perm = sb.st_mode & 0777;
+//     file->size = sb.st_size;
+//     file->nb_link = sb.st_nlink;
+//     file->last_change = sb.st_mtimespec.tvsec;
+//     file->n_time = sb.st_mtimespec.tv_nsec;
+//     file->user_id = sb.st_uid;
+//     file->group_id = sb.st_gid;
+//     return (file);
+// }
 
 char *get_user_name(long user_id)
 {

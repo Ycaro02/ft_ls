@@ -1,7 +1,7 @@
 #include "../ft_ls.h"
 
 
-static void fill_buffer_perm(char c)
+static void fill_buffer_perm(char c, int *is_exec)
 {
     int nb = c - 48;
     char r = '-';
@@ -12,21 +12,24 @@ static void fill_buffer_perm(char c)
     if (nb & 2)
         w = 'w';
     if (nb & 1)
+    {
         x = 'x';
+        *is_exec = 0;   
+    }
     fill_buffer_char(r);
     fill_buffer_char(w);
     fill_buffer_char(x);
 }
 
-static void putnbr_decimal_to_octal(int nbr)
+static void putnbr_decimal_to_octal(int nbr, int *is_exec)
 {
         int             b_size = 8;
         long int        n = nbr;
         char            *base = "01234567";
 
         if (n / b_size != 0)
-                putnbr_decimal_to_octal(n / b_size);
-        fill_buffer_perm(base[n % b_size]);
+                putnbr_decimal_to_octal(n / b_size, is_exec);
+        fill_buffer_perm(base[n % b_size], is_exec);
 }
 
 char get_type(struct stat sb)
@@ -53,7 +56,7 @@ char get_type(struct stat sb)
     return (UNDIFINED);
 }
 
-t_file *fill_file_struct(struct stat sb, char *path)
+t_file *fill_file_struct(struct stat sb, char *path, char *parent)
 {
     t_file *file;
 
@@ -73,6 +76,7 @@ t_file *fill_file_struct(struct stat sb, char *path)
     file->group_id = sb.st_gid;
     file->name = ft_strdup(path);
     file->nb_block = sb.st_blocks;
+    file->parrent = ft_strdup(parent);
     return (file);
 }
 
@@ -120,23 +124,67 @@ static void write_group_name(long group_id, int space)
     fill_buffer_char(' ');
 }
 
-static void write_nb_link(long long nb_link)
+static void write_nb_link(long long nb_link, int *space)
 {
     fill_buffer_char(' ');
     char *tmp = ft_itoa((int)nb_link);
+    insert_space(space[4] - ft_strlen(tmp));
     fill_buffer(tmp);
     free(tmp);
     fill_buffer_char(' ');
 }
 
+
+static void write_symlink(char *path, char *parrent_path)
+{
+    char    *buff;
+    char    *tmp;
+    int     ret;
+
+    buff = ft_calloc(sizeof(char), 200);
+    if (!buff)
+        return;
+    tmp = join_parent_name(parrent_path, path);
+    if (!tmp)
+    {
+        free(buff);
+        return ;
+    }
+    fill_buffer_color(path, E_CYAN);
+    fill_buffer(" -> ");
+     ret = readlink(tmp, buff, 199);
+    if (ret == -1)
+        perror("readlink");
+    else 
+        fill_buffer_color(buff, E_BLUE);
+    free(buff);
+    free(tmp);
+}
+
+
+static void write_file_name(t_file file, int is_exec)
+{
+    fill_buffer_char(' ');
+    if(file.type == SYMLINK)
+        write_symlink(file.name, file.parrent);
+    else if (file.type == DIRECTORY)
+        fill_buffer_color(file.name, E_BLUE);
+    else if (is_exec == 0)
+        fill_buffer_color(file.name, E_GREEN);
+    else
+        fill_buffer(file.name);
+    fill_buffer_char('\n');
+}
+
 void fill_buffer_l_option(t_file file, int *space)
 {   
     char *tmp;
+    int is_exec = 1;
     
     tmp = ft_itoa((int)file.size);
     fill_buffer_char(file.type);
-    putnbr_decimal_to_octal(file.perm);
-    write_nb_link(file.nb_link);
+    putnbr_decimal_to_octal(file.perm, &is_exec);
+    write_nb_link(file.nb_link, space);
     write_user_name(file.user_id, space[0]);
     write_group_name(file.group_id, space[1]);
     insert_space(space[2] - ft_strlen(tmp));
@@ -144,13 +192,9 @@ void fill_buffer_l_option(t_file file, int *space)
     free(tmp);
     fill_buffer_char(' ');
     tmp = get_printable_date(&file.last_change);
-    insert_space(space[3] - ft_strlen(tmp));
     fill_buffer(tmp);
     free(tmp);
-    fill_buffer_char(' ');
-    fill_buffer(file.name);
-    fill_buffer_char(' ');
-    fill_buffer_char('\n');
+    write_file_name(file, is_exec);
 }
 
 static int get_len_size(t_file file)
@@ -197,6 +241,15 @@ static int get_len_date(t_file file)
     return (nb);
 }
 
+static int get_len_nb_link(t_file file)
+{
+    char *tmp = ft_itoa(file.nb_link);
+    int nb = ft_strlen(tmp);
+    free(tmp);
+    return (nb);
+}
+
+
 int get_nb_space(t_list *lst, int(*get_len_info)(t_file))
 {
     t_file *file;
@@ -218,25 +271,18 @@ int get_nb_space(t_list *lst, int(*get_len_info)(t_file))
 int *get_all_space(t_list *lst)
 {
     int *array;
-    int user;
-    int group;
-    int size;
-    int date;
 
-    user = get_nb_space(lst, get_user_name_len);
-    group = get_nb_space(lst, get_group_name_len);
-    size = get_nb_space(lst, get_len_size);
-    date = get_nb_space(lst, get_len_date);
-    array = malloc(sizeof(int )* 4);
+    array = malloc(sizeof(int )* 5);
     if (!array)
     {
         new_lstclear(&lst, free);
         perror("Malloc");
         exit(1);
     }
-    array[0] = user;
-    array[1] = group;
-    array[2] = size;
-    array[3] = date;
+    array[0] = get_nb_space(lst, get_user_name_len);
+    array[1] = get_nb_space(lst, get_group_name_len);
+    array[2] = get_nb_space(lst, get_len_size);
+    array[3] = get_nb_space(lst, get_len_date);
+    array[4] = get_nb_space(lst, get_len_nb_link);
     return (array);
 }

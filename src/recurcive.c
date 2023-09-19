@@ -1,10 +1,10 @@
 #include "../ft_ls.h"
 
-static int create_new_file(struct stat sb, t_list **new, char *str)
+static int create_new_file(struct stat sb, t_list **new, char *str, char *parent)
 {
     t_file *new_file;
     
-    new_file = fill_file_struct(sb, str);
+    new_file = fill_file_struct(sb, str, parent);
     if (!new_file || !new_file->name)
     {
         printf("Malloc error get recurse dir\n");
@@ -22,7 +22,7 @@ static int create_new_file(struct stat sb, t_list **new, char *str)
     return (0);
 }
 
-static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new)
+static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new, char*parent)
 {
     char *str;
     struct stat sb;
@@ -40,7 +40,7 @@ static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new)
         new_lstclear(new, free);
         return (1);
     }
-    if (create_new_file(sb, new, str) == 1)
+    if (create_new_file(sb, new, str, parent) == 1)
     {
         free(str);
         return (1);
@@ -49,7 +49,7 @@ static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new)
     return (0);
 }
 
-static int read_dir(t_file *file, t_list **new, int flag_nb)
+static int read_dir(t_file *file, t_list **new, int flag_nb, char* parent)
 {
     struct dirent *my_dir;
     DIR *dir;
@@ -62,7 +62,7 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
         {
-            if (parse_directory(file, my_dir, new) == 1)
+            if (parse_directory(file, my_dir, new, parent) == 1)
             {
                 closedir(dir);
                 return (1);
@@ -73,12 +73,12 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
     return (0);
 }
 
-t_list *get_recurcive_dir(t_file *file, int flag_nb)
+t_list *get_recurcive_dir(t_file *file, int flag_nb, char* parent)
 {
     t_list *new;
 
     new = NULL;
-    if (file->type != DIRECTORY || read_dir(file, &new, flag_nb) == 1)
+    if (file->type != DIRECTORY || read_dir(file, &new, flag_nb, parent) == 1)
     {
         ft_putstr_fd("Open dir error\n", 2);
         return (NULL);
@@ -99,14 +99,15 @@ void search_recurcive_dir(t_list *dir_lst, int flag_nb)
     t_list *local_list;
 
     local_list = NULL;
+    int lst_len = get_lst_len(dir_lst);
     while(dir_lst)
     {
         t_file *file = dir_lst->content;
         if (flag_nb & L_OPTION)
-            ls_l_one_dir(dir_lst->content, flag_nb);
+            ls_l_one_dir(dir_lst->content, flag_nb, lst_len);
         else
-            ls_one_dir(dir_lst->content, flag_nb);
-        local_list = get_recurcive_dir(file, flag_nb);
+            ls_one_dir(dir_lst->content, flag_nb, lst_len);
+        local_list = get_recurcive_dir(file, flag_nb, file->name);
         if (local_list)
         {
             search_recurcive_dir(local_list, flag_nb);

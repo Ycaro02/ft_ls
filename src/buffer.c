@@ -23,6 +23,31 @@ void fill_buffer(char *str)
     }
 }
 
+void fill_color(enum e_color color)
+{
+    if (color == E_RED)
+        fill_buffer(RED);
+    if (color == E_BLUE)
+        fill_buffer(BLUE);
+    if (color == E_GREEN)
+        fill_buffer(GREEN);
+    if (color == E_YELLOW)
+        fill_buffer(YELLOW);
+    if (color == E_PURPLE)
+        fill_buffer(PURPLE);
+    if (color == E_CYAN)
+        fill_buffer(CYAN);
+}
+
+void fill_buffer_color(char *str, enum e_color color)
+{
+    if (!str)
+        return ;
+    fill_color(color);
+    fill_buffer(str);
+    fill_buffer(RESET);
+}
+
 void fill_buffer_char(char c)
 {
     g_buff.buffer[g_buff.i] = c;

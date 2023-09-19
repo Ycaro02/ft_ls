@@ -11,7 +11,7 @@ static t_file *default_file_struct()
         perror("lstat for current dir");
         return (NULL);
     }
-    file = fill_file_struct(sb, ".");
+    file = fill_file_struct(sb, ".", "..");
     if (!file || !(file->name))
     {
         perror("Malloc Error ft_ls");
@@ -24,7 +24,7 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found)
 {
     t_file *file;
     
-    file = fill_file_struct(sb, str);
+    file = fill_file_struct(sb, str, str);
     if (!file || !file->name)
     {
         printf("Malloc error build file lst args\n");
@@ -99,7 +99,7 @@ static int check_for_fill_struct(t_list **all, struct dirent *my_dir, int flag_n
             free(str);
             return (0);
         }
-        new_file = fill_file_struct(sb, my_dir->d_name);
+        new_file = fill_file_struct(sb, my_dir->d_name, file->name);
         if (!new_file)
             return (1);
         ft_lstadd_back(all, ft_lstnew(new_file));

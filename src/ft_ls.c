@@ -1,21 +1,25 @@
 #include "../ft_ls.h"
 
-void ls_one_dir(t_file *file, int flag_nb)
+void ls_one_dir(t_file *file, int flag_nb, int lst_len)
 {
-    fill_buffer(file->name);
-    fill_buffer(":\n");
+    if (lst_len > 1)
+    {
+        fill_buffer(file->name);
+        fill_buffer(":\n");
+    }
     t_list *lst = get_all_file_struct(file, flag_nb);
     if (!lst)
         return ;
     store_in_buffer(lst, flag_nb);
-    fill_buffer("\n");
 }
 
-static void display_dir_header(t_file file)
+static void display_dir_header(t_file file, int lst_len)
 {
-    fill_buffer_char('\n');
-    fill_buffer(file.name);
-    fill_buffer(":\n");
+    if (lst_len > 1)
+    {
+        fill_buffer(file.name);
+        fill_buffer(":\n");
+    }
     char *total_str = ft_itoa(file.total_size);
     fill_buffer("total ");
     fill_buffer(total_str);
@@ -36,7 +40,7 @@ long long get_total_size(t_list *lst)
     return (total);
 }
 
-void ls_l_one_dir(t_file *file, int flag_nb)
+void ls_l_one_dir(t_file *file, int flag_nb, int lst_len)
 {
     t_list *lst = NULL;
     if (file->type == DIRECTORY)
@@ -46,7 +50,7 @@ void ls_l_one_dir(t_file *file, int flag_nb)
     if (!lst)
         return ;
     file->total_size = get_total_size(lst);
-    display_dir_header(*file);
+    display_dir_header(*file, lst_len);
     t_list *new = NULL;
     if (flag_nb & REVERSE_OPTION)
     {
