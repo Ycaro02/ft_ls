@@ -76,7 +76,10 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
     file->group_id = sb.st_gid;
     file->name = ft_strdup(path);
     file->nb_block = sb.st_blocks;
-    file->parrent = ft_strdup(parent);
+    if(parent)
+        file->parrent = ft_strdup(parent);
+    else
+        file->parrent = NULL;
     return (file);
 }
 
@@ -144,7 +147,10 @@ static void write_symlink(char *path, char *parrent_path)
     buff = ft_calloc(sizeof(char), 200);
     if (!buff)
         return;
-    tmp = join_parent_name(parrent_path, path);
+    if (parrent_path)
+        tmp = join_parent_name(parrent_path, path);
+    else
+        tmp = ft_strjoin(path, "");
     if (!tmp)
     {
         free(buff);

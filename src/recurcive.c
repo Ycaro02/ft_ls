@@ -4,7 +4,8 @@ static int create_new_file(struct stat sb, t_list **new, char *str, char *parent
 {
     t_file *new_file;
     
-    new_file = fill_file_struct(sb, str, parent);
+    (void)parent;
+    new_file = fill_file_struct(sb, str, NULL);
     if (!new_file || !new_file->name)
     {
         printf("Malloc error get recurse dir\n");
@@ -113,6 +114,7 @@ void search_recurcive_dir(t_list *dir_lst, int flag_nb)
             search_recurcive_dir(local_list, flag_nb);
             new_lstclear(&local_list, free);
         }
+            new_lstclear(&local_list, free);
         dir_lst = dir_lst->next;
     }
 }

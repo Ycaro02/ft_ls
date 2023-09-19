@@ -137,7 +137,8 @@ void	new_lstclear(t_list **lst, void (*del)(void*))
 		tmp = current->next;
         t_file *file = current->content;
         del(file->name);
-        del(file->parrent);
+        if (file->parrent)
+            del(file->parrent);
         del(current->content);
 		free(current);
 		current = tmp;
