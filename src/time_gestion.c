@@ -83,7 +83,7 @@ int check_six_month(time_t last_change)
     return (NEW);
 }
 
-char *get_printable_date(time_t *last_change)
+char **get_printable_date(time_t *last_change)
 {
     char *str = ctime(last_change);
     char * new = NULL;
@@ -96,10 +96,13 @@ char *get_printable_date(time_t *last_change)
         if (!new)
             return (NULL);
         remove_last_nchar(new, 3);
-        return (new);
     }
-    new = str_trim_patern(str_trim_patern(str, ' ', 3 , 0), ' ', 1, 1);
+    else
+        new = str_trim_patern(str_trim_patern(str, ' ', 3 , 0), ' ', 1, 1);
     if (!new)
         return (NULL);
-    return (new);
+    char **tab;
+    tab = ft_split(new, ' ');
+    free(new);
+    return (tab);
 }

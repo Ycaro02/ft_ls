@@ -133,7 +133,7 @@ void        write_file_name(t_file file, int is_exec, int option);
 
 
 // time gestion.c
-char        *get_printable_date(time_t *time);
+char        **get_printable_date(time_t *time);
 
 // sort.c
 void        sort_lst(t_list *lst, int flag_nb);

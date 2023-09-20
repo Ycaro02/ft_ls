@@ -186,6 +186,32 @@ void write_file_name(t_file file, int is_exec, int option)
         fill_buffer(" ");
 }
 
+static void write_date(time_t *last_change, int* space)
+{
+    char **tmp;
+    int i;
+    int j;
+    
+    j = 4;
+    i = 0;
+    tmp = NULL;
+    tmp = get_printable_date(last_change);
+    if (!tmp)
+    {
+        perror("Malloc");
+        return ;
+    }
+    while (tmp[i])
+    {
+        insert_space(space[j] - ft_strlen(tmp[i]));
+        fill_buffer(tmp[i]);
+        fill_buffer_char(' ');
+        i++;
+        j++;
+    }
+    free(tmp);
+}
+
 void fill_buffer_l_option(t_file file, int *space)
 {   
     char *tmp;
@@ -197,13 +223,14 @@ void fill_buffer_l_option(t_file file, int *space)
     write_nb_link(file.nb_link, space);
     write_user_name(file.user_id, space[0]);
     write_group_name(file.group_id, space[1]);
+   
     insert_space(space[2] - ft_strlen(tmp));
     fill_buffer(tmp);
     free(tmp);
+   
     fill_buffer_char(' ');
-    tmp = get_printable_date(&file.last_change);
-    fill_buffer(tmp);
-    free(tmp);
+    write_date(&file.last_change, space);
+
     fill_buffer_char(' ');
     write_file_name(file, is_exec, L_OPTION);
 }
@@ -244,13 +271,30 @@ static int get_user_name_len(t_file file)
 }
 
 
-static int get_len_date(t_file file)
+static int get_len_date_month(t_file file)
 {
-    char *tmp = get_printable_date(&file.last_change);
-    int nb = ft_strlen(tmp);
+    char **tmp = get_printable_date(&file.last_change);
+    int nb = ft_strlen(tmp[0]);
     free(tmp);
     return (nb);
 }
+
+static int get_len_date_day(t_file file)
+{
+    char **tmp = get_printable_date(&file.last_change);
+    int nb = ft_strlen(tmp[1]);
+    free(tmp);
+    return (nb);
+}
+
+static int get_len_date_hour(t_file file)
+{
+    char **tmp = get_printable_date(&file.last_change);
+    int nb = ft_strlen(tmp[2]);
+    free(tmp);
+    return (nb);
+}
+
 
 static int get_len_nb_link(t_file file)
 {
@@ -259,7 +303,6 @@ static int get_len_nb_link(t_file file)
     free(tmp);
     return (nb);
 }
-
 
 int get_nb_space(t_list *lst, int(*get_len_info)(t_file))
 {
@@ -283,7 +326,7 @@ int *get_all_space(t_list *lst)
 {
     int *array;
 
-    array = malloc(sizeof(int )* 5);
+    array = malloc(sizeof(int )* 7);
     if (!array)
     {
         new_lstclear(&lst, free);
@@ -293,7 +336,9 @@ int *get_all_space(t_list *lst)
     array[0] = get_nb_space(lst, get_user_name_len);
     array[1] = get_nb_space(lst, get_group_name_len);
     array[2] = get_nb_space(lst, get_len_size);
-    array[3] = get_nb_space(lst, get_len_date);
-    array[4] = get_nb_space(lst, get_len_nb_link);
+    array[3] = get_nb_space(lst, get_len_nb_link);
+    array[4] = get_nb_space(lst, get_len_date_month);
+    array[5] = get_nb_space(lst, get_len_date_day);
+    array[6] = get_nb_space(lst, get_len_date_hour);
     return (array);
 }
