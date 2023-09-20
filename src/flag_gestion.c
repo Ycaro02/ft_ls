@@ -78,6 +78,21 @@ int add_flag(char c, enum e_flag *used)
     return (-1);
 }
 
+static int check_for_add_flag(char *str, enum e_flag *used)
+{
+    int i;
+
+    i = 1;
+    while (str && str[i])
+    {
+        int check = add_flag(str[i], used);
+        if (check == -1)
+            return (1);
+        i++;
+    }  
+    return (0);
+}
+
 enum e_flag *parse_flag(int argc, char **argv, enum e_flag *used)
 {
     int i = 0;
@@ -91,16 +106,10 @@ enum e_flag *parse_flag(int argc, char **argv, enum e_flag *used)
     {
         if (argv[i][0] == '-')
         {
-            int j = 1;
-            // if (argv[i][1] == '\0')
-                // printf("ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
-            while (argv[i] && argv[i][j])
-            {
-                int check = add_flag(argv[i][j], used);
-                if (check == -1)
-                    return (NULL);
-                j++;
-            }
+            if (argv[i][1] == '\0')
+                printf("ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
+            if (check_for_add_flag(argv[i], used) == 1)
+                return (NULL);
         }
         i++;
     }
@@ -112,12 +121,12 @@ enum e_flag *check_for_flag(int argc, char **argv)
     enum e_flag *used = malloc(sizeof(int) * 6);
     if (!used)
     {
-        ft_putstr_fd("Error malloc failed\n", 2);
+        perror("Malloc");
         return (NULL);
     }
     void *flag_ptr = used;
     used = parse_flag(argc, argv, used);
-    if (used == NULL)
+    if (!used)
     {
         free(flag_ptr);
         return (NULL);

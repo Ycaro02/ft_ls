@@ -24,6 +24,7 @@ SRCS	=	src/main.c\
 			src/time_gestion.c\
 			src/sort.c\
 			src/buffer.c\
+			src/manage_space.c\
 
 NAME	= ft_ls
 
@@ -31,9 +32,9 @@ RM	= rm -f
 
 LIBFT = src/libft/libft.a
 
-TEST_NAME = test_name
+# TEST_NAME = test_name
 
-TEST_SRCS = detect_type.c
+# TEST_SRCS = detect_type.c
 
 all:		${NAME}
 
@@ -54,15 +55,15 @@ fclean:		clean
 			@make -s -C src/libft fclean
 			@${RM} ${NAME}
 
-test:
-			@echo " \033[5;36m ----- Compiling libft...  ----- \033[0m\n"
-			@make -s -C src/libft bonus
-			@echo " \033[5;36m ----- Compiling test project...  ----- \033[0m\n"
-			@${CC} $(CFLAGS) $(TEST_SRCS) $(LIBFT) -o $(TEST_NAME)
-			clear
-			./$(TEST_NAME) . ..
-			@make -s -C src/libft fclean
-			@$(RM) $(TEST_NAME) $(LIBFT) 
+# test:
+# 			@echo " \033[5;36m ----- Compiling libft...  ----- \033[0m\n"
+# 			@make -s -C src/libft bonus
+# 			@echo " \033[5;36m ----- Compiling test project...  ----- \033[0m\n"
+# 			@${CC} $(CFLAGS) $(TEST_SRCS) $(LIBFT) -o $(TEST_NAME)
+# 			clear
+# 			./$(TEST_NAME) . ..
+# 			@make -s -C src/libft fclean
+# 			@$(RM) $(TEST_NAME) $(LIBFT) 
 
 re:			fclean all
 

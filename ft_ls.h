@@ -47,6 +47,16 @@ enum e_flag  {
     R_OPTION=16,
 };
 
+enum e_space  {
+    S_USER,
+    S_GROUP,
+    S_SIZE,
+    S_LINK,
+    S_MONTH,
+    S_DAY,
+    S_HOUR,
+};
+
 enum e_color  {
     E_RED,
     E_GREEN,
@@ -80,17 +90,7 @@ typedef struct s_buff
 extern t_buff g_buff;
 
 // TODO -t :
-//  -- fix don't list empty dir
-// for get space -l need to separate date date with 3 separate colum and count for each
 // refactor str_trim_pattern
-
-//  -sort function by change_time (newer first)
-// Check flag order ()
-//      - a : ( done ) ( toBeChecked )
-//      - t : ( done ), need to check 6 month 
-//      - r : ( done )
-//      - R : ( done )
-//      - l :  ( done )
 
 /////////////////////////////
 #include <stdio.h>///////////
@@ -106,6 +106,7 @@ int         last_char_is_slash(char *str);
 void	    new_lstclear(t_list **lst, void (*del)(void*));
 char        *join_parent_name(char* parent_name, char* path);
 void        display_file_lst(t_list *lst);
+void        free_tab(char **tab);
 
 // flag_gestion.c
 int         get_flag(enum e_flag *flag);

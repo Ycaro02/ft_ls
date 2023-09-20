@@ -21,15 +21,63 @@ static void fill_buffer_perm(char c, int *is_exec)
     fill_buffer_char(x);
 }
 
-static void putnbr_decimal_to_octal(int nbr, int *is_exec)
+// static void putnbr_decimal_to_octal(int nbr, int *is_exec)
+// {
+//         int             b_size = 8;
+//         long int        n = nbr;
+//         char            *base = "01234567";
+
+//         if (n / b_size != 0)
+//                 putnbr_decimal_to_octal(n / b_size, is_exec);
+//         fill_buffer_perm(base[n % b_size], is_exec);
+// }
+
+static void convert(char* perm, int nbr, int index)
 {
         int             b_size = 8;
         long int        n = nbr;
         char            *base = "01234567";
 
+        index -= 1;
         if (n / b_size != 0)
-                putnbr_decimal_to_octal(n / b_size, is_exec);
-        fill_buffer_perm(base[n % b_size], is_exec);
+            convert(perm, n / b_size, index);
+        perm[index] = base[n % b_size];
+}
+
+
+static char *remove_char(char *str, char c)
+{
+    int i = 0;
+    char* tmp;
+
+    while (str && str[i] && str[i] == c)
+        i++;
+    if (i < 3 && i != 0)
+    {
+        tmp = ft_strdup(&str[i]);
+        if (!tmp)
+            return (NULL);
+        free(str);
+    }
+    else
+        tmp = NULL;
+    return (tmp);
+}
+
+static char *get_perm(int nbr)
+{
+    char *perm;
+
+    perm = malloc(sizeof(char) * 4);
+    perm[0] = '8'; 
+    perm[1] = '8'; 
+    perm[2] = '8'; 
+    perm[3] = '\0';
+    convert(perm, nbr, 3);
+    char *tmp = remove_char(perm, '8');
+    if (tmp)
+        return (tmp);
+    return (perm);
 }
 
 char get_type(struct stat sb)
@@ -56,6 +104,22 @@ char get_type(struct stat sb)
     return (UNDIFINED);
 }
 
+static int fill_name_and_parent(t_file *file, char *path, char *parent)
+{
+    file->name = ft_strdup(path);
+    if (!file->name)
+        return (1);
+    if (parent)
+    {
+        file->parrent = ft_strdup(parent);
+        if (!file->parrent)
+            return (1);
+    }
+    else
+        file->parrent = NULL;
+    return (0);
+}
+
 t_file *fill_file_struct(struct stat sb, char *path, char *parent)
 {
     t_file *file;
@@ -74,12 +138,9 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
     file->last_change = sb.st_mtime;
     file->user_id = sb.st_uid;
     file->group_id = sb.st_gid;
-    file->name = ft_strdup(path);
     file->nb_block = sb.st_blocks;
-    if(parent)
-        file->parrent = ft_strdup(parent);
-    else
-        file->parrent = NULL;
+    if (fill_name_and_parent(file, path, parent) == 1)
+        return (NULL);
     return (file);
 }
 
@@ -127,47 +188,43 @@ static void write_group_name(long group_id, int space)
     fill_buffer_char(' ');
 }
 
-static void write_nb_link(long long nb_link, int *space)
+static void write_nb_link(long long nb_link, int space)
 {
     fill_buffer_char(' ');
     char *tmp = ft_itoa((int)nb_link);
-    insert_space(space[4] - ft_strlen(tmp));
+    insert_space(space - ft_strlen(tmp));
     fill_buffer(tmp);
     free(tmp);
     fill_buffer_char(' ');
 }
 
 
-static void write_symlink(char *path, char *parrent_path, int option)
+static int write_symlink(char *path, char *parrent_path, int option)
 {
-    char    *buff;
+    char    buff[200];
     char    *tmp;
-    int     ret;
 
-    buff = ft_calloc(sizeof(char), 200);
-    if (!buff)
-        return;
-    if (parrent_path)
-        tmp = join_parent_name(parrent_path, path);
-    else
-        tmp = ft_strjoin(path, "");
-    if (!tmp)
-    {
-        free(buff);
-        return ;
-    }
     fill_buffer_color(path, E_CYAN);
     if (option == L_OPTION)
     {
+        if (parrent_path)
+            tmp = join_parent_name(parrent_path, path);
+        else
+            tmp = ft_strjoin(path, "");
+        if (!tmp)
+            return (1);
         fill_buffer(" -> ");
-        ret = readlink(tmp, buff, 199);
+        int ret = readlink(tmp, buff, 199);
         if (ret == -1)
             perror("readlink");
         else 
-            fill_buffer_color(buff, E_BLUE);
+        {
+            buff[ret] = '\0'; 
+            fill_buffer(buff);
+        }
+        free(tmp);
     }
-    free(buff);
-    free(tmp);
+    return (0);
 }
 
 void write_file_name(t_file file, int is_exec, int option)
@@ -192,7 +249,7 @@ static void write_date(time_t *last_change, int* space)
     int i;
     int j;
     
-    j = 4;
+    j = S_MONTH;
     i = 0;
     tmp = NULL;
     tmp = get_printable_date(last_change);
@@ -209,6 +266,24 @@ static void write_date(time_t *last_change, int* space)
         i++;
         j++;
     }
+    free_tab(tmp);
+}
+
+static void write_perm(t_file file, int *is_exec)
+{
+    char *tmp;
+    tmp = get_perm(file.perm);
+    int len = ft_strlen(tmp);
+    if (len == 1)
+        fill_buffer("------");
+    else if (len == 2)
+        fill_buffer("---");
+    int i = 0;
+    while (tmp && tmp[i])
+    {
+        fill_buffer_perm(tmp[i], is_exec);
+        i++;
+    }
     free(tmp);
 }
 
@@ -217,128 +292,17 @@ void fill_buffer_l_option(t_file file, int *space)
     char *tmp;
     int is_exec = 1;
     
-    tmp = ft_itoa((int)file.size);
     fill_buffer_char(file.type);
-    putnbr_decimal_to_octal(file.perm, &is_exec);
-    write_nb_link(file.nb_link, space);
-    write_user_name(file.user_id, space[0]);
-    write_group_name(file.group_id, space[1]);
-   
-    insert_space(space[2] - ft_strlen(tmp));
+    write_perm(file, &is_exec);
+    write_nb_link(file.nb_link, space[S_LINK]);
+    write_user_name(file.user_id, space[S_USER]);
+    write_group_name(file.group_id, space[S_GROUP]);
+    tmp = ft_itoa((int)file.size);
+    insert_space(space[S_SIZE] - ft_strlen(tmp));
     fill_buffer(tmp);
     free(tmp);
-   
     fill_buffer_char(' ');
     write_date(&file.last_change, space);
-
     fill_buffer_char(' ');
     write_file_name(file, is_exec, L_OPTION);
-}
-
-static int get_len_size(t_file file)
-{
-    char    *tmp;
-    int     max;
-
-    tmp = ft_itoa((int)file.size);
-    max = ft_strlen(tmp);
-    free(tmp);
-    return (max);
-}
-
-static int get_group_name_len(t_file file)
-{
-    struct group* group = getgrgid(file.group_id);
-    if (!group)
-    {
-        perror("getgrgid");
-        return (-1);
-    }
-    int nb = ft_strlen(group->gr_name);
-    return (nb);
-}
-
-static int get_user_name_len(t_file file)
-{
-    struct passwd* user = getpwuid(file.user_id);
-    if (!user)
-    {
-        perror("getpwuid");
-        return (-1);
-    }
-    int nb = ft_strlen(user->pw_name);
-    return (nb);
-}
-
-
-static int get_len_date_month(t_file file)
-{
-    char **tmp = get_printable_date(&file.last_change);
-    int nb = ft_strlen(tmp[0]);
-    free(tmp);
-    return (nb);
-}
-
-static int get_len_date_day(t_file file)
-{
-    char **tmp = get_printable_date(&file.last_change);
-    int nb = ft_strlen(tmp[1]);
-    free(tmp);
-    return (nb);
-}
-
-static int get_len_date_hour(t_file file)
-{
-    char **tmp = get_printable_date(&file.last_change);
-    int nb = ft_strlen(tmp[2]);
-    free(tmp);
-    return (nb);
-}
-
-
-static int get_len_nb_link(t_file file)
-{
-    char *tmp = ft_itoa(file.nb_link);
-    int nb = ft_strlen(tmp);
-    free(tmp);
-    return (nb);
-}
-
-int get_nb_space(t_list *lst, int(*get_len_info)(t_file))
-{
-    t_file *file;
-    t_list *current = lst;
-    int max = -1;
-
-    file = NULL;
-    while (current)
-    {
-        file = current->content;
-        int tmp = get_len_info(*file);
-        if (tmp > max)
-            max = tmp;
-        current = current->next;
-    }
-    return (max);
-}
-
-int *get_all_space(t_list *lst)
-{
-    int *array;
-
-    array = malloc(sizeof(int )* 7);
-    if (!array)
-    {
-        new_lstclear(&lst, free);
-        perror("Malloc");
-        exit(1);
-    }
-    array[0] = get_nb_space(lst, get_user_name_len);
-    array[1] = get_nb_space(lst, get_group_name_len);
-    array[2] = get_nb_space(lst, get_len_size);
-    array[3] = get_nb_space(lst, get_len_nb_link);
-    array[4] = get_nb_space(lst, get_len_date_month);
-    array[5] = get_nb_space(lst, get_len_date_day);
-    array[6] = get_nb_space(lst, get_len_date_hour);
-    return (array);
 }
