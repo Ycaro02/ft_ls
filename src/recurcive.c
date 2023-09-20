@@ -81,7 +81,7 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb, char* parent)
     new = NULL;
     if (file->type != DIRECTORY || read_dir(file, &new, flag_nb, parent) == 1)
     {
-        ft_putstr_fd("Open dir error\n", 2);
+        perror(file->name);
         return (NULL);
     }
     sort_lst(new, flag_nb);

@@ -70,7 +70,8 @@ void store_in_buffer(t_list *lst, int flag_nb)
     while (current)
     {
         t_file *file = current->content;
-        fill_buffer(file->name);
+        // fill_buffer(file->name);
+        write_file_name(*file, 1, 0);
         if (current->next)
             fill_buffer("  ");
         current = current->next;

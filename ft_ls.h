@@ -81,6 +81,8 @@ extern t_buff g_buff;
 
 // TODO -t :
 //  -- fix don't list empty dir
+// for get space -l need to separate date date with 3 separate colum and count for each
+// refactor str_trim_pattern
 
 //  -sort function by change_time (newer first)
 // Check flag order ()
@@ -127,6 +129,7 @@ t_file      *fill_file_struct(struct stat sb, char *path, char* parent);
 void        fill_buffer_l_option(t_file file, int* space);
 void        display_file_struct(t_file file);
 int			*get_all_space(t_list *lst);
+void        write_file_name(t_file file, int is_exec, int option);
 
 
 // time gestion.c

@@ -138,7 +138,7 @@ static void write_nb_link(long long nb_link, int *space)
 }
 
 
-static void write_symlink(char *path, char *parrent_path)
+static void write_symlink(char *path, char *parrent_path, int option)
 {
     char    *buff;
     char    *tmp;
@@ -157,29 +157,33 @@ static void write_symlink(char *path, char *parrent_path)
         return ;
     }
     fill_buffer_color(path, E_CYAN);
-    fill_buffer(" -> ");
-     ret = readlink(tmp, buff, 199);
-    if (ret == -1)
-        perror("readlink");
-    else 
-        fill_buffer_color(buff, E_BLUE);
+    if (option == L_OPTION)
+    {
+        fill_buffer(" -> ");
+        ret = readlink(tmp, buff, 199);
+        if (ret == -1)
+            perror("readlink");
+        else 
+            fill_buffer_color(buff, E_BLUE);
+    }
     free(buff);
     free(tmp);
 }
 
-
-static void write_file_name(t_file file, int is_exec)
+void write_file_name(t_file file, int is_exec, int option)
 {
-    fill_buffer_char(' ');
     if(file.type == SYMLINK)
-        write_symlink(file.name, file.parrent);
+        write_symlink(file.name, file.parrent, option);
     else if (file.type == DIRECTORY)
         fill_buffer_color(file.name, E_BLUE);
     else if (is_exec == 0)
         fill_buffer_color(file.name, E_GREEN);
     else
         fill_buffer(file.name);
-    fill_buffer_char('\n');
+    if (option == L_OPTION)
+        fill_buffer_char('\n');
+    else
+        fill_buffer(" ");
 }
 
 void fill_buffer_l_option(t_file file, int *space)
@@ -200,7 +204,8 @@ void fill_buffer_l_option(t_file file, int *space)
     tmp = get_printable_date(&file.last_change);
     fill_buffer(tmp);
     free(tmp);
-    write_file_name(file, is_exec);
+    fill_buffer_char(' ');
+    write_file_name(file, is_exec, L_OPTION);
 }
 
 static int get_len_size(t_file file)
