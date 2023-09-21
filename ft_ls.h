@@ -66,6 +66,13 @@ enum e_color  {
     E_CYAN,
 };
 
+enum e_error {
+    ANY_ERR,
+    NO_ACCESS_ERR,
+    NA_CMD_LINE_ERR,
+    MALLOC_ERR,
+};
+
 typedef struct s_file 
 {
     char        type;
@@ -114,8 +121,8 @@ enum e_flag *check_for_flag(int argc, char **argv);
 
 // parse.c
 t_list      *get_all_file_name(const char *directory_name, int flag_nb);
-t_list      *get_dir_args(char **argv);
 t_list      *get_all_file_struct(t_file *file, int flag_nb);
+t_list      *get_dir_args(char **argv, int *error);
 
 // ft_ls.c
 void        ls_l_one_dir(t_file *file, int flag_nb, int lst_len);

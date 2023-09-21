@@ -36,6 +36,7 @@ static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new, ch
     }
     if (lstat(str, &sb) == -1)
     {
+        ft_putstr_fd("ft_ls: cannot access directory : ", 2);
         perror(str);
         free(str);
         new_lstclear(new, free);
@@ -81,6 +82,7 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb, char* parent)
     new = NULL;
     if (file->type != DIRECTORY || read_dir(file, &new, flag_nb, parent) == 1)
     {
+        ft_putstr_fd("ft_ls: cannot open directory : ", 2);
         perror(file->name);
         return (NULL);
     }

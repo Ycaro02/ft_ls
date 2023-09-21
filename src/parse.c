@@ -43,13 +43,15 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found)
 }
 
 
-static int check_args(char *str, t_list **new, int *found)
+static int check_args(char *str, t_list **new, int *found, int *error)
 {
     struct stat sb;
 
     if (lstat(str, &sb) == -1)
     {
         *found = 1;
+        *error = NA_CMD_LINE_ERR;
+        ft_putstr_fd("in check args perror : ft_ls error : ", 2);
         perror(str);
         return (0);
     }
@@ -58,7 +60,7 @@ static int check_args(char *str, t_list **new, int *found)
     return (0);
 }
 
-t_list *get_dir_args(char **argv)
+t_list *get_dir_args(char **argv, int *error)
 {
     int i;
     t_list *new;
@@ -71,7 +73,7 @@ t_list *get_dir_args(char **argv)
     {
         if (argv[i][0] != '-')
         {
-            if (check_args(argv[i], &new, &found) == 1)
+            if (check_args(argv[i], &new, &found, error) == 1)
                 return (NULL);
         }
         i++;
@@ -95,6 +97,7 @@ static int check_for_fill_struct(t_list **all, struct dirent *my_dir, int flag_n
             return (1);
         if (lstat(str, &sb) == -1)
         {
+            ft_putstr_fd("in check for fill struct perror : ls: cannot open directory : ", 2);
             perror(str);
             free(str);
             return (0);
@@ -118,7 +121,7 @@ t_list* get_all_file_struct(t_file *file, int flag_nb)
     do 
     {
         my_dir = readdir(dir);
-        if (check_for_fill_struct(&all, my_dir, flag_nb, file) == 1)
+        if (!my_dir || check_for_fill_struct(&all, my_dir, flag_nb, file) == 1)
             return (NULL);
     } while (my_dir != NULL);
     closedir(dir);

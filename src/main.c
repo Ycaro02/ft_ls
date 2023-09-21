@@ -13,11 +13,12 @@ void ls(t_list * lst, int flag_nb,  void (*ls_function)(t_file*, int, int))
     }
 }
 
-void ft_ls(char **argv, int flag_nb)
+void ft_ls(char **argv, int flag_nb, int *error)
 {
     t_list *dir_lst;
     
-    dir_lst = get_dir_args(&argv[1]);
+
+    dir_lst = get_dir_args(&argv[1], error);
     if (!dir_lst)
         return ;
     sort_lst(dir_lst, flag_nb);
@@ -40,12 +41,15 @@ void ft_ls(char **argv, int flag_nb)
 
 int main (int argc, char** argv)
 {
-    (void)argc;
+    int error;
+    int flag_nb;
+
+    error = 0;
     enum e_flag *flag = check_for_flag(argc, argv);
     if (!flag)
         return(2);
-    int flag_nb = get_flag(flag);
+    flag_nb = get_flag(flag);
     free(flag);
-    ft_ls(argv, flag_nb);
+    ft_ls(argv, flag_nb, &error);
     return (0);
 }
