@@ -38,6 +38,9 @@ SRC =	ft_memset.c \
 		ft_strjoin_free.c \
 		ft_lower_strcmp.c \
 		ft_strcmp.c \
+		printf_fd/ft_intfunction.c \
+		printf_fd/ft_printf.c \
+		printf_fd/ft_put_and_count.c \
 
 BONUS = ft_lstnew.c \
 		ft_lstadd_front.c \

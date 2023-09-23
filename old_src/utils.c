@@ -1,22 +1,5 @@
 #include "../include/ft_ls.h"
 
-void update_error(int *error)
-{
-     if (*error != NA_CMD_LINE_ERR)
-        *error = NO_ACCESS_ERR;
-}
-
-int print_error(char *msg, char* str, int error_type, int use_perror)
-{
-    if (use_perror == 0)
-        perror(msg);
-    else
-        ft_putstr_fd(msg, 2);
-    if (str)
-        ft_putstr_fd(str, 2);
-    return (error_type);
-}
-
 int get_lst_len(t_list *lst)
 {
     int i;

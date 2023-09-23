@@ -2,6 +2,7 @@
 
 t_buff g_buff;
 
+
 void ls(t_list * lst, int flag_nb,  void (*ls_function)(t_file*, int, int))
 {
     t_list *current = lst;
@@ -13,33 +14,52 @@ void ls(t_list * lst, int flag_nb,  void (*ls_function)(t_file*, int, int))
     }
 }
 
-void ft_ls(char **argv, int flag_nb, int *error)
+void call_ls(t_list *dir_lst, int flag_nb, int *error)
 {
-    t_list *dir_lst;
-    
-
-    dir_lst = get_dir_args(&argv[1], error);
-    if (!dir_lst)
-        return ;
-    sort_lst(dir_lst, flag_nb);
-    t_list *new = NULL;
-    if (flag_nb & REVERSE_OPTION)
-    {
-        reverse_lst(dir_lst, &new);
-        free_node_ptr(&dir_lst);
-        dir_lst = new;
-    }
+    int err = 0;
     if (flag_nb & R_OPTION)
-        search_recurcive_dir(dir_lst, flag_nb);
+        err = search_recurcive_dir(dir_lst, flag_nb, error);
     else if (flag_nb & L_OPTION)
         ls(dir_lst, flag_nb, ls_l_one_dir);
     else
         ls(dir_lst, flag_nb, ls_one_dir);
-    finish_print_buffer();
     new_lstclear(&dir_lst, free);
+    if (err == MALLOC_ERR)
+    {
+        ft_printf_fd(2, "Malloc error exit\n");
+        exit(MALLOC_ERR);
+    }
+    finish_print_buffer();
 }
 
-int main (int argc, char** argv)
+int ft_ls(char **argv, int flag_nb, int* error)
+{
+    t_list *dir_lst;
+    t_list *new;
+    
+    new = NULL;
+    dir_lst = get_dir_args(&argv[1], error);
+    if (!dir_lst)
+        return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
+    sort_lst(dir_lst, flag_nb);
+    if (!dir_lst)
+        return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
+    if (flag_nb & REVERSE_OPTION)
+    {
+        reverse_lst(dir_lst, &new);
+        if (!new)
+        {
+            new_lstclear(&dir_lst, free);
+            return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
+        }
+        free_node_ptr(&dir_lst);
+        dir_lst = new;
+    }
+    call_ls(dir_lst, flag_nb, error);
+    return (*error);
+}
+
+int main (int argc, char **argv)
 {
     int error;
     int flag_nb;
@@ -47,9 +67,9 @@ int main (int argc, char** argv)
     error = 0;
     enum e_flag *flag = check_for_flag(argc, argv);
     if (!flag)
-        return(2);
+        return(MALLOC_ERR);
     flag_nb = get_flag(flag);
     free(flag);
     ft_ls(argv, flag_nb, &error);
-    return (0);
+    return (error);
 }

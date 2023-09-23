@@ -44,6 +44,8 @@ extern t_buff g_buff;
 /////////////////////////////
 
 // utils.c
+void        update_error(int *error);
+int         print_error(char *msg, char* str, int error_type, int use_perror);
 int         get_lst_len(t_list *lst);
 int         is_point_dir(char *path, int flag_nb);
 int         last_char_is_slash(char *str);
@@ -65,7 +67,7 @@ void        ls_l_one_dir(t_file *file, int flag_nb, int lst_len);
 void        ls_one_dir(t_file *file, int flag_nb, int lst_len);
 
 // recurcive.c
-void        search_recurcive_dir(t_list *dir_lst, int flag_nb);
+int        search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error);
 
 // l_options.c
 char        get_type(struct stat sb);

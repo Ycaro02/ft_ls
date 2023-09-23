@@ -39,6 +39,17 @@ int flag_already_add(char c, enum e_flag *used)
     return (0);
 }
 
+static void put_flag_error(char c)
+{
+    char cc[2];
+    
+    cc[0] = c;
+    cc[1] = '\0';
+    ft_putstr_fd("\nft_ls: unrecognized option ", 2);
+    ft_putstr_fd(cc, 2);
+    ft_putstr_fd("\n", 2);
+}
+
 static enum e_flag fill_used_flag(enum e_flag *tab, enum e_flag flag)
 {
     int i = 0;
@@ -63,7 +74,7 @@ int add_flag(char c, enum e_flag *used)
         return (fill_used_flag(used, A_OPTION));
     else if (c == T_FLAG_CHAR)
         return (fill_used_flag(used, T_OPTION));
-    ft_printf_fd(2, "ft_ls: unrecognized option %c\n", c);
+    put_flag_error(c);
     return (-1);
 }
 
@@ -96,7 +107,7 @@ enum e_flag *parse_flag(int argc, char **argv, enum e_flag *used)
         if (argv[i][0] == '-')
         {
             if (argv[i][1] == '\0')
-                ft_printf_fd(2, "ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
+                printf("ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
             if (check_for_add_flag(argv[i], used) == 1)
                 return (NULL);
         }

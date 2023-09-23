@@ -8,13 +8,13 @@ static t_file *default_file_struct()
     file = NULL;
     if (lstat(".", &sb) == -1)
     {
-        perror("ft_ls lstat");
+        perror("lstat for current dir");
         return (NULL);
     }
     file = fill_file_struct(sb, ".", "..");
     if (!file || !(file->name))
     {
-        perror("Malloc");
+        perror("Malloc Error ft_ls");
         return (NULL);
     }
     return (file);
@@ -27,15 +27,15 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found)
     file = fill_file_struct(sb, str, str);
     if (!file || !file->name)
     {
-        perror("Malloc");
-        return (MALLOC_ERR);
+        printf("Malloc error build file lst args\n");
+        return (1);
     }
     if (file->type == DIRECTORY)
         ft_lstadd_back(new, ft_lstnew(file));
     else
     {
         *found = 1;
-        ft_printf_fd(1, "%s\n", str);
+        printf("%s\n", str);
         free(file->name);
         free(file);
     }
@@ -55,8 +55,8 @@ static int check_args(char *str, t_list **new, int *found, int *error)
         perror(str);
         return (0);
     }
-    if (build_file_lst(sb, str, new, found) == MALLOC_ERR)
-        return (MALLOC_ERR);
+    if (build_file_lst(sb, str, new, found) == 1)
+        return (1);
     return (0);
 }
 
@@ -73,7 +73,7 @@ t_list *get_dir_args(char **argv, int *error)
     {
         if (argv[i][0] != '-')
         {
-            if (check_args(argv[i], &new, &found, error) == MALLOC_ERR)
+            if (check_args(argv[i], &new, &found, error) == 1)
                 return (NULL);
         }
         i++;
