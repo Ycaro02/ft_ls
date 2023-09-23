@@ -37,7 +37,10 @@ typedef struct s_buff
 extern t_buff g_buff;
 
 // TODO -t :
-// refactor str_trim_pattern
+// refactor str_trim_pattern //
+// in fill_l_buffer/fill_buffer_loption: 
+//                 - change return type for check malloc error //
+//                  - maybe last malloc check
 
 /////////////////////////////
 #include <stdio.h>///////////
