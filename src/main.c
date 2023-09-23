@@ -2,7 +2,6 @@
 
 t_buff g_buff;
 
-
 int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), int* error)
 {
     t_list *current = lst;
@@ -39,9 +38,7 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error)
 int ft_ls(char **argv, int flag_nb, int* error)
 {
     t_list *dir_lst;
-    t_list *new;
     
-    new = NULL;
     dir_lst = get_dir_args(&argv[1], error);
     if (!dir_lst)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
@@ -50,14 +47,11 @@ int ft_ls(char **argv, int flag_nb, int* error)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
     if (flag_nb & REVERSE_OPTION)
     {
-        reverse_lst(dir_lst, &new);
-        if (!new)
+        if (safe_reverse_lst(&dir_lst, error) == MALLOC_ERR)
         {
             new_lstclear(&dir_lst, free);
             return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
         }
-        free_node_ptr(&dir_lst);
-        dir_lst = new;
     }
     call_ls(dir_lst, flag_nb, error);
     return (*error);

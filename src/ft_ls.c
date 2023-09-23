@@ -2,8 +2,6 @@
 
 int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 {
-    (void)error;
-
     if (lst_len > 1)
     {
         fill_buffer(file->name);
@@ -14,11 +12,12 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
         return (0);
     if (!lst && *error == MALLOC_ERR)
         return (MALLOC_ERR);
-    store_in_buffer(lst, flag_nb);
+    if (store_in_buffer(lst, flag_nb) == MALLOC_ERR)
+        return (MALLOC_ERR);
     return (0);
 }
 
-static void display_dir_header(t_file file, int lst_len)
+static int display_dir_header(t_file file, int lst_len)
 {
     if (lst_len > 1)
     {
@@ -26,10 +25,13 @@ static void display_dir_header(t_file file, int lst_len)
         fill_buffer(":\n");
     }
     char *total_str = ft_itoa(file.total_size);
+    if (!total_str)
+        return (MALLOC_ERR);
     fill_buffer("total ");
     fill_buffer(total_str);
     fill_buffer("\n");
     free(total_str);
+    return (0);
 }
 
 long long get_total_size(t_list *lst)
@@ -47,9 +49,6 @@ long long get_total_size(t_list *lst)
 
 int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 {
-    (void)error;
-
-
     t_list *lst = NULL;
     if (file->type == DIRECTORY)
       lst = get_all_file_struct(file, flag_nb, error);
@@ -60,26 +59,12 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
     if (!lst && *error == MALLOC_ERR)
         return (MALLOC_ERR);
     file->total_size = get_total_size(lst);
-    display_dir_header(*file, lst_len);
-    t_list *new = NULL;
-    if (flag_nb & REVERSE_OPTION)
-    {
-        reverse_lst(lst, &new);
-        if (!new)
-            return (MALLOC_ERR);
-        free_node_ptr(&lst);
-        lst = new;
-    }
-    t_list *current = lst;
-    int *space = get_all_space(current);
-    if (!space)
+    if (display_dir_header(*file, lst_len) == MALLOC_ERR)
         return (MALLOC_ERR);
-    while (current)
-    {
-        fill_buffer_l_option(*(t_file *)current->content, space); // change to int return for malloc check
-        current = current->next;
-    }
-    free(space);
-    new_lstclear(&lst, free);
+    if (flag_nb & REVERSE_OPTION)
+        if (safe_reverse_lst(&lst, error) == MALLOC_ERR)
+            return (MALLOC_ERR);
+    if (fill_l_buffer(lst) == MALLOC_ERR)
+        return (MALLOC_ERR);
     return (0);
 }

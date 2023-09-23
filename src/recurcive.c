@@ -49,7 +49,9 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
 {
     struct dirent *my_dir;
     DIR *dir;
+    int ret;
 
+    ret = 0;
     dir = opendir(file->name);
     if (!dir)
         return (print_error("Opendir error\n", NULL, 1, 1));
@@ -58,16 +60,13 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
         {
-            int ret = parse_directory(file, my_dir, new);
+            ret = parse_directory(file, my_dir, new);
             if (ret != 0)
-            {
-                closedir(dir);
-                return (ret);
-            }
+                break;
         }
     } while (my_dir != NULL);
     closedir(dir);
-    return (0);
+    return (ret);
 }
 
 t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
@@ -91,15 +90,8 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
     sort_lst(new, flag_nb);
     if (new && flag_nb & REVERSE_OPTION)
     {
-        t_list *reverse = NULL;
-        reverse_lst(new, &reverse);
-        if (!reverse)
-        {
-            *error = MALLOC_ERR;
+        if (safe_reverse_lst(&new, error) == MALLOC_ERR)
             return (NULL);
-        }
-        free_node_ptr(&new);
-        new = reverse;
     }
     return (new);
 }

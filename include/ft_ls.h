@@ -82,13 +82,15 @@ char        **get_printable_date(time_t *time);
 // sort.c
 void        sort_lst(t_list *lst, int flag_nb);
 void        free_node_ptr(t_list **lst);
-void        reverse_lst(t_list *lst, t_list **new);
+int         safe_reverse_lst(t_list **lst,  int* error);
+
 
 // buffer.c
 void        fill_buffer(char *str);
+int         fill_l_buffer(t_list *lst);
 void        fill_buffer_char(char c);
 void        fill_buffer_color(char *str, enum e_color color);
-void        store_in_buffer(t_list *lst, int flag_nb);
+int         store_in_buffer(t_list *lst, int flag_nb);
 void        print_and_clear();
 void        finish_print_buffer();
 

@@ -18,7 +18,7 @@ void free_node_ptr(t_list **lst)
 	*lst = NULL;
 }
 
-void reverse_lst(t_list *lst, t_list **new)
+static void reverse_lst(t_list *lst, t_list **new)
 {
     t_list *current;
 
@@ -28,6 +28,21 @@ void reverse_lst(t_list *lst, t_list **new)
         ft_lstadd_front(new, ft_lstnew(current->content));
         current = current->next; 
     }
+}
+
+int safe_reverse_lst(t_list **lst,  int* error)
+{
+    t_list *reverse = NULL;
+    reverse_lst(*lst, &reverse);
+    if (!reverse)
+    {
+        if (error)
+            *error = MALLOC_ERR;
+        return (MALLOC_ERR);
+    }
+    free_node_ptr(lst);
+    *lst = reverse;
+    return (0);
 }
 
 void sort_by_name(t_list *lst, int flag_nb)
