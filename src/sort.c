@@ -1,4 +1,4 @@
-#include "../ft_ls.h"
+#include "../include/ft_ls.h"
 
 void free_node_ptr(t_list **lst)
 {
@@ -42,7 +42,7 @@ void sort_by_name(t_list *lst, int flag_nb)
             min = lst;
         t_file *current = (t_file *)lst->content;
         t_file *min_file = (t_file *)min->content;
-        if (lower_strcmp(current->name, min_file->name) < 0)
+        if (ft_lower_strcmp(current->name, min_file->name) < 0)
             min = lst;
         lst = lst->next;
     }

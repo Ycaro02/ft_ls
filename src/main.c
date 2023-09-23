@@ -1,4 +1,4 @@
-#include "../ft_ls.h"
+#include "../include/ft_ls.h"
 
 t_buff g_buff;
 

@@ -1,4 +1,4 @@
-#include "../ft_ls.h"
+#include "../include/ft_ls.h"
 
 static int get_len_size(t_file file)
 {
@@ -40,7 +40,7 @@ static int get_len_date_month(t_file file)
 {
     char **tmp = get_printable_date(&file.last_change);
     int nb = ft_strlen(tmp[0]);
-    free_tab(tmp);
+    ft_free_tab(tmp);
     return (nb);
 }
 
@@ -48,7 +48,7 @@ static int get_len_date_day(t_file file)
 {
     char **tmp = get_printable_date(&file.last_change);
     int nb = ft_strlen(tmp[1]);
-    free_tab(tmp);
+    ft_free_tab(tmp);
     return (nb);
 }
 
@@ -56,7 +56,7 @@ static int get_len_date_hour(t_file file)
 {
     char **tmp = get_printable_date(&file.last_change);
     int nb = ft_strlen(tmp[2]);
-    free_tab(tmp);
+    ft_free_tab(tmp);
     return (nb);
 }
 

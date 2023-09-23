@@ -1,4 +1,4 @@
-#include "../ft_ls.h"
+#include "../include/ft_ls.h"
 
 
 static void fill_buffer_perm(char c, int *is_exec)
@@ -266,7 +266,7 @@ static void write_date(time_t *last_change, int* space)
         i++;
         j++;
     }
-    free_tab(tmp);
+    ft_free_tab(tmp);
 }
 
 static void write_perm(t_file file, int *is_exec)

@@ -1,4 +1,4 @@
-#include "../ft_ls.h"
+#include "../include/ft_ls.h"
 
 
 void    print_and_clear()

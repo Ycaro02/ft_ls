@@ -1,4 +1,4 @@
-#include "../ft_ls.h"
+#include "../include/ft_ls.h"
 
 void ls_one_dir(t_file *file, int flag_nb, int lst_len)
 {

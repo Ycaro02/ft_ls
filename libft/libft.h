@@ -50,6 +50,7 @@ char	**ft_split(char const *str, char c);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strdup(const char *s);
 char	*ft_itoa(int n);
+char	*ft_ltoa(long n);
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
@@ -65,5 +66,11 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *));
 void	ft_lstclear(t_list **lst, void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+void 		ft_free_tab(char **tab);
+char        *ft_strjoin_free(char *s1, char *s2, char option);
+int 		ft_lower_strcmp(char *s1, char *s2);
+int 		ft_strcmp(char *s1, char *s2);
+
 
 #endif

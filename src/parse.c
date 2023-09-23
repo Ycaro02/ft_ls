@@ -1,4 +1,4 @@
-#include "../ft_ls.h"
+#include "../include/ft_ls.h"
 
 static t_file *default_file_struct()
 {
@@ -121,7 +121,7 @@ t_list* get_all_file_struct(t_file *file, int flag_nb)
     do 
     {
         my_dir = readdir(dir);
-        if (!my_dir || check_for_fill_struct(&all, my_dir, flag_nb, file) == 1)
+        if (check_for_fill_struct(&all, my_dir, flag_nb, file) == 1)
             return (NULL);
     } while (my_dir != NULL);
     closedir(dir);

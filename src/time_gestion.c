@@ -1,4 +1,4 @@
-#include "../ft_ls.h"
+#include "../include/ft_ls.h"
 
 static int get_patern_index(char *str, int *start, int pos, char c)
 {

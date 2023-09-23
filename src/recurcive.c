@@ -1,4 +1,4 @@
-#include "../ft_ls.h"
+#include "../include/ft_ls.h"
 
 static int create_new_file(struct stat sb, t_list **new, char *str, char *parent)
 {

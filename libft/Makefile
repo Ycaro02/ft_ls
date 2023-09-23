@@ -33,6 +33,11 @@ SRC =	ft_memset.c \
 		ft_putnbr_fd.c \
 		ft_strmapi.c \
 		ft_striteri.c \
+		ft_ltoa.c \
+		ft_free_tab.c \
+		ft_strjoin_free.c \
+		ft_lower_strcmp.c \
+		ft_strcmp.c \
 
 BONUS = ft_lstnew.c \
 		ft_lstadd_front.c \
