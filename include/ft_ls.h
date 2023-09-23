@@ -59,12 +59,12 @@ enum e_flag *check_for_flag(int argc, char **argv);
 
 // parse.c
 t_list      *get_all_file_name(const char *directory_name, int flag_nb);
-t_list      *get_all_file_struct(t_file *file, int flag_nb);
+t_list      *get_all_file_struct(t_file *file, int flag_nb, int* error);
 t_list      *get_dir_args(char **argv, int *error);
 
 // ft_ls.c
-void        ls_l_one_dir(t_file *file, int flag_nb, int lst_len);
-void        ls_one_dir(t_file *file, int flag_nb, int lst_len);
+int        ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int* error);
+int        ls_one_dir(t_file *file, int flag_nb, int lst_len, int* error);
 
 // recurcive.c
 int        search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error);

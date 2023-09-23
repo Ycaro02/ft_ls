@@ -3,15 +3,19 @@
 t_buff g_buff;
 
 
-void ls(t_list * lst, int flag_nb,  void (*ls_function)(t_file*, int, int))
+int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), int* error)
 {
     t_list *current = lst;
     int lst_len = get_lst_len(lst);
+    int err = 0;
     while (current)
     {
-        ls_function(current->content, flag_nb, lst_len);
+        err = ls_function(current->content, flag_nb, lst_len, error);
+        if (err == MALLOC_ERR)
+            break ;
         current = current->next;
     }
+    return (err);
 }
 
 void call_ls(t_list *dir_lst, int flag_nb, int *error)
@@ -20,9 +24,9 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error)
     if (flag_nb & R_OPTION)
         err = search_recurcive_dir(dir_lst, flag_nb, error);
     else if (flag_nb & L_OPTION)
-        ls(dir_lst, flag_nb, ls_l_one_dir);
+        err = ls(dir_lst, flag_nb, ls_l_one_dir, error);
     else
-        ls(dir_lst, flag_nb, ls_one_dir);
+        err = ls(dir_lst, flag_nb, ls_one_dir, error);
     new_lstclear(&dir_lst, free);
     if (err == MALLOC_ERR)
     {

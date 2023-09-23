@@ -108,12 +108,12 @@ static int fill_name_and_parent(t_file *file, char *path, char *parent)
 {
     file->name = ft_strdup(path);
     if (!file->name)
-        return (1);
+        return (MALLOC_ERR);
     if (parent)
     {
         file->parrent = ft_strdup(parent);
         if (!file->parrent)
-            return (1);
+            return (MALLOC_ERR);
     }
     else
         file->parrent = NULL;
@@ -126,10 +126,7 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
 
     file = malloc(sizeof(t_file));
     if (!file)
-    {
-        perror("Malloc");
         return (NULL);
-    }
     file->total_size = -1;
     file->type = get_type(sb);
     file->perm = sb.st_mode & 0777;
@@ -139,7 +136,7 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
     file->user_id = sb.st_uid;
     file->group_id = sb.st_gid;
     file->nb_block = sb.st_blocks;
-    if (fill_name_and_parent(file, path, parent) == 1)
+    if (fill_name_and_parent(file, path, parent) == MALLOC_ERR)
         return (NULL);
     return (file);
 }

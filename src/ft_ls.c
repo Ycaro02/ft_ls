@@ -1,16 +1,21 @@
 #include "../include/ft_ls.h"
 
-void ls_one_dir(t_file *file, int flag_nb, int lst_len)
+int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 {
+    (void)error;
+
     if (lst_len > 1)
     {
         fill_buffer(file->name);
         fill_buffer(":\n");
     }
-    t_list *lst = get_all_file_struct(file, flag_nb);
+    t_list *lst = get_all_file_struct(file, flag_nb, error);
     if (!lst)
-        return ;
+        return (0);
+    if (!lst && *error == MALLOC_ERR)
+        return (MALLOC_ERR);
     store_in_buffer(lst, flag_nb);
+    return (0);
 }
 
 static void display_dir_header(t_file file, int lst_len)
@@ -40,31 +45,41 @@ long long get_total_size(t_list *lst)
     return (total);
 }
 
-void ls_l_one_dir(t_file *file, int flag_nb, int lst_len)
+int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 {
+    (void)error;
+
+
     t_list *lst = NULL;
     if (file->type == DIRECTORY)
-      lst = get_all_file_struct(file, flag_nb);
+      lst = get_all_file_struct(file, flag_nb, error);
     else
-        return ;
+        return (0);
     if (!lst)
-        return ;
+        return (0);
+    if (!lst && *error == MALLOC_ERR)
+        return (MALLOC_ERR);
     file->total_size = get_total_size(lst);
     display_dir_header(*file, lst_len);
     t_list *new = NULL;
     if (flag_nb & REVERSE_OPTION)
     {
         reverse_lst(lst, &new);
+        if (!new)
+            return (MALLOC_ERR);
         free_node_ptr(&lst);
         lst = new;
     }
     t_list *current = lst;
     int *space = get_all_space(current);
+    if (!space)
+        return (MALLOC_ERR);
     while (current)
     {
-        fill_buffer_l_option(*(t_file *)current->content, space);
+        fill_buffer_l_option(*(t_file *)current->content, space); // change to int return for malloc check
         current = current->next;
     }
     free(space);
     new_lstclear(&lst, free);
+    return (0);
 }

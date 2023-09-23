@@ -8,12 +8,12 @@ void update_error(int *error)
 
 int print_error(char *msg, char* str, int error_type, int use_perror)
 {
+    if (str)
+        ft_putstr_fd(str, 2);
     if (use_perror == 0)
         perror(msg);
     else
         ft_putstr_fd(msg, 2);
-    if (str)
-        ft_putstr_fd(str, 2);
     return (error_type);
 }
 

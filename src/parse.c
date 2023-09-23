@@ -84,34 +84,32 @@ t_list *get_dir_args(char **argv, int *error)
 }
 
 
-static int check_for_fill_struct(t_list **all, struct dirent *my_dir, int flag_nb, t_file *file)
+static int check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, int *error)
 {
-    char *str;
+    char *full_path;
     struct stat sb;
     t_file *new_file;
 
-    if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
+    full_path = join_parent_name(file->name, my_dir->d_name);
+    if (!full_path)
+        return (MALLOC_ERR);
+    if (lstat(full_path, &sb) == -1)
     {
-        str = join_parent_name(file->name, my_dir->d_name);
-        if (!str)
-            return (1);
-        if (lstat(str, &sb) == -1)
-        {
-            ft_putstr_fd("in check for fill struct perror : ls: cannot open directory : ", 2);
-            perror(str);
-            free(str);
-            return (0);
-        }
-        new_file = fill_file_struct(sb, my_dir->d_name, file->name);
-        if (!new_file)
-            return (1);
-        ft_lstadd_back(all, ft_lstnew(new_file));
-        free(str);
+        ft_printf_fd(2, "ft_ls: cannot open directory : ");
+        perror(full_path);
+        free(full_path);
+        update_error(error);
+        return (0);
     }
+    free(full_path);
+    new_file = fill_file_struct(sb, my_dir->d_name, file->name);
+    if (!new_file)
+        return (MALLOC_ERR);
+    ft_lstadd_back(all, ft_lstnew(new_file));
     return (0);
 }
 
-t_list* get_all_file_struct(t_file *file, int flag_nb)
+t_list* get_all_file_struct(t_file *file, int flag_nb, int *error)
 {
     t_list *all = NULL;
     struct dirent *my_dir;
@@ -121,8 +119,14 @@ t_list* get_all_file_struct(t_file *file, int flag_nb)
     do 
     {
         my_dir = readdir(dir);
-        if (check_for_fill_struct(&all, my_dir, flag_nb, file) == 1)
-            return (NULL);
+        if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
+        {
+            if (check_for_fill_struct(&all, my_dir, file, error) == MALLOC_ERR)
+            {
+                *error = MALLOC_ERR;
+                return (NULL);
+            }
+        }
     } while (my_dir != NULL);
     closedir(dir);
     if (!all)
