@@ -98,11 +98,11 @@ void	new_lstclear(t_list **lst, void (*del)(void*))
 
 void display_file_lst(t_list *lst)
 {
-    printf("\nDisplay file lst\n");
+    ft_printf_fd(1, "\nDisplay file lst\n");
     while (lst)
     {
         t_file *file = lst->content;
-        printf("%s\n", file->name);
+        ft_printf_fd(1, "%s\n", file->name);
         lst = lst->next;
     }
 }

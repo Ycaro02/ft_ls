@@ -10,6 +10,7 @@
 # include <time.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <stdio.h> // perror
 # include "../libft/libft.h"
 # include "define_enum.h"
 
@@ -38,12 +39,9 @@ extern t_buff g_buff;
 
 // TODO -t :
 // refactor str_trim_pattern //
-// in fill_l_buffer/fill_buffer_loption: 
-//                 - change return type for check malloc error //
-//                  - maybe last malloc check
 
 /////////////////////////////
-#include <stdio.h>///////////
+// #include <stdio.h>///////////
 /////////////////////////////
 
 // utils.c
@@ -75,9 +73,10 @@ int        search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error);
 // l_options.c
 char        get_type(struct stat sb);
 t_file      *fill_file_struct(struct stat sb, char *path, char* parent);
-void        fill_buffer_l_option(t_file file, int* space);
+int         fill_buffer_l_option(t_file file, int* space);
 int			*get_all_space(t_list *lst);
-void        write_file_name(t_file file, int is_exec, int option);
+int         write_file_name(t_file file, int is_exec, int option);
+char        *get_perm(int nbr);
 
 // time gestion.c
 char        **get_printable_date(time_t *time);
