@@ -5,7 +5,7 @@ t_buff g_buff;
 int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), int* error)
 {
     t_list *current = lst;
-    int lst_len = get_lst_len(lst);
+    int lst_len = get_lst_len(lst) - 1;
     int err = 0;
     while (current)
     {
@@ -19,7 +19,9 @@ int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), 
 
 void call_ls(t_list *dir_lst, int flag_nb, int *error)
 {
-    int err = 0;
+    int err;
+    
+    err = 0;
     if (flag_nb & R_OPTION)
         err = search_recurcive_dir(dir_lst, flag_nb, error);
     else if (flag_nb & L_OPTION)
@@ -63,11 +65,12 @@ int main (int argc, char **argv)
     int flag_nb;
 
     error = 0;
+    ft_bzero(g_buff.buffer, BUFFER_LEN - 1);
     enum e_flag *flag = check_for_flag(argc, argv);
     if (!flag)
         return(MALLOC_ERR);
     flag_nb = get_flag(flag);
     free(flag);
-    ft_ls(argv, flag_nb, &error);
+    error = ft_ls(argv, flag_nb, &error);
     return (error);
 }

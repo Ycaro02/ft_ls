@@ -14,6 +14,9 @@
 # include "../libft/libft.h"
 # include "define_enum.h"
 
+# include <sys/ioctl.h>
+
+
 typedef struct s_file 
 {
     char        type;
@@ -40,11 +43,8 @@ extern t_buff g_buff;
 // TODO -t :
 // refactor str_trim_pattern //
 
-/////////////////////////////
-// #include <stdio.h>///////////
-/////////////////////////////
-
 // utils.c
+int         get_stdout_width();
 void        update_error(int *error);
 int         print_error(char *msg, char* str, int error_type, int use_perror);
 int         get_lst_len(t_list *lst);
@@ -74,9 +74,13 @@ int        search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error);
 char        get_type(struct stat sb);
 t_file      *fill_file_struct(struct stat sb, char *path, char* parent);
 int         fill_buffer_l_option(t_file file, int* space);
-int			*get_all_space(t_list *lst);
 int         write_file_name(t_file file, int is_exec, int option);
 char        *get_perm(int nbr);
+void        insert_space(int nb);
+
+// manage_space.c
+int			*get_all_space(t_list *lst);
+int         get_nb_space(t_list *lst, int(*get_len_info)(t_file));
 
 // time gestion.c
 char        **get_printable_date(time_t *time);
@@ -95,5 +99,10 @@ void        fill_buffer_color(char *str, enum e_color color);
 int         store_in_buffer(t_list *lst, int flag_nb);
 void        print_and_clear();
 void        finish_print_buffer();
+
+
+// manage_column.c
+int         fill_buffer_with_column(char **tab, int nb_raw, t_list **lst);
+char        **check_manage_colum(t_list *lst, int *err, int *value);
 
 #endif

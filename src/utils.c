@@ -96,6 +96,18 @@ void	new_lstclear(t_list **lst, void (*del)(void*))
 	*lst = NULL;
 }
 
+
+int get_stdout_width()
+{
+    struct winsize win;
+    int width;
+    
+    if (ioctl(1, TIOCGWINSZ, &win) != 0)
+        return (-1); 
+    width = win.ws_col; 
+    return (width);
+}
+
 void display_file_lst(t_list *lst)
 {
     ft_printf_fd(1, "\nDisplay file lst\n");

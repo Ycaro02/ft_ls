@@ -74,7 +74,7 @@ void fill_buffer_char(char c)
         print_and_clear();
 }
 
-static int check_buffer_perm(int perm, int to_check)
+static int check_file_perm(int perm, int to_check)
 {
     char    *tmp;
     int     i;
@@ -98,25 +98,35 @@ static int check_buffer_perm(int perm, int to_check)
     return (ret);
 }
 
+
 int store_in_buffer(t_list *lst, int flag_nb)
 {
     t_list *current;
     int is_exec = 0;
-
+    int err = 0;
+    int nb_raw = 0;
+    char** tab = NULL;
+    
     if (flag_nb & REVERSE_OPTION)
         if (safe_reverse_lst(&lst, NULL) == MALLOC_ERR)
             return (MALLOC_ERR);
+    tab = check_manage_colum(lst, &err, &nb_raw);
+    if (err == MALLOC_ERR)
+        return (err);
+    else if (tab != NULL)
+        return (fill_buffer_with_column(tab, nb_raw, &lst));
+
     current = lst;
     while (current)
     {
         t_file *file = current->content;
-        is_exec = check_buffer_perm(file->perm, 1);
+        is_exec = check_file_perm(file->perm, 1);
         if (is_exec == MALLOC_ERR)
             return (MALLOC_ERR);
-        if (write_file_name(*file, is_exec, 0) == MALLOC_ERR)
+        if (write_file_name(*file, is_exec, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
         if (current->next)
-            fill_buffer("  ");
+            fill_buffer(" ");
         current = current->next;
     }
     fill_buffer("\n");

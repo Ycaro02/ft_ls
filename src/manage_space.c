@@ -35,7 +35,6 @@ static int get_user_name_len(t_file file)
     return (nb);
 }
 
-
 static int get_len_date_month(t_file file)
 {
     char **tmp = get_printable_date(&file.last_change);

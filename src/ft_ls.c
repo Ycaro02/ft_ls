@@ -2,16 +2,16 @@
 
 int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 {
-    if (lst_len > 1)
+    if (lst_len > 0)
     {
         fill_buffer(file->name);
         fill_buffer(":\n");
     }
     t_list *lst = get_all_file_struct(file, flag_nb, error);
-    if (!lst)
-        return (0);
     if (!lst && *error == MALLOC_ERR)
         return (MALLOC_ERR);
+    if (!lst)
+        return (0);
     if (store_in_buffer(lst, flag_nb) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);
@@ -19,7 +19,7 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 
 static int display_dir_header(t_file file, int lst_len)
 {
-    if (lst_len > 1)
+    if (lst_len > 0)
     {
         fill_buffer(file.name);
         fill_buffer(":\n");

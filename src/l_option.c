@@ -136,7 +136,7 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
     return (file);
 }
 
-static void insert_space(int nb)
+void insert_space(int nb)
 {
     if (nb > 0)
     {

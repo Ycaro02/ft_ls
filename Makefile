@@ -14,7 +14,7 @@ CC		= gcc
 
 CFLAGS	= -Wall -Wextra -Werror -g
 
-SRCS	=		src/main.c\
+SRCS	=	src/main.c\
 			src/utils.c\
 			src/flag_gestion.c\
 			src/parse.c\
@@ -25,6 +25,10 @@ SRCS	=		src/main.c\
 			src/sort.c\
 			src/buffer.c\
 			src/manage_space.c\
+			src/manage_column.c\
+
+
+OBJ = $(SRCS:.c=.o)
 
 NAME	= ft_ls
 
@@ -34,17 +38,20 @@ LIBFT = libft/libft.a
 
 all:		${NAME}
 
-${NAME}:	
+%.o : %.c
+	@$(CC) ${CFLAGS} -c $< -o $@
+
+${NAME}:	$(OBJ)
 			@echo " \033[5;36m ----- Compiling libft...  ----- \033[0m\n"
 			@make -s -C libft bonus
 			@echo "\033[7;32m -----  Compiling libft  ----- \033[0m\n"
 			@echo " \033[5;36m ----- Compiling ft_ls project...  ----- \033[0m\n"
-			@${CC} $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME)
+			@${CC} $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) 
 			@echo "\033[7;32m -----  Compiling ft_ls done  ----- \033[0m\n"
 
 clean:
 			@echo "\033[7;31m\n -----  Cleaning all objects...  ----- \033[0m\n"
-			@${RM} ${NAME}
+			@${RM} ${OBJ}
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
 fclean:		clean

@@ -95,8 +95,7 @@ static int check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *fi
         return (MALLOC_ERR);
     if (lstat(full_path, &sb) == -1)
     {
-        ft_printf_fd(2, "ft_ls: cannot open directory : ");
-        perror(full_path);
+        print_error(full_path, "ft_ls: cannot open directory : ", NO_ACCESS_ERR, 0);
         free(full_path);
         update_error(error);
         return (0);
