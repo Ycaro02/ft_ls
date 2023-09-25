@@ -101,16 +101,16 @@ static int check_file_perm(int perm, int to_check)
 
 int store_in_buffer(t_list *lst, int flag_nb)
 {
-    t_list *current;
-    int is_exec = 0;
-    int err = 0;
-    int nb_raw = 0;
-    char** tab = NULL;
+    t_list  *current;
+    int     is_exec = 0;
+    int     err = 0;
+    int     nb_raw = 0;
+    char    **tab = NULL;
     
     if (flag_nb & REVERSE_OPTION)
         if (safe_reverse_lst(&lst, NULL) == MALLOC_ERR)
             return (MALLOC_ERR);
-    tab = check_manage_colum(lst, &err, &nb_raw);
+    tab = check_manage_colum(lst, &err, &nb_raw, get_lst_len(lst));
     if (err == MALLOC_ERR)
         return (err);
     else if (tab != NULL)

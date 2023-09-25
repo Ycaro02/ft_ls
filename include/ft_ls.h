@@ -103,6 +103,6 @@ void        finish_print_buffer();
 
 // manage_column.c
 int         fill_buffer_with_column(char **tab, int nb_raw, t_list **lst);
-char        **check_manage_colum(t_list *lst, int *err, int *value);
+char        **check_manage_colum(t_list *lst, int *err, int *value, int lst_len);
 
 #endif
