@@ -83,7 +83,8 @@ static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int
     {
         t_file *file = lst->content;
         j += ft_strcpy(&tab[i][j], file->name, ft_strlen(file->name));
-        insert_space_str(max_unit_len[current_colum] + 2, file->name, &j, tab[i]);
+        if (current_colum != max_per_raw - 1)
+            insert_space_str(max_unit_len[current_colum] + 2, file->name, &j, tab[i]);
         i++;
         if (i == nb_raw)
         {
@@ -109,7 +110,7 @@ static int *get_max_by_column(t_list *lst, int nb_column, int nb_raw)
         if (tmp > max)
             max = tmp;
         i++;
-        if (i == nb_raw)
+        if (i == nb_raw )
         {
             tab[column] = max;
             max = 0;
@@ -123,6 +124,70 @@ static int *get_max_by_column(t_list *lst, int nb_column, int nb_raw)
     // for (int k =0; k< nb_column; k++)
     //     printf("max de %d = %d\n", k, tab[k]);
     return (tab);
+}
+
+static int average_test(int i, int test, int tab_len, int *all_len)
+{
+    int ret = -1;
+
+    while (i < tab_len - test)
+    {
+        if (ret == -1)
+            ret = all_len[i];
+        if (i + test < tab_len)
+            ret += all_len[i + test];
+        else
+            break ;
+        i += test;
+    }
+    return (ret);
+}
+
+
+static int test_all(int test, int* all_len, int tab_len, int stdout_w)
+{
+    int ret = -1;
+    int i = 0;
+    while (i < tab_len - test)
+    {
+        ret = average_test(i, test, tab_len, all_len);
+        printf("for test = %d, i = %d, ret = %d\n", test, i, ret);
+        if (ret > stdout_w)
+            return (-1);
+        i += test;
+    }
+    if (ret > stdout_w)
+        return (-1);
+    return (0);
+}
+
+int get_max_per_raw(int stdout_w, int max_unit, t_list *lst)
+{
+    int len = get_lst_len(lst);
+    int *all_len = ft_calloc(sizeof(int), len);
+    int i = 0;
+    t_list *current = lst;
+    while (current)
+    {
+        t_file *file = current->content;
+        all_len[i] = ft_strlen(file->name);
+        i++;
+        current = current->next;
+    }
+
+    int test = 2;
+    i = 0;
+
+    int ret = -1;
+    while (ret != 0)
+    {
+        ret = test_all(test, all_len, len, stdout_w);
+        test++;
+    }
+    (void)max_unit;
+    free(all_len);
+    printf("test = %d\n", test);
+    return (test);
 }
 
 char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len)
@@ -139,17 +204,22 @@ char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len)
         nb_raw++;
     if (nb_raw <= 0)
         nb_raw = 1;
-    *value = nb_raw;
 
+    nb_raw = get_max_per_raw(stdout_width, max_unit_len, lst);
+    max_per_raw = (int)(lst_len / nb_raw);
+    *value = nb_raw;
+    if (lst_len % nb_raw != 0)
+        max_per_raw++;
+
+    int *tab_max_unit = get_max_by_column(lst, max_per_raw, nb_raw);
+    if (!tab_max_unit)
+    {
+        *err = MALLOC_ERR;
+        return (NULL);
+    }
     if (get_all_len(lst, max_unit_len) > (long long)stdout_width) // to change
     {
 
-        int *tab_max_unit = get_max_by_column(lst, max_per_raw, nb_raw);
-        if (!tab_max_unit)
-        {
-            *err = MALLOC_ERR;
-            return (NULL);
-        }
         tab = manage_column(lst, tab_max_unit, max_per_raw, nb_raw);
         if (!tab)
             *err = MALLOC_ERR;
