@@ -1,3 +1,9 @@
+// extended attr
 touch mon_fichier.txt
 setfattr -n user.comment -v "Ceci est un commentaire" mon_fichier.txt
 getfattr -d mon_fichier.txt
+
+//ACL
+touch coucou.txt
+setfacl -m u:root:rwx,u:nfour:r-- coucou.txt
+getfacl coucou.txt
