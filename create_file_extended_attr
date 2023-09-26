@@ -1,0 +1,3 @@
+touch mon_fichier.txt
+setfattr -n user.comment -v "Ceci est un commentaire" mon_fichier.txt
+getfattr -d mon_fichier.txt
