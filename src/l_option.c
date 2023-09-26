@@ -198,7 +198,7 @@ static int write_nb_link(long long nb_link, int space)
 
 static int write_symlink(char *path, char *parrent_path, int option)
 {
-    char    buff[200];
+    char    buff[500];
     char    *tmp;
 
     fill_buffer_color(path, E_CYAN);

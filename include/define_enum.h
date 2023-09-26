@@ -26,6 +26,7 @@
 # define     REGULAR      '-'
 # define     SOCKET       's'
 # define     UNDIFINED    '?'
+# define     EXEC         'x'
 
 # define NEW 0
 # define OLD 1
@@ -50,6 +51,7 @@ enum e_space  {
 };
 
 enum e_color  {
+    E_NONE,
     E_RED,
     E_GREEN,
     E_YELLOW,
@@ -62,7 +64,7 @@ enum e_error {
     ANY_ERR,
     NO_ACCESS_ERR,
     NA_CMD_LINE_ERR,
-    MALLOC_ERR,
+    MALLOC_ERR=-10,
 };
 
 #endif

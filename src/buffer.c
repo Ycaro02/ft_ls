@@ -61,9 +61,14 @@ void fill_buffer_color(char *str, enum e_color color)
 {
     if (!str)
         return ;
-    fill_color(color);
-    fill_buffer(str);
-    fill_buffer(RESET);
+    if (color != E_NONE)
+    {
+        fill_color(color);
+        fill_buffer(str);
+        fill_buffer(RESET);
+    }
+    else
+        fill_buffer(str);
 }
 
 void fill_buffer_char(char c)
@@ -74,7 +79,7 @@ void fill_buffer_char(char c)
         print_and_clear();
 }
 
-static int check_file_perm(int perm, int to_check)
+int check_file_perm(int perm, int to_check)
 {
     char    *tmp;
     int     i;
@@ -110,12 +115,13 @@ int store_in_buffer(t_list *lst, int flag_nb)
     if (flag_nb & REVERSE_OPTION)
         if (safe_reverse_lst(&lst, NULL) == MALLOC_ERR)
             return (MALLOC_ERR);
+    
     tab = check_manage_colum(lst, &err, &nb_raw, get_lst_len(lst));
     if (err == MALLOC_ERR)
         return (err);
     else if (tab != NULL)
         return (fill_buffer_with_column(tab, nb_raw, &lst));
-
+    printf("YOOOOOO\n");
     current = lst;
     while (current)
     {

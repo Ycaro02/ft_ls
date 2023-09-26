@@ -1,15 +1,19 @@
 #include "../include/ft_ls.h"
 
-static long long get_all_len(t_list *list, int len)
+static long long get_total_len(t_list *list)
 {
     long long total;
-
+    t_file *file;
+    
     total = 0;
     while (list)
     {
-        total += len;
+        file = list->content;
+        total += ft_strlen(file->name);
+        total += 2;
         list = list->next;
     }
+    total -= 2;
     return (total);
 } 
 
@@ -57,7 +61,8 @@ static int get_raw_len(int *max_unit_len, int max)
     int i = 0;
     while (i < max)
     {
-        nb += max_unit_len[i] + 2;
+        nb += max_unit_len[i];
+        nb += 2;
         i++;
     }
     return (nb);
@@ -68,7 +73,7 @@ static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int
     int current_colum = 0;
     int i = 0;
     int j = 0;
-    char **tab = ft_calloc(sizeof(char *), nb_raw + 1);
+    char **tab = ft_calloc(sizeof(char *), nb_raw + 2);
     if (!tab)
         return (NULL);
     int total = get_raw_len(max_unit_len, max_per_raw);
@@ -78,10 +83,23 @@ static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int
         if (!tab[k])
             return (NULL);
     }
-    tab[nb_raw] = NULL;
+
+    char *type = ft_calloc(sizeof(char), get_lst_len(lst) + 1);
+    if (!type)
+        return (NULL);
+    tab[nb_raw] = type;
+    tab[nb_raw + 1] = NULL;
+    int k = 0;
+  
     while (lst)
     {
         t_file *file = lst->content;
+        type[k] = file->type;
+        if (type[k] == REGULAR)
+        {
+            if (check_file_perm(file->perm, 1) == 0)
+                type[k] = EXEC;
+        }
         j += ft_strcpy(&tab[i][j], file->name, ft_strlen(file->name));
         if (current_colum != max_per_raw - 1)
             insert_space_str(max_unit_len[current_colum] + 2, file->name, &j, tab[i]);
@@ -92,6 +110,7 @@ static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int
             i = 0;
         }
         j = get_raw_len(max_unit_len, current_colum);
+        k++;
         lst = lst->next;
     }
     return (tab);
@@ -121,105 +140,141 @@ static int *get_max_by_column(t_list *lst, int nb_column, int nb_raw)
     }
     if (i < nb_raw && column < nb_column)
         tab[column] = max;
-    // for (int k =0; k< nb_column; k++)
-    //     printf("max de %d = %d\n", k, tab[k]);
     return (tab);
 }
 
-static int average_test(int i, int test, int tab_len, int *all_len)
+
+// get the max column len for each test
+static int get_max_len_by_index(int start, int test ,int max, int* tab)
+{
+    int nb = 0;
+    int i = start;
+    while (i < (start + test))
+    {
+        if (i < max)
+        {
+            if (nb < tab[i])
+                nb = tab[i];
+        }
+        i++;
+    }
+    return (nb);
+}
+
+static int average_test(int i, int test, int tab_len, int *all_len, int *local_space)
 {
     int ret = -1;
-
+    int column = 0;
+    // printf("in average test i = %d test = %d ", i ,test);
     while (i < tab_len - test)
     {
         if (ret == -1)
-            ret = all_len[i];
-        if (i + test < tab_len)
-            ret += all_len[i + test];
+        {
+            local_space[column] = get_max_len_by_index(i, test, tab_len, all_len);
+            ret = local_space[column];
+            ret += 2;
+            column++;
+        }
+        if (i + test <= tab_len)
+        {
+            local_space[column] = get_max_len_by_index(i + test, test, tab_len, all_len);
+            ret += local_space[column];
+            ret += 2;
+            column++;
+        }
         else
             break ;
         i += test;
     }
+    ret -= 2; // remove last space
+    // printf("ret = %d\n", ret);
     return (ret);
 }
 
-
 static int test_all(int test, int* all_len, int tab_len, int stdout_w)
 {
+    int *local_space = ft_calloc(sizeof(int), tab_len);
     int ret = -1;
     int i = 0;
-    while (i < tab_len - test)
+    while (i < test)
     {
-        ret = average_test(i, test, tab_len, all_len);
-        printf("for test = %d, i = %d, ret = %d\n", test, i, ret);
+        ret = average_test(i, test, tab_len, all_len, local_space);
         if (ret > stdout_w)
-            return (-1);
-        i += test;
+            break ;
+        i++;
     }
     if (ret > stdout_w)
-        return (-1);
-    return (0);
+        ret = -1;
+    else
+        ret = 0;
+    free(local_space);
+    return (ret);
 }
 
-int get_max_per_raw(int stdout_w, int max_unit, t_list *lst)
+static int* get_all_len(t_list *lst, int len)
 {
-    int len = get_lst_len(lst);
-    int *all_len = ft_calloc(sizeof(int), len);
-    int i = 0;
-    t_list *current = lst;
-    while (current)
+    int i;
+    int *all_len = NULL;
+    
+    i = 0;
+    all_len = ft_calloc(sizeof(int), len);
+    if (!all_len)
+        return (NULL);
+    while (lst)
     {
-        t_file *file = current->content;
+        t_file *file = lst->content;
         all_len[i] = ft_strlen(file->name);
         i++;
-        current = current->next;
+        lst = lst->next;
     }
+    return (all_len);
+}
 
-    int test = 2;
-    i = 0;
-
+static int get_nb_raw(int stdout_w, t_list *lst)
+{
+    int len = get_lst_len(lst);
+    int *all_len = get_all_len(lst, len);
+    if (!all_len)
+        return (MALLOC_ERR);
+    int test = 1; // test value for nb_raw, //brute force it
     int ret = -1;
     while (ret != 0)
     {
         ret = test_all(test, all_len, len, stdout_w);
         test++;
     }
-    (void)max_unit;
     free(all_len);
-    printf("test = %d\n", test);
-    return (test);
+    return (test - 1);
 }
 
 char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len)
 {
-    char        **tab = NULL;
-    int         nb_raw = 0 ;
-    int         max_unit_len = get_nb_space(lst, get_name_len) + 2;
-    int         stdout_width = get_stdout_width();
-    int         max_per_raw = (int)(stdout_width / (max_unit_len));
-    if (max_per_raw == 0)
-        max_per_raw = 1;
-    nb_raw = (int)(lst_len / max_per_raw);
-    if (lst_len % max_per_raw != 0)
-        nb_raw++;
-    if (nb_raw <= 0)
-        nb_raw = 1;
-
-    nb_raw = get_max_per_raw(stdout_width, max_unit_len, lst);
-    max_per_raw = (int)(lst_len / nb_raw);
-    *value = nb_raw;
-    if (lst_len % nb_raw != 0)
-        max_per_raw++;
-
-    int *tab_max_unit = get_max_by_column(lst, max_per_raw, nb_raw);
-    if (!tab_max_unit)
+    char    **tab = NULL;
+    int     *tab_max_unit = NULL;
+    int     stdout_width = get_stdout_width();
+    int     nb_raw = 0; 
+    int     max_per_raw = 1;
+    
+    nb_raw = get_nb_raw(stdout_width, lst);
+    if (nb_raw == MALLOC_ERR)
     {
         *err = MALLOC_ERR;
         return (NULL);
     }
-    if (get_all_len(lst, max_unit_len) > (long long)stdout_width) // to change
+    *value = nb_raw;
+    max_per_raw  = (int)(lst_len / nb_raw);
+    if (max_per_raw <= 0)
+        max_per_raw = 1;
+    if (lst_len % nb_raw != 0)
+        max_per_raw++;
+    if (get_total_len(lst) > (long long)stdout_width)
     {
-
+        tab_max_unit = get_max_by_column(lst, max_per_raw, nb_raw);
+        if (!tab_max_unit)
+        {
+            *err = MALLOC_ERR;
+            return (NULL);
+        }
         tab = manage_column(lst, tab_max_unit, max_per_raw, nb_raw);
         if (!tab)
             *err = MALLOC_ERR;
@@ -228,19 +283,97 @@ char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len)
     return (tab);
 }
 
+static enum e_color get_color_by_index(char *type, int index)
+{
+    char c = '-';
+    if (index < (int)ft_strlen(type))
+        c = type[index];
+    if (c == DIRECTORY)
+        return (E_BLUE);
+    if (c == SYMLINK)
+        return (E_CYAN);
+    if (c == EXEC)
+        return (E_GREEN);
+    return(E_NONE);
+}
+
+int fill_buffer_stop(char *str, char c)
+{
+    int i = 0;
+    while (str && str[i])
+    {
+        fill_buffer_char(str[i]);
+        i++;
+        if (str[i] == c)
+            break;
+    }
+    return (i);
+}
+
+int fill_buffer_color_with_space(char *str, enum e_color color, char c)
+{
+    int i = 0;
+    if (!str)
+        return (-100000);
+    if (color != E_NONE)
+        fill_color(color);
+
+    i = fill_buffer_stop(str, c);
+    if (color != E_NONE)
+        fill_buffer(RESET);
+    while (str[i] && str[i] == c)
+    {
+        fill_buffer_char(str[i]);
+        i++;
+    }
+    while (str[i] && str[i] == c)
+        i++;
+    if (str[i] == '\0')
+        return (-100000);
+    return (i);
+}
+
+static void add_color(char *str, int nb_raw ,char *type, int raw)
+{
+    int i = 0;
+    int color = E_NONE;
+    int nb = raw;
+    while (str && str[i])
+    {
+        if (nb < (int)ft_strlen(type))
+            color = get_color_by_index(type, nb);
+        i += fill_buffer_color_with_space(&str[i], color, ' ');
+        if (i < 0)
+            break;
+        nb += nb_raw;
+    }
+}
+
 int fill_buffer_with_column(char **tab, int nb_raw, t_list **lst)
 {
     for (int i = 0; i < nb_raw; i++)
     {
-        if (tab[i] != NULL)
-            fill_buffer(tab[i]);
+        add_color(tab[i], nb_raw, tab[nb_raw], i);
         if (i != nb_raw - 1)
             fill_buffer_char('\n');
     }
-    for (int i = 0; i < nb_raw; i++)
+    for (int i = 0; i < nb_raw + 1; i++)
         free(tab[i]);
     free(tab);
     fill_buffer("\n");
     new_lstclear(lst, free);
     return (0);
 }
+
+// old check_manage_column variable:
+    // int         nb_raw = 0 ;
+    // int         max_per_raw = 0;
+    // int         max_unit_len = get_nb_space(lst, get_name_len) + 2;
+    // int         max_per_raw = (int)(stdout_width / (max_unit_len));
+    // if (max_per_raw == 0)
+    //     max_per_raw = 1;
+    // nb_raw = (int)(lst_len / max_per_raw);
+    // if (lst_len % max_per_raw != 0)
+    //     nb_raw++;
+    // if (nb_raw <= 0)
+    //     nb_raw = 1;

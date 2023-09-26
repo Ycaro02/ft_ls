@@ -59,7 +59,7 @@ int         get_flag(enum e_flag *flag);
 enum e_flag *check_for_flag(int argc, char **argv);
 
 // parse.c
-t_list      *get_all_file_name(const char *directory_name, int flag_nb);
+// t_list      *get_all_file_name(const char *directory_name, int flag_nb);
 t_list      *get_all_file_struct(t_file *file, int flag_nb, int* error);
 t_list      *get_dir_args(char **argv, int *error);
 
@@ -99,7 +99,8 @@ void        fill_buffer_color(char *str, enum e_color color);
 int         store_in_buffer(t_list *lst, int flag_nb);
 void        print_and_clear();
 void        finish_print_buffer();
-
+void        fill_color(enum e_color color);
+int         check_file_perm(int perm, int to_check);
 
 // manage_column.c
 int         fill_buffer_with_column(char **tab, int nb_raw, t_list **lst);
