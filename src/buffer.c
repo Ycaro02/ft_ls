@@ -79,28 +79,10 @@ void fill_buffer_char(char c)
         print_and_clear();
 }
 
-int store_in_buffer(t_list *lst, int flag_nb)
+static int classic_store(t_list *lst, int flag_nb)
 {
-    t_list  *current;
-    int     is_exec = 0;
-    int     err = 0;
-    int     nb_raw = 0;
-    char    **tab = NULL;
-    
-    if (flag_nb & REVERSE_OPTION)
-        if (safe_reverse_lst(&lst, NULL) == MALLOC_ERR)
-            return (MALLOC_ERR);
-    
-    tab = check_manage_colum(lst, &err, &nb_raw, get_lst_len(lst));
-    if (err == MALLOC_ERR)
-    {
-        new_lstclear(&lst, free);
-        return (err);
-    }
-    else if (tab != NULL)
-        return (fill_buffer_with_column(tab, nb_raw, &lst));
-    printf("YOOOOOO\n");
-    current = lst;
+    int is_exec = 0;
+    t_list *current = lst;
     while (current)
     {
         t_file *file = current->content;
@@ -115,6 +97,28 @@ int store_in_buffer(t_list *lst, int flag_nb)
     }
     fill_buffer("\n");
     new_lstclear(&lst, free);
+    return (0);
+}
+
+int store_in_buffer(t_list *lst, int flag_nb)
+{
+    int     err = 0;
+    int     nb_raw = 0;
+    char    **tab = NULL;
+    
+    if (flag_nb & REVERSE_OPTION)
+        if (safe_reverse_lst(&lst, NULL) == MALLOC_ERR)
+            return (MALLOC_ERR);
+    tab = check_manage_colum(lst, &err, &nb_raw, get_lst_len(lst));
+    if (err == MALLOC_ERR)
+    {
+        new_lstclear(&lst, free);
+        return (MALLOC_ERR);
+    }
+    else if (tab != NULL)
+        return (fill_buffer_with_column(tab, nb_raw, &lst));
+    else
+        return (classic_store(lst, flag_nb));
     return (0);
 }
 

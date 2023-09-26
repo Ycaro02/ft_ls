@@ -120,7 +120,6 @@ void	new_lstclear(t_list **lst, void (*del)(void*))
 	*lst = NULL;
 }
 
-
 int get_stdout_width()
 {
     struct winsize win;

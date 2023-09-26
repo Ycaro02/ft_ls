@@ -260,13 +260,17 @@ static int get_nb_raw(int stdout_w, t_list *lst)
     return (test - 1);
 }
 
+/* Protection after max_per_raw affectation, not sure is mandatory
+        if (max_per_raw <= 0)
+            max_per_raw = 1;
+*/
+
 char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len)
 {
     char    **tab = NULL;
     int     *tab_max_unit = NULL;
     int     stdout_width = get_stdout_width();
-    int     nb_raw = 0; 
-    int     max_per_raw = 1;
+    int     nb_raw = 0, max_per_raw = 1;
     
     nb_raw = get_nb_raw(stdout_width, lst);
     if (nb_raw == MALLOC_ERR)
@@ -275,11 +279,7 @@ char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len)
         return (NULL);
     }
     *value = nb_raw;
-    max_per_raw  = (int)(lst_len / nb_raw);
-    if (max_per_raw <= 0)
-        max_per_raw = 1;
-    if (lst_len % nb_raw != 0)
-        max_per_raw++;
+    max_per_raw  = (int)(lst_len / nb_raw) + (lst_len % nb_raw != 0); // add 1 if (lst_len % nb_raw != 0)
     if (get_total_len(lst) > (long long)stdout_width)
     {
         tab_max_unit = get_max_by_column(lst, max_per_raw, nb_raw);
@@ -330,7 +330,6 @@ int fill_buffer_color_with_space(char *str, enum e_color color, char c)
         return (-100000);
     if (color != E_NONE)
         fill_color(color);
-
     i = fill_buffer_stop(str, c);
     if (color != E_NONE)
         fill_buffer(RESET);
@@ -377,16 +376,3 @@ int fill_buffer_with_column(char **tab, int nb_raw, t_list **lst)
     new_lstclear(lst, free);
     return (0);
 }
-
-// old check_manage_column variable:
-    // int         nb_raw = 0 ;
-    // int         max_per_raw = 0;
-    // int         max_unit_len = get_nb_space(lst, get_name_len) + 2;
-    // int         max_per_raw = (int)(stdout_width / (max_unit_len));
-    // if (max_per_raw == 0)
-    //     max_per_raw = 1;
-    // nb_raw = (int)(lst_len / max_per_raw);
-    // if (lst_len % max_per_raw != 0)
-    //     nb_raw++;
-    // if (nb_raw <= 0)
-    //     nb_raw = 1;
