@@ -40,7 +40,6 @@ static void insert_space_str(int max_unit_len, char *name, int *j, char *str)
     }
 }
 
-
 int ft_strcpy(char* dst, char *src, int len)
 {
     int i = 0;
@@ -53,7 +52,6 @@ int ft_strcpy(char* dst, char *src, int len)
     }
     return (len);
 }    
-
 
 static int get_raw_len(int *max_unit_len, int max)
 {
@@ -68,11 +66,8 @@ static int get_raw_len(int *max_unit_len, int max)
     return (nb);
 }
 
-static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int nb_raw)
+static char **alloc_tab(int nb_raw, int *max_unit_len, int max_per_raw, int lst_len)
 {
-    int current_colum = 0;
-    int i = 0;
-    int j = 0;
     char **tab = ft_calloc(sizeof(char *), nb_raw + 2);
     if (!tab)
         return (NULL);
@@ -84,33 +79,52 @@ static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int
             return (NULL);
     }
 
-    char *type = ft_calloc(sizeof(char), get_lst_len(lst) + 1);
+    char *type = ft_calloc(sizeof(char), lst_len + 1);
     if (!type)
         return (NULL);
     tab[nb_raw] = type;
     tab[nb_raw + 1] = NULL;
-    int k = 0;
-  
+    return (tab);
+}
+
+static int fill_type_str(char *str, int k, t_file file)
+{
+    int ret = -1;
+    str[k] = file.type;
+    if (str[k] == REGULAR)
+        ret = check_file_perm(file.perm, 1);
+    if (ret == MALLOC_ERR)
+        return (MALLOC_ERR);
+    else if (ret == 0)
+        str[k] = EXEC;
+    return (0);
+}
+
+static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int nb_raw)
+{
+    int current_raw = 0, current_colum = 0, i = 0, j = 0;
+    char **tab = alloc_tab(nb_raw, max_unit_len, max_per_raw, get_lst_len(lst));
+    if (!tab)
+        return (NULL);
     while (lst)
     {
         t_file *file = lst->content;
-        type[k] = file->type;
-        if (type[k] == REGULAR)
+        if (fill_type_str(tab[nb_raw], j, *file) == MALLOC_ERR)
         {
-            if (check_file_perm(file->perm, 1) == 0)
-                type[k] = EXEC;
+            ft_free_tab(tab);
+            return (NULL);
         }
-        j += ft_strcpy(&tab[i][j], file->name, ft_strlen(file->name));
+        i += ft_strcpy(&tab[current_raw][i], file->name, ft_strlen(file->name));
         if (current_colum != max_per_raw - 1)
-            insert_space_str(max_unit_len[current_colum] + 2, file->name, &j, tab[i]);
-        i++;
-        if (i == nb_raw)
+            insert_space_str(max_unit_len[current_colum] + 2, file->name, &i, tab[current_raw]);
+        current_raw++;
+        if (current_raw == nb_raw)
         {
             current_colum++;
-            i = 0;
+            current_raw = 0;
         }
-        j = get_raw_len(max_unit_len, current_colum);
-        k++;
+        i = get_raw_len(max_unit_len, current_colum);
+        j++;
         lst = lst->next;
     }
     return (tab);
@@ -143,7 +157,6 @@ static int *get_max_by_column(t_list *lst, int nb_column, int nb_raw)
     return (tab);
 }
 
-
 // get the max column len for each test
 static int get_max_len_by_index(int start, int test ,int max, int* tab)
 {
@@ -161,11 +174,11 @@ static int get_max_len_by_index(int start, int test ,int max, int* tab)
     return (nb);
 }
 
-static int average_test(int i, int test, int tab_len, int *all_len, int *local_space)
+static int brut_test(int i, int test, int tab_len, int *all_len, int *local_space)
 {
     int ret = -1;
     int column = 0;
-    // printf("in average test i = %d test = %d ", i ,test);
+    // printf("in brut test i = %d test = %d ", i ,test);
     while (i < tab_len - test)
     {
         if (ret == -1)
@@ -198,7 +211,7 @@ static int test_all(int test, int* all_len, int tab_len, int stdout_w)
     int i = 0;
     while (i < test)
     {
-        ret = average_test(i, test, tab_len, all_len, local_space);
+        ret = brut_test(i, test, tab_len, all_len, local_space);
         if (ret > stdout_w)
             break ;
         i++;

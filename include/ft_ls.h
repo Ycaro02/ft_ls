@@ -10,11 +10,11 @@
 # include <time.h>
 # include <sys/types.h>
 # include <sys/stat.h>
-# include <stdio.h> // perror
 # include "../libft/libft.h"
 # include "define_enum.h"
+# include <stdio.h> // perror
 
-# include <sys/ioctl.h>
+# include <sys/ioctl.h> // ioctl for manage_column
 
 
 typedef struct s_file 
@@ -44,6 +44,7 @@ extern t_buff g_buff;
 // refactor str_trim_pattern //
 
 // utils.c
+int         check_file_perm(int perm, int to_check);
 int         get_stdout_width();
 void        update_error(int *error);
 int         print_error(char *msg, char* str, int error_type, int use_perror);
@@ -100,7 +101,6 @@ int         store_in_buffer(t_list *lst, int flag_nb);
 void        print_and_clear();
 void        finish_print_buffer();
 void        fill_color(enum e_color color);
-int         check_file_perm(int perm, int to_check);
 
 // manage_column.c
 int         fill_buffer_with_column(char **tab, int nb_raw, t_list **lst);

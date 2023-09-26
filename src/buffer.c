@@ -79,31 +79,6 @@ void fill_buffer_char(char c)
         print_and_clear();
 }
 
-int check_file_perm(int perm, int to_check)
-{
-    char    *tmp;
-    int     i;
-    int     ret;
-
-    i = 0;
-    ret = 1;
-    tmp = get_perm(perm);
-    if (!tmp)
-        return (MALLOC_ERR);
-    while (tmp[i])
-    {
-        if ((tmp[i] - 48) & to_check)
-        {
-            ret = 0;
-            break;
-        }
-        i++;
-    }
-    free(tmp);
-    return (ret);
-}
-
-
 int store_in_buffer(t_list *lst, int flag_nb)
 {
     t_list  *current;
@@ -118,7 +93,10 @@ int store_in_buffer(t_list *lst, int flag_nb)
     
     tab = check_manage_colum(lst, &err, &nb_raw, get_lst_len(lst));
     if (err == MALLOC_ERR)
+    {
+        new_lstclear(&lst, free);
         return (err);
+    }
     else if (tab != NULL)
         return (fill_buffer_with_column(tab, nb_raw, &lst));
     printf("YOOOOOO\n");
