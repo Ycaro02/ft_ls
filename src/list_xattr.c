@@ -1,5 +1,4 @@
 #include "../include/ft_ls.h"
-#include <sys/acl.h>
 
 int ft_strlen_word(char *s)
 {

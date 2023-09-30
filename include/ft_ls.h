@@ -1,15 +1,15 @@
 #ifndef FT_LS_H
 # define FT_LS_H
 
-# include <stdlib.h>
 # include <unistd.h>
+# include <stdlib.h>
+# include <stdio.h> // perror
 # include <dirent.h>
 # include <grp.h>
 # include <pwd.h>
 # include <time.h>
 # include <sys/types.h>
 # include <sys/stat.h>
-# include <stdio.h> // perror
 
 # include <sys/ioctl.h> // ioctl for manage_column
 # include <sys/xattr.h>
@@ -18,6 +18,22 @@
 # include "../libft/libft.h"
 # include "define_enum.h"
 
+/*TODO  -clean all
+      -add many crazy option 
+        -u (access time) man ls:
+            with -lt : sort by ?? t or u, display access time
+            with -l  : sort by name. display acces time
+            else     : sort by access time newest first
+        - f not sort, enable 2 option 
+            a : list hiden file
+            U : do not sort; list entries in directory order)
+        - g like -l but don't list owner
+        - d list just directory not their content
+        ///
+        - 1 one filename per line
+        - c (ctime) like u but with ctime 
+        - n  like -l but list id of user/group
+*/
 typedef struct s_file 
 {
     char        type;
@@ -79,7 +95,7 @@ void            write_user_name(long user_id, int space);
 void            write_group_name(long group_id, int space);
 
 // manage_space.c
-int			        *get_all_space(t_list *lst);
+int			     *get_all_space(t_list *lst);
 int              get_nb_space(t_list *lst, int(*get_len_info)(t_file));
 
 // time gestion.c
