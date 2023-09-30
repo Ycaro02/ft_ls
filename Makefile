@@ -26,6 +26,7 @@ SRCS	=	src/main.c\
 			src/buffer.c\
 			src/manage_space.c\
 			src/manage_column.c\
+			src/list_xattr.c\
 
 
 OBJ = $(SRCS:.c=.o)
@@ -46,7 +47,7 @@ ${NAME}:	$(OBJ)
 			@make -s -C libft bonus
 			@echo "\033[7;32m -----  Compiling libft  ----- \033[0m\n"
 			@echo " \033[5;36m ----- Compiling ft_ls project...  ----- \033[0m\n"
-			@${CC} $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) 
+			@${CC} $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) -lacl
 			@echo "\033[7;32m -----  Compiling ft_ls done  ----- \033[0m\n"
 
 clean:

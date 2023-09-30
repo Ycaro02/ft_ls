@@ -148,7 +148,7 @@ void insert_space(int nb)
     }
 }
 
-static void write_user_name(long user_id, int space)
+void write_user_name(long user_id, int space)
 {
     struct passwd* user = getpwuid(user_id);
     if (!user)
@@ -161,10 +161,11 @@ static void write_user_name(long user_id, int space)
         insert_space(space - ft_strlen(user->pw_name));
         fill_buffer(user->pw_name);
     }
-    fill_buffer_char(' ');
+    if (space != -1)
+        fill_buffer_char(' ');
 }
 
-static void write_group_name(long group_id, int space)
+void write_group_name(long group_id, int space)
 {
     struct group* group = getgrgid(group_id);
     if (!group)
@@ -177,7 +178,8 @@ static void write_group_name(long group_id, int space)
         insert_space(space - ft_strlen(group->gr_name));
         fill_buffer(group->gr_name);
     }
-    fill_buffer_char(' ');
+    if (space != -1)
+        fill_buffer_char(' ');
 }
 
 static int write_nb_link(long long nb_link, int space)

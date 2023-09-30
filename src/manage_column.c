@@ -199,7 +199,7 @@ static int brut_test(int i, int test, int tab_len, int *all_len, int *local_spac
             break ;
         i += test;
     }
-    ret -= 2; // remove last space
+    ret -= 2; // remove last spaces
     // printf("ret = %d\n", ret);
     return (ret);
 }

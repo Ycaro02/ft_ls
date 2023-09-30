@@ -16,6 +16,9 @@
 
 # include <sys/ioctl.h> // ioctl for manage_column
 
+#include <sys/xattr.h>
+#include </usr/include/linux/xattr.h> // for windows
+
 
 typedef struct s_file 
 {
@@ -78,6 +81,8 @@ int         fill_buffer_l_option(t_file file, int* space);
 int         write_file_name(t_file file, int is_exec, int option);
 char        *get_perm(int nbr);
 void        insert_space(int nb);
+void write_user_name(long user_id, int space);
+void write_group_name(long group_id, int space);
 
 // manage_space.c
 int			*get_all_space(t_list *lst);
@@ -105,5 +110,8 @@ void        fill_color(enum e_color color);
 // manage_column.c
 int         fill_buffer_with_column(char **tab, int nb_raw, t_list **lst);
 char        **check_manage_colum(t_list *lst, int *err, int *value, int lst_len);
+
+// list_xattr.c
+int diplay_xattr(t_file *file);
 
 #endif

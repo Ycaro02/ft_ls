@@ -25,7 +25,7 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found)
     t_file *file;
     
     file = fill_file_struct(sb, str, str);
-    if (!file || !file->name)
+    if (!file)
     {
         perror("Malloc");
         return (MALLOC_ERR);
@@ -36,6 +36,8 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found)
     {
         *found = 1;
         ft_printf_fd(1, "%s\n", str);
+        if (file->parrent)
+            free(file->parrent);
         free(file->name);
         free(file);
     }
@@ -74,7 +76,10 @@ t_list *get_dir_args(char **argv, int *error)
         if (argv[i][0] != '-')
         {
             if (check_args(argv[i], &new, &found, error) == MALLOC_ERR)
+            {
+                *error = MALLOC_ERR;
                 return (NULL);
+            }
         }
         i++;
     }

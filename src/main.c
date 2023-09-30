@@ -12,6 +12,7 @@ int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), 
         err = ls_function(current->content, flag_nb, lst_len, error);
         if (err == MALLOC_ERR)
             break ;
+        diplay_xattr(current->content);
         current = current->next;
     }
     return (err);
@@ -42,8 +43,10 @@ int ft_ls(char **argv, int flag_nb, int* error)
     t_list *dir_lst;
     
     dir_lst = get_dir_args(&argv[1], error);
-    if (!dir_lst)
+    if (!dir_lst && *error == MALLOC_ERR)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
+    else if (!dir_lst)
+        return (*error);
     sort_lst(dir_lst, flag_nb);
     if (!dir_lst)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
@@ -72,5 +75,6 @@ int main (int argc, char **argv)
     flag_nb = get_flag(flag);
     free(flag);
     error = ft_ls(argv, flag_nb, &error);
+
     return (error);
 }
