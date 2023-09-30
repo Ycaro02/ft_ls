@@ -1,7 +1,6 @@
 #include "../include/ft_ls.h"
 #include <sys/acl.h>
 
-
 int ft_strlen_word(char *s)
 {
 	int i =0;
@@ -15,65 +14,78 @@ static int list_xattr(char *path, char *list)
     ft_bzero(list, BUFSIZ);
     int listen_len = listxattr(path, list, BUFSIZ);
     if (listen_len == -1)
-    {
-        ft_printf_fd(2, "Listxattr error for %s\n", path);
         return (-1);
-    }
     return (listen_len);
 }
 
-static int display_acl(t_file file, char *str)
+static int display_acl(t_file file, char *str, char* full_name)
 {
-    acl_t acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
-    fill_buffer(str);
-    fill_buffer("\n# owner : ");
-    write_user_name(file.user_id, -1);
-    fill_buffer_char('\n');
-    fill_buffer("# group : ");
-    write_group_name(file.group_id, -1);
-    fill_buffer_char('\n');
+    acl_t acl = acl_get_file(full_name, ACL_TYPE_ACCESS);
     if (!acl)
-        ft_printf_fd(2, "ACL NULL\n");
+    {
+        ft_printf_fd(2, "ACL NULL for %s\n", full_name);
+        return (-1);
+    }
+    multiple_fill_buff(str, "\n# owner : ", NULL, NULL);
+    write_user_name(file.user_id, -1);
+    multiple_fill_buff("\n", "# group : ", NULL, NULL);
+    write_group_name(file.group_id, -1);
     char *text = acl_to_text(acl, NULL);
-    fill_buffer(text);
-    fill_buffer_char('\n');
+    multiple_fill_buff("\n", text, "\n", NULL);
     acl_free(text);
     acl_free(acl);
     return (0);
 }
 
-int diplay_xattr(t_file *file)
+static int fill_acl_attr(t_file *file, char *str, char *value, char *tmp)
+{
+    ft_bzero(value, BUFSIZ);
+    if (strncmp(str, "system.posix_acl_", 17) == 0)
+        display_acl(*file, str, tmp);
+    else
+    {
+        if (getxattr(tmp, str, value, BUFSIZ) == -1)
+        {
+            ft_printf_fd(2, "Erorr getxattr for %s\n", tmp);
+            free(tmp);
+            return (-1);
+        }
+        multiple_fill_buff(str, "=\"", NULL, NULL);
+        multiple_fill_buff(value, "\"\n", NULL, NULL);
+    }
+    return (0);
+}
+
+int diplay_xattr_acl(t_file *file)
 {
     char value[BUFSIZ];
     char list[BUFSIZ];
     int i = 0;
-    int res =0;
+    char *tmp = NULL;
 
-    int listen_len = list_xattr(file->name, list);
+    if (file->parrent)
+        tmp = join_parent_name(file->parrent, file->name);
+    else
+        tmp = ft_strjoin(file->name, "");
+    if (!tmp)
+        return (MALLOC_ERR);
+    int listen_len = list_xattr(tmp, list);
     if (listen_len == -1)
+    {
+        free(tmp);
         return (-1);
-    fill_buffer("# file: ");
-    fill_buffer(file->name);
-    fill_buffer_char('\n');
+    }
     while (i < listen_len)
     {
-        ft_bzero(value, BUFSIZ);
-        if (strncmp(&list[i], "system.posix_acl_", 17) == 0)
-            display_acl(*file, &list[i]);
-        else
+        if (i == 0)
+            multiple_fill_buff("\n# file : ", file->name, "\n", NULL);
+        if (fill_acl_attr(file, &list[i], value, tmp) == -1)
         {
-            fill_buffer(&list[i]);
-            fill_buffer("=\"");
-            res = getxattr(file->name, &list[i], value, BUFSIZ);
-            if (res == -1)
-            {
-                ft_printf_fd(2, "Erorr getxattr\n");
-                return (1);
-            }
-            fill_buffer(value);
-            fill_buffer("\"\n");
+            free(tmp);
+            return (-1);
         }
         i += ft_strlen_word(&list[i]) + 1;
     }
+    free(tmp);
     return (0);
 }

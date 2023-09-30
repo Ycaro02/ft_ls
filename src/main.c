@@ -12,7 +12,6 @@ int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), 
         err = ls_function(current->content, flag_nb, lst_len, error);
         if (err == MALLOC_ERR)
             break ;
-        diplay_xattr(current->content);
         current = current->next;
     }
     return (err);

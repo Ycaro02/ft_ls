@@ -36,6 +36,8 @@ int flag_already_add(char c, enum e_flag *used)
         return (1);
     else if (c == T_FLAG_CHAR && already_add(used, T_OPTION) == 1)
         return (1);
+    else if (c == ACL_EXT_Z_FLAG && already_add(used, Z_OPTION) == 1)
+        return (1);
     return (0);
 }
 
@@ -63,6 +65,8 @@ int add_flag(char c, enum e_flag *used)
         return (fill_used_flag(used, A_OPTION));
     else if (c == T_FLAG_CHAR)
         return (fill_used_flag(used, T_OPTION));
+     else if (c == ACL_EXT_Z_FLAG)
+        return (fill_used_flag(used, Z_OPTION));
     ft_printf_fd(2, "ft_ls: unrecognized option %c\n", c);
     return (-1);
 }

@@ -17,6 +17,7 @@
 # define     REVERSE_FLAG_CHAR 'r'
 # define     A_FLAG_CHAR 'a'
 # define     T_FLAG_CHAR 't'
+# define     ACL_EXT_Z_FLAG 'z'
 
 # define     BLOCK        'b'
 # define     CHARACTER    'c'
@@ -38,6 +39,7 @@ enum e_flag  {
     T_OPTION=4,
     REVERSE_OPTION=8,
     R_OPTION=16,
+    Z_OPTION=32,
 };
 
 enum e_space  {

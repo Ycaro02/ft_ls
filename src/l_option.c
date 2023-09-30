@@ -311,7 +311,7 @@ static int write_size(long size, int space)
     return (0);
 }
 
-int fill_buffer_l_option(t_file file, int *space)
+int fill_buffer_l_option(t_file file, int *space, int flag_nb)
 {   
     int is_exec;
 
@@ -326,5 +326,7 @@ int fill_buffer_l_option(t_file file, int *space)
         write_date(&file.last_change, space) == MALLOC_ERR || \
         write_file_name(file, is_exec, L_OPTION) == MALLOC_ERR)
         return (MALLOC_ERR);
+    if (flag_nb & Z_OPTION)
+        diplay_xattr_acl(&file);
     return (0);
 }

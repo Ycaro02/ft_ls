@@ -1,5 +1,17 @@
 #include "../include/ft_ls.h"
 
+void multiple_fill_buff(char *s1, char*s2, char *s3, char *s4)
+{
+    if (s1)
+        fill_buffer(s1);
+    if (s2)
+        fill_buffer(s2);
+    if (s3)
+        fill_buffer(s3);
+    if (s4)
+        fill_buffer(s4);
+}
+
 void    print_and_clear()
 {
     write(1, g_buff.buffer, g_buff.i);
@@ -7,7 +19,7 @@ void    print_and_clear()
     g_buff.i = 0;
 }
 
-int fill_l_buffer(t_list *lst)
+int fill_l_buffer(t_list *lst, int flag_nb)
 {
     t_list *current = lst;
     int *space;
@@ -18,7 +30,7 @@ int fill_l_buffer(t_list *lst)
         return (MALLOC_ERR);
     while (current)
     {
-        fill_buffer_l_option(*(t_file *)current->content, space); // change to int return for malloc check
+        fill_buffer_l_option(*(t_file *)current->content, space, flag_nb); // change to int return for malloc check
         current = current->next;
     }
     free(space);
@@ -91,7 +103,13 @@ static int classic_store(t_list *lst, int flag_nb)
             return (MALLOC_ERR);
         if (write_file_name(*file, is_exec, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
-        if (current->next)
+        if (flag_nb & Z_OPTION)
+        {
+            fill_buffer_char('\n');
+            diplay_xattr_acl(file);
+            fill_buffer_char('\n');
+        }
+        else if (current->next)
             fill_buffer(" ");
         current = current->next;
     }
@@ -115,11 +133,11 @@ int store_in_buffer(t_list *lst, int flag_nb)
         new_lstclear(&lst, free);
         return (MALLOC_ERR);
     }
-    else if (tab != NULL)
+    else if (tab != NULL && !(flag_nb & Z_OPTION))
         return (fill_buffer_with_column(tab, nb_raw, &lst));
-    else
-        return (classic_store(lst, flag_nb));
-    return (0);
+    if (tab)
+        ft_free_tab(tab);
+    return (classic_store(lst, flag_nb));
 }
 
 void finish_print_buffer()

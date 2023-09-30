@@ -77,12 +77,12 @@ int        search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error);
 // l_options.c
 char        get_type(struct stat sb);
 t_file      *fill_file_struct(struct stat sb, char *path, char* parent);
-int         fill_buffer_l_option(t_file file, int* space);
+int         fill_buffer_l_option(t_file file, int* space, int nb_flag);
 int         write_file_name(t_file file, int is_exec, int option);
 char        *get_perm(int nbr);
 void        insert_space(int nb);
-void write_user_name(long user_id, int space);
-void write_group_name(long group_id, int space);
+void        write_user_name(long user_id, int space);
+void        write_group_name(long group_id, int space);
 
 // manage_space.c
 int			*get_all_space(t_list *lst);
@@ -99,19 +99,23 @@ int         safe_reverse_lst(t_list **lst,  int* error);
 
 // buffer.c
 void        fill_buffer(char *str);
-int         fill_l_buffer(t_list *lst);
+int         fill_l_buffer(t_list *lst, int flag_nb);
 void        fill_buffer_char(char c);
 void        fill_buffer_color(char *str, enum e_color color);
 int         store_in_buffer(t_list *lst, int flag_nb);
 void        print_and_clear();
 void        finish_print_buffer();
+void        multiple_fill_buff(char *s1, char*s2, char *s3, char *s4);
 void        fill_color(enum e_color color);
+
+//main.c
+int         ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), int* error);
 
 // manage_column.c
 int         fill_buffer_with_column(char **tab, int nb_raw, t_list **lst);
 char        **check_manage_colum(t_list *lst, int *err, int *value, int lst_len);
 
 // list_xattr.c
-int diplay_xattr(t_file *file);
+int         diplay_xattr_acl(t_file *file);
 
 #endif
