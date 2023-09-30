@@ -21,6 +21,8 @@ static int list_xattr(char *path, char *list)
 static int display_acl(t_file file, char *str, char* full_name)
 {
     acl_t acl = acl_get_file(full_name, ACL_TYPE_ACCESS);
+    char *text = NULL;
+    
     if (!acl)
     {
         ft_printf_fd(2, "ACL NULL for %s\n", full_name);
@@ -30,7 +32,7 @@ static int display_acl(t_file file, char *str, char* full_name)
     write_user_name(file.user_id, -1);
     multiple_fill_buff("\n", "# group : ", NULL, NULL);
     write_group_name(file.group_id, -1);
-    char *text = acl_to_text(acl, NULL);
+    text = acl_to_text(acl, NULL);
     multiple_fill_buff("\n", text, "\n", NULL);
     acl_free(text);
     acl_free(acl);
@@ -40,7 +42,7 @@ static int display_acl(t_file file, char *str, char* full_name)
 static int fill_acl_attr(t_file *file, char *str, char *value, char *tmp)
 {
     ft_bzero(value, BUFSIZ);
-    if (strncmp(str, "system.posix_acl_", 17) == 0)
+    if (ft_strncmp(str, "system.posix_acl_", 17) == 0)
         display_acl(*file, str, tmp);
     else
     {
@@ -56,20 +58,31 @@ static int fill_acl_attr(t_file *file, char *str, char *value, char *tmp)
     return (0);
 }
 
-int diplay_xattr_acl(t_file *file)
+static char *get_new_path(t_file *file)
 {
-    char value[BUFSIZ];
-    char list[BUFSIZ];
-    int i = 0;
-    char *tmp = NULL;
+    char *tmp;
 
+    tmp = NULL;
     if (file->parrent)
         tmp = join_parent_name(file->parrent, file->name);
     else
         tmp = ft_strjoin(file->name, "");
     if (!tmp)
+        return (NULL);
+    return (tmp);
+}
+
+int diplay_xattr_acl(t_file *file)
+{
+    char value[BUFSIZ];
+    char list[BUFSIZ];
+    int i = 0, listen_len = 0;
+    char *tmp = NULL;
+
+    tmp = get_new_path(file);
+    if (!tmp)
         return (MALLOC_ERR);
-    int listen_len = list_xattr(tmp, list);
+    listen_len = list_xattr(tmp, list);
     if (listen_len == -1)
     {
         free(tmp);

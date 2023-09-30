@@ -111,7 +111,7 @@ enum e_flag *parse_flag(int argc, char **argv, enum e_flag *used)
 
 enum e_flag *check_for_flag(int argc, char **argv)
 {
-    enum e_flag *used = malloc(sizeof(int) * 6);
+    enum e_flag *used = ft_calloc(sizeof(int), NB_FLAG);
     if (!used)
     {
         perror("Malloc");

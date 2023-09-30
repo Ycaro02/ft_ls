@@ -29,8 +29,10 @@
 # define     UNDIFINED    '?'
 # define     EXEC         'x'
 
-# define NEW 0
-# define OLD 1
+# define    NEW 0
+# define    OLD 1
+
+# define    NB_FLAG 7
 
 enum e_flag  {
     UNKNOW=0,
