@@ -11,6 +11,8 @@ int get_flag(enum e_flag *flag)
     }
     if (nb & G_OPTION && !(nb & L_OPTION))
         nb += L_OPTION;
+    if (nb & F_OPTION && !(nb & A_OPTION))
+        nb += A_OPTION;
     return (nb);
 }
 
@@ -46,6 +48,10 @@ int flag_already_add(char c, enum e_flag *used)
         return (1);
     else if (c == G_FLAG_CHAR && already_add(used, G_OPTION) == 1)
         return (1);
+    else if (c == F_FLAG_CHAR && already_add(used, F_OPTION) == 1)
+        return (1);
+    else if (c == D_FLAG_CHAR && already_add(used, D_OPTION) == 1)
+        return (1);
     return (0);
 }
 
@@ -79,8 +85,12 @@ int add_flag(char c, enum e_flag *used)
         return (fill_used_flag(used, U_OPTION));
     else if (c == C_FLAG_CHAR)
         return (fill_used_flag(used, C_OPTION));
-     else if (c == G_FLAG_CHAR)
+    else if (c == G_FLAG_CHAR)
         return (fill_used_flag(used, G_OPTION));
+    else if (c == F_FLAG_CHAR)
+        return (fill_used_flag(used, F_OPTION));
+    else if (c == D_FLAG_CHAR)
+        return (fill_used_flag(used, D_OPTION));
     ft_printf_fd(2, "ft_ls: unrecognized option %c\n", c);
     return (-1);
 }

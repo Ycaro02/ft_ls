@@ -125,7 +125,7 @@ int store_in_buffer(t_list *lst, int flag_nb)
     char    **tab = NULL;
     
     if (flag_nb & REVERSE_OPTION)
-        if (safe_reverse_lst(&lst, NULL) == MALLOC_ERR)
+        if (safe_reverse_lst(&lst, NULL, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
     tab = check_manage_colum(lst, &err, &nb_raw, get_lst_len(lst));
     if (err == MALLOC_ERR)

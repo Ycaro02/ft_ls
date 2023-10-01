@@ -30,9 +30,11 @@ static void reverse_lst(t_list *lst, t_list **new)
     }
 }
 
-int safe_reverse_lst(t_list **lst,  int* error)
+int safe_reverse_lst(t_list **lst,  int* error, int flag_nb)
 {
     t_list *reverse = NULL;
+    if (flag_nb & F_OPTION)
+        return (0);
     reverse_lst(*lst, &reverse);
     if (!reverse)
     {
@@ -105,6 +107,8 @@ void sort_by_time(t_list *lst, int flag_nb, char option)
 
 void sort_lst(t_list *lst, int flag_nb)
 {
+    if (flag_nb & F_OPTION)
+        return ;
     if (flag_nb & L_OPTION)
     {
         if (flag_nb & T_OPTION)
@@ -129,6 +133,4 @@ void sort_lst(t_list *lst, int flag_nb)
             sort_by_time(lst, flag_nb, 'c'); // c
     else
         sort_by_name(lst, flag_nb);
-    // else if (flag_nb & F_OPTION)
-    //     return ;
 }

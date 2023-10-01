@@ -14,6 +14,8 @@ int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), 
             break ;
         current = current->next;
     }
+    if (flag_nb & D_OPTION && !(flag_nb & L_OPTION))
+        fill_buffer_char('\n');
     return (err);
 }
 
@@ -22,13 +24,16 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error)
     int err;
     
     err = 0;
-    if (flag_nb & R_OPTION)
+    if (flag_nb & R_OPTION && !(D_OPTION))
         err = search_recurcive_dir(dir_lst, flag_nb, error);
     else if (flag_nb & L_OPTION)
         err = ls(dir_lst, flag_nb, ls_l_one_dir, error);
     else
         err = ls(dir_lst, flag_nb, ls_one_dir, error);
-    new_lstclear(&dir_lst, free);
+    if (!(flag_nb & D_OPTION))
+        new_lstclear(&dir_lst, free);
+    else
+        free_node_ptr(&dir_lst);
     if (err == MALLOC_ERR)
     {
         ft_printf_fd(2, "Malloc error exit\n");
@@ -51,7 +56,7 @@ int ft_ls(char **argv, int flag_nb, int* error)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
     if (flag_nb & REVERSE_OPTION)
     {
-        if (safe_reverse_lst(&dir_lst, error) == MALLOC_ERR)
+        if (safe_reverse_lst(&dir_lst, error, flag_nb) == MALLOC_ERR)
         {
             new_lstclear(&dir_lst, free);
             return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));

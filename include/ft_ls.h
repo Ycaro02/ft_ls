@@ -25,14 +25,14 @@
             with -l  : sort by name. display acces time     ==> done  
             else     : sort by access time newest first     ==> done  
         - c (ctime) like -u but with ctime                  ==> done  Try to get nsec for fix precision 
-        - g like -l but don't list owner
-        - f not sort, enable 2 option
+        - g like -l but don't list owner                    ==> done
+        - f not sort, enable 2 option                       ==> done, (need to remove color)
             a : list hiden file
             U : do not sort; list entries in directory order)
-        - d list just directory not their content
+        - d list just directory not their content           ==> done
         ///
         - 1 one filename per line (already done for z)
-        - n  like -l but list id of user/group instead of their name
+        - n  like -l but list id of user/group instead of their name => easy to set-up same way -g
 */
 typedef struct s_file 
 {
@@ -106,7 +106,7 @@ char            **get_printable_date(time_t *time);
 // sort.c
 void            sort_lst(t_list *lst, int flag_nb);
 void            free_node_ptr(t_list **lst);
-int             safe_reverse_lst(t_list **lst,  int* error);
+int             safe_reverse_lst(t_list **lst,  int* error, int flag_nb);
 
 // buffer.c
 void            fill_buffer(char *str);
