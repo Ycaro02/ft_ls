@@ -17,6 +17,8 @@
 # include "../libft/libft.h"
 # include "define_enum.h"
 
+//TODO color = option
+
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
 //                                  STRUCT                                    //
