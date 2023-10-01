@@ -130,6 +130,7 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
     file->last_status_change = sb.st_ctime;
     file->last_access = sb.st_atime;
     file->last_change = sb.st_mtime;
+    // printf(".sec = %ld usec = %ld\n", sb.st_mtime, sb.st_mtimensec);
     file->user_id = sb.st_uid;
     file->group_id = sb.st_gid;
     file->nb_block = sb.st_blocks;
@@ -248,32 +249,6 @@ int write_file_name(t_file file, int is_exec, int option)
     return (0);
 }
 
-static int write_date(time_t *last_change, int* space)
-{
-    char **tmp;
-    int i;
-    int j;
-    
-    j = S_MONTH;
-    i = 0;
-    tmp = NULL;
-    tmp = get_printable_date(last_change);
-    if (!tmp)
-    {
-        perror("Malloc");
-        return (MALLOC_ERR);
-    }
-    while (tmp[i])
-    {
-        insert_space(space[j] - ft_strlen(tmp[i]));
-        fill_buffer(tmp[i]);
-        fill_buffer_char(' ');
-        i++;
-        j++;
-    }
-    ft_free_tab(tmp);
-    return (0);
-}
 
 static int write_perm(t_file file, int *is_exec)
 {
@@ -313,6 +288,35 @@ static int write_size(long size, int space)
     return (0);
 }
 
+static int write_date(t_file file, int* space, int flag_nb)
+{
+    char **tmp = NULL;
+    int i = 0;
+    int j = S_MONTH;
+
+    if (flag_nb & U_OPTION)
+        tmp = get_printable_date(&file.last_access);
+    else if (flag_nb & C_OPTION)
+        tmp = get_printable_date(&file.last_status_change);
+    else
+        tmp = get_printable_date(&file.last_change);
+    if (!tmp)
+    {
+        perror("Malloc");
+        return (MALLOC_ERR);
+    }
+    while (tmp[i])
+    {
+        insert_space(space[j] - ft_strlen(tmp[i]));
+        fill_buffer(tmp[i]);
+        fill_buffer_char(' ');
+        i++;
+        j++;
+    }
+    ft_free_tab(tmp);
+    return (0);
+}
+
 int fill_buffer_l_option(t_file file, int *space, int flag_nb)
 {   
     int is_exec;
@@ -325,7 +329,7 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
     write_user_name(file.user_id, space[S_USER]);
     write_group_name(file.group_id, space[S_GROUP]);
     if (write_size(file.size, space[S_SIZE]) == MALLOC_ERR || \
-        write_date(&file.last_change, space) == MALLOC_ERR || \
+        write_date(file, space, flag_nb) == MALLOC_ERR || \
         write_file_name(file, is_exec, L_OPTION) == MALLOC_ERR)
         return (MALLOC_ERR);
     if (flag_nb & Z_OPTION)

@@ -19,20 +19,20 @@
 # include "define_enum.h"
 
 /*TODO  -clean all
-      -add many crazy option 
+      -add many crazy option
         -u (access time) man ls:
-            with -lt : sort by ?? t or u, display access time
-            with -l  : sort by name. display acces time
-            else     : sort by access time newest first
-        - f not sort, enable 2 option 
+            with -lt : sort by u, display access time       ==> done
+            with -l  : sort by name. display acces time     ==> done  
+            else     : sort by access time newest first     ==> done  
+        - c (ctime) like -u but with ctime                  ==> done  Try to get nsec for fix precision 
+        - f not sort, enable 2 option
             a : list hiden file
             U : do not sort; list entries in directory order)
         - g like -l but don't list owner
         - d list just directory not their content
         ///
-        - 1 one filename per line
-        - c (ctime) like u but with ctime 
-        - n  like -l but list id of user/group
+        - 1 one filename per line (already done for z)
+        - n  like -l but list id of user/group instead of their name
 */
 typedef struct s_file 
 {
