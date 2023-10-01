@@ -17,13 +17,6 @@ static long long get_total_len(t_list *list)
     return (total);
 } 
 
-static int get_name_len(t_file file)
-{
-    int len = ft_strlen(file.name);
-    return (len);
-}
-
-
 static void add_char(char *dst, char src, int *j)
 {
     dst[*j] = src;
@@ -72,10 +65,10 @@ static char **alloc_tab(int nb_raw, int *max_unit_len, int max_per_raw, int lst_
     if (!tab)
         return (NULL);
     int total = get_raw_len(max_unit_len, max_per_raw);
-    for (int k = 0; k < nb_raw; k++)
+    for (int i = 0; i < nb_raw; i++)
     {
-        tab[k] = ft_calloc(sizeof(char), total + 2);
-        if (!tab[k])
+        tab[i] = ft_calloc(sizeof(char), total + 2);
+        if (!tab[i])
             return (NULL);
     }
 
@@ -139,7 +132,7 @@ static int *get_max_by_column(t_list *lst, int nb_column, int nb_raw)
     while (lst)
     {
         t_file *file = lst->content;
-        int tmp = get_name_len(*file);
+        int tmp = ft_strlen(file->name);
         if (tmp > max)
             max = tmp;
         i++;
@@ -157,7 +150,7 @@ static int *get_max_by_column(t_list *lst, int nb_column, int nb_raw)
     return (tab);
 }
 
-// get the max column len for each test
+// get the max column len for specific column and test value
 static int get_max_len_by_index(int start, int test ,int max, int* tab)
 {
     int nb = 0;
@@ -249,7 +242,7 @@ static int get_nb_raw(int stdout_w, t_list *lst)
     int *all_len = get_all_len(lst, len);
     if (!all_len)
         return (MALLOC_ERR);
-    int test = 1; // test value for nb_raw, //brute force it
+    int test = 1; // test value for nb_raw, brute force it
     int ret = -1;
     while (ret != 0)
     {

@@ -57,7 +57,7 @@ static int get_user_name_len(t_file file)
 
 static int get_len_date_month(t_file file)
 {
-    char **tmp = get_printable_date(&file.last_change);
+    char **tmp = get_printable_date(file.last_change);
     if (!tmp)
         return (MALLOC_ERR);
     int nb = ft_strlen(tmp[0]);
@@ -67,7 +67,7 @@ static int get_len_date_month(t_file file)
 
 static int get_len_date_day(t_file file)
 {
-    char **tmp = get_printable_date(&file.last_change);
+    char **tmp = get_printable_date(file.last_change);
     if (!tmp)
         return (MALLOC_ERR);
     int nb = ft_strlen(tmp[1]);
@@ -77,7 +77,7 @@ static int get_len_date_day(t_file file)
 
 static int get_len_date_hour(t_file file)
 {
-    char **tmp = get_printable_date(&file.last_change);
+    char **tmp = get_printable_date(file.last_change);
     if (!tmp)
         return (MALLOC_ERR);
     int nb = ft_strlen(tmp[2]);

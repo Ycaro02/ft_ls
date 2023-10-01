@@ -127,10 +127,9 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
     file->perm = sb.st_mode & 0777;
     file->size = sb.st_size;
     file->nb_link = sb.st_nlink;
-    file->last_status_change = sb.st_ctime;
-    file->last_access = sb.st_atime;
-    file->last_change = sb.st_mtime;
-    // printf(".sec = %ld usec = %ld\n", sb.st_mtime, sb.st_mtimensec);
+    file->last_status_change = sb.st_ctim;
+    file->last_access = sb.st_atim;
+    file->last_change = sb.st_mtim;
     file->user_id = sb.st_uid;
     file->group_id = sb.st_gid;
     file->nb_block = sb.st_blocks;
@@ -315,11 +314,11 @@ static int write_date(t_file file, int* space, int flag_nb)
     int j = S_MONTH;
 
     if (flag_nb & U_OPTION)
-        tmp = get_printable_date(&file.last_access);
+        tmp = get_printable_date(file.last_access);
     else if (flag_nb & C_OPTION)
-        tmp = get_printable_date(&file.last_status_change);
+        tmp = get_printable_date(file.last_status_change);
     else
-        tmp = get_printable_date(&file.last_change);
+        tmp = get_printable_date(file.last_change);
     if (!tmp)
     {
         perror("Malloc");

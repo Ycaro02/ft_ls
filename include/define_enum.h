@@ -1,5 +1,5 @@
-#ifndef LS_DEFINE_H
-# define LS_DEFINE_H
+#ifndef FT_LS_DEFINE_ENUM_H
+# define FT_LS_DEFINE_ENUM_H
 
 # define    RED "\033[1;31m"
 # define    GREEN "\033[1;32m"

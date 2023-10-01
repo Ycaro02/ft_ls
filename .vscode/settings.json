@@ -3,6 +3,8 @@
 		"ft_ls.h": "c",
 		"time.h": "c",
 		"stdio.h": "c",
-		"stat.h": "c"
+		"stat.h": "c",
+		"types.h": "c",
+		"corecrt.h": "c"
 	}
 }

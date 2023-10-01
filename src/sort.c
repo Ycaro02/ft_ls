@@ -69,19 +69,34 @@ void sort_by_name(t_list *lst, int flag_nb)
     sort_by_name(head->next, flag_nb);
 }
 
-t_list *get_min_value(t_list *min, t_list *lst, char option)
+static t_list *get_precise_value(t_list *min, t_list* lst, t_timespec current, t_timespec min_file)
+{
+    t_file *current_tmp = lst->content;
+    t_file *min_tmp = min->content;
+
+    if (current.tv_sec > min_file.tv_sec)
+        min = lst;
+    if (current.tv_sec == min_file.tv_sec)
+    {
+        if (current.tv_nsec > min_file.tv_nsec)
+            min = lst;
+        if (current.tv_nsec == min_file.tv_nsec)
+            if (ft_lower_strcmp(current_tmp->name, min_tmp->name) < 0)
+                min = lst;
+    }
+    return (min);
+}
+
+static t_list *get_min_value(t_list *min, t_list *lst, char option)
 {
     t_file *current = (t_file *)lst->content;
     t_file *min_file = (t_file *)min->content;
-    if (option == 't')
-        if (current->last_change > min_file->last_change)
-            min = lst;
-    if (option == 'u')
-        if (current->last_access > min_file->last_access)
-            min = lst;
-    if (option == 'c')
-        if (current->last_status_change > min_file->last_status_change)
-            min = lst;
+    if (option == T_FLAG_CHAR)
+        min = get_precise_value(min , lst, current->last_change, min_file->last_change);
+    else if (option == U_FLAG_CHAR)
+        min = get_precise_value(min , lst, current->last_access, min_file->last_access);
+    else if (option == C_FLAG_CHAR)
+        min = get_precise_value(min , lst, current->last_status_change, min_file->last_status_change);
     return (min);
 }
 
@@ -114,23 +129,21 @@ void sort_lst(t_list *lst, int flag_nb)
         if (flag_nb & T_OPTION)
         {
             if (flag_nb & U_OPTION)
-                sort_by_time(lst, flag_nb, 'u'); // u
+                sort_by_time(lst, flag_nb, U_FLAG_CHAR);
             else if (flag_nb & C_OPTION)
-                sort_by_time(lst, flag_nb, 'c'); // c
+                sort_by_time(lst, flag_nb, C_FLAG_CHAR);
             else
-                sort_by_time(lst, flag_nb, 't'); // t
+                sort_by_time(lst, flag_nb, T_FLAG_CHAR);
         }
-        else if (flag_nb & U_OPTION || flag_nb & C_OPTION)
-            sort_by_name(lst, flag_nb);
         else
             sort_by_name(lst, flag_nb);
     }
     else if (flag_nb & U_OPTION)
-            sort_by_time(lst, flag_nb, 'u'); // u -u take priotiry tested with ls -u -ut -utc
+            sort_by_time(lst, flag_nb, U_FLAG_CHAR); // u -u take priotiry
     else if (flag_nb & C_OPTION)
-            sort_by_time(lst, flag_nb, 'c'); // c
+            sort_by_time(lst, flag_nb, C_FLAG_CHAR); // c
     else if (flag_nb & T_OPTION)
-            sort_by_time(lst, flag_nb, 'c'); // c
+            sort_by_time(lst, flag_nb, T_FLAG_CHAR); // c
     else
         sort_by_name(lst, flag_nb);
 }

@@ -20,9 +20,9 @@
 
 /*TODO:
       -clean all
-        - '-c -u -t':                       ==> done  Try to get nsec for fix precision 
-        - f not sort, enable 2 option       ==> done, (need to remove color)
 */
+typedef struct timespec t_timespec;
+
 typedef struct s_file 
 {
     char        type;
@@ -33,9 +33,9 @@ typedef struct s_file
     off_t       size;
     off_t       total_size;
     blkcnt_t    nb_block;
-    time_t      last_status_change;
-    time_t      last_access;
-    time_t      last_change;
+    t_timespec  last_status_change;
+    t_timespec  last_access;
+    t_timespec  last_change;
     char        *name;
     char        *parrent;
 } t_file;
@@ -89,7 +89,7 @@ void            write_group_name(long group_id, int space, int flag_nb);
 int			     *get_all_space(t_list *lst, int flag_nb);
 
 // time gestion.c
-char            **get_printable_date(time_t *time);
+char            **get_printable_date(t_timespec last_change);
 
 // sort.c
 void            sort_lst(t_list *lst, int flag_nb);

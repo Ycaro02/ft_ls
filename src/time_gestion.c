@@ -83,13 +83,13 @@ int check_six_month(time_t last_change)
     return (NEW);
 }
 
-char **get_printable_date(time_t *last_change)
+char **get_printable_date(t_timespec last_change)
 {
-    char *str = ctime(last_change);
+    char *str = ctime(&last_change.tv_sec);
     char * new = NULL;
     int old;
 
-    old = check_six_month(*last_change);
+    old = check_six_month(last_change.tv_sec);
     if (old == NEW)
     {
         new = str_trim_patern(str_trim_patern(str, ' ', 1, 0), ' ', 3, 1);
