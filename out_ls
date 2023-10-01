@@ -1,0 +1,16 @@
+total 180
+-rw-r--r-- 1 1000   1955 Oct  1 12:17 Makefile
+-rwxr-xr-x 1 1000  16176 Oct  1 12:17 a.out
+-rw-r--r-- 1 1000      0 Oct  1 12:17 coucou.txt
+-rwxr-xr-x 1 1000     51 Oct  1 12:17 count.sh
+-rw-r--r-- 1 1000    225 Oct  1 12:17 create_file_extended_attr
+-rwxr-xr-x 1 1000 125120 Oct  1 18:23 ft_ls
+drwxr-xr-x 2 1000   4096 Oct  1 12:17 include
+drwxr-xr-x 3 1000   4096 Oct  1 18:23 libft
+-rw-r--r-- 1 1000      0 Oct  1 12:17 mon_fichier.txt
+-rw-r--r-- 1 1000    792 Oct  1 18:27 out_ft_ls
+-rw-r--r-- 1 1000      0 Oct  1 18:27 out_ls
+drwxr-xr-x 2 1000   4096 Oct  1 18:23 src
+drwxr-xr-x 2 1000   4096 Oct  1 12:17 test
+-rw-r--r-- 1 1000   1256 Oct  1 12:17 test.c
+drwxr-xr-x 2 1000   4096 Oct  1 12:17 tuto_tmp

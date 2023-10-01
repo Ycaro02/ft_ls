@@ -54,18 +54,30 @@ int get_lst_len(t_list *lst)
     return (i);
 }
 
-int is_point_dir(char *path, int flag_nb)
+int is_point_dir(char *path, int flag_nb, int display)
 {
-    if (flag_nb & A_OPTION && !(flag_nb & R_OPTION))
-        return (1);
-    else if (flag_nb & R_OPTION && flag_nb & A_OPTION)
+    if (display == 0)
     {
-        if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0)
-            return (0);
+        if (flag_nb & A_OPTION)
+            return (1);
+        else
+            if (path && path[0] == '.')
+                return (0);
         return (1);
     }
-    if (path && path[0] == '.')
-        return (0);
+    else
+    {
+        if (flag_nb & A_OPTION && !(flag_nb & R_OPTION))
+            return (1);
+        else if (flag_nb & R_OPTION && flag_nb & A_OPTION)
+        {
+            if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0)
+                return (0);
+            return (1);
+        }
+        if (path && path[0] == '.')
+            return (0);
+    }
     return (1);
 }
 

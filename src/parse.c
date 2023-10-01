@@ -123,7 +123,7 @@ t_list* get_all_file_struct(t_file *file, int flag_nb, int *error)
     do 
     {
         my_dir = readdir(dir);
-        if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
+        if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 0) == 1)
         {
             if (check_for_fill_struct(&all, my_dir, file, error) == MALLOC_ERR)
             {

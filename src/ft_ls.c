@@ -33,13 +33,6 @@ long long get_total_size(t_list *lst)
 int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 {
     t_list *lst = NULL;
-    if (flag_nb & D_OPTION)
-    {
-        ft_lstadd_back(&lst, ft_lstnew(file));
-        if (fill_l_buffer(lst, flag_nb) == MALLOC_ERR)
-            return (MALLOC_ERR);
-        return (0);
-    }
     if (file->type == DIRECTORY)
       lst = get_all_file_struct(file, flag_nb, error);
     else

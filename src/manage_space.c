@@ -19,6 +19,7 @@ static int get_user_id_len(t_file file)
     if (!tmp)
         return (MALLOC_ERR);
     int nb = ft_strlen(tmp);
+    free(tmp);
     return (nb);
 }
 
@@ -28,6 +29,7 @@ static int get_group_id_len(t_file file)
     if (!tmp)
         return (MALLOC_ERR);
     int nb = ft_strlen(tmp);
+    free(tmp);
     return (nb);
 }
 

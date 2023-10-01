@@ -58,7 +58,7 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
     do 
     {
         my_dir = readdir(dir);
-        if (my_dir && is_point_dir(my_dir->d_name, flag_nb) == 1)
+        if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 1) == 1)
         {
             ret = parse_directory(file, my_dir, new);
             if (ret != 0)

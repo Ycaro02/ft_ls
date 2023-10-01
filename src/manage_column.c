@@ -365,7 +365,7 @@ int fill_buffer_with_column(char **tab, int nb_raw, t_list **lst)
     for (int i = 0; i < nb_raw + 1; i++)
         free(tab[i]);
     free(tab);
-    fill_buffer("\n");
     new_lstclear(lst, free);
+    fill_buffer("\n\n");
     return (0);
 }

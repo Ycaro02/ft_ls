@@ -80,7 +80,7 @@ static t_list *get_precise_value(t_list *min, t_list* lst, t_timespec current, t
     {
         if (current.tv_nsec > min_file.tv_nsec)
             min = lst;
-        if (current.tv_nsec == min_file.tv_nsec)
+        if (current.tv_nsec == min_file.tv_nsec)    // if sec and microsec are equal sort by name
             if (ft_lower_strcmp(current_tmp->name, min_tmp->name) < 0)
                 min = lst;
     }

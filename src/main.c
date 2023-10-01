@@ -19,18 +19,39 @@ int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), 
     return (err);
 }
 
+static int ls_only_dir(t_list *dir_lst, int flag_nb)
+{
+    t_list *current = dir_lst;
+    int *space = get_all_space(dir_lst, flag_nb);
+    int err = 0;
+    while (current)
+    {
+        err = fill_buffer_l_option(*(t_file *)current->content, space, flag_nb);
+        if (err == MALLOC_ERR)
+        {
+            free(space);
+            return (MALLOC_ERR);
+        }
+        current = current->next;
+    }
+    free(space);
+    return (0);
+}
+
 void call_ls(t_list *dir_lst, int flag_nb, int *error)
 {
     int err;
     
     err = 0;
-    if (flag_nb & R_OPTION && !(D_OPTION))
-        err = search_recurcive_dir(dir_lst, flag_nb, error);
+    if (flag_nb & R_OPTION && !(flag_nb & D_OPTION))
+        err = search_recurcive_dir(dir_lst, flag_nb, error, 0);
+    else if (flag_nb & L_OPTION && flag_nb & D_OPTION)
+        err = ls_only_dir(dir_lst, flag_nb);
     else if (flag_nb & L_OPTION)
         err = ls(dir_lst, flag_nb, ls_l_one_dir, error);
     else
         err = ls(dir_lst, flag_nb, ls_one_dir, error);
-    if (!(flag_nb & D_OPTION))
+    if (!(flag_nb & D_OPTION) || (flag_nb & L_OPTION && flag_nb & D_OPTION))
         new_lstclear(&dir_lst, free);
     else
         free_node_ptr(&dir_lst);

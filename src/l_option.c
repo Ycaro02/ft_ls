@@ -169,8 +169,8 @@ void write_user_name(long user_id, int space, int flag_nb)
         }
         else
         {
-            insert_space(space - ft_strlen(user->pw_name));
             fill_buffer(user->pw_name);
+            insert_space(space - ft_strlen(user->pw_name));
         }
     }
     if (space != -1)
@@ -196,8 +196,8 @@ void write_group_name(long group_id, int space, int flag_nb)
         }
         else
         {
-            insert_space(space - ft_strlen(group->gr_name));
             fill_buffer(group->gr_name);
+            insert_space(space - ft_strlen(group->gr_name));
         }
     }
     if (space != -1)
