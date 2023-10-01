@@ -3,10 +3,7 @@
 static int display_dir_header(t_file file, int lst_len)
 {
     if (lst_len > 0)
-    {
-        fill_buffer(file.name);
-        fill_buffer(":\n");
-    }
+        multiple_fill_buff("\n", file.name, ":\n", NULL);
     char *total_str = ft_itoa(file.total_size);
     if (!total_str)
         return (MALLOC_ERR);
@@ -33,14 +30,13 @@ long long get_total_size(t_list *lst)
 int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 {
     t_list *lst = NULL;
-    if (file->type == DIRECTORY)
-      lst = get_all_file_struct(file, flag_nb, error);
-    else
+    if (file->type != DIRECTORY)
         return (0);
+    lst = get_all_file_struct(file, flag_nb, error);
+    if (!lst && *error == MALLOC_ERR) // one of case where int pointer error is mandatory
+        return (MALLOC_ERR);
     if (!lst)
         return (0);
-    if (!lst && *error == MALLOC_ERR)
-        return (MALLOC_ERR);
     file->total_size = get_total_size(lst);
     if (display_dir_header(*file, lst_len) == MALLOC_ERR)
         return (MALLOC_ERR);
@@ -65,11 +61,7 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
         return (0);
     }
     if (lst_len > 0)
-    {
-        fill_buffer("\n");
-        fill_buffer(file->name);
-        fill_buffer(":\n");
-    }
+        multiple_fill_buff("\n", file->name, ":\n", NULL); // here first \n with ls -R
     lst = get_all_file_struct(file, flag_nb, error);
     if (!lst && *error == MALLOC_ERR)
         return (MALLOC_ERR);

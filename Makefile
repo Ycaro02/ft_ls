@@ -16,17 +16,19 @@ CFLAGS	= -Wall -Wextra -Werror -g
 
 SRCS	=	src/main.c\
 			src/utils.c\
+			src/recurcive.c\
 			src/flag_gestion.c\
 			src/parse.c\
 			src/ft_ls.c\
-			src/recurcive.c\
+			src/t_file.c\
 			src/l_option.c\
+			src/l_option_utils.c\
 			src/time_gestion.c\
 			src/sort.c\
 			src/buffer.c\
-			src/manage_space.c\
 			src/manage_column.c\
 			src/list_xattr.c\
+			src/manage_space.c\
 
 
 OBJ = $(SRCS:.c=.o)
