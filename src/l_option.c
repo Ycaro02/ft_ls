@@ -127,6 +127,8 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
     file->perm = sb.st_mode & 0777;
     file->size = sb.st_size;
     file->nb_link = sb.st_nlink;
+    file->last_status_change = sb.st_ctime;
+    file->last_access = sb.st_atime;
     file->last_change = sb.st_mtime;
     file->user_id = sb.st_uid;
     file->group_id = sb.st_gid;

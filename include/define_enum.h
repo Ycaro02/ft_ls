@@ -18,6 +18,8 @@
 # define     A_FLAG_CHAR 'a'
 # define     T_FLAG_CHAR 't'
 # define     ACL_EXT_Z_FLAG 'z'
+# define     U_FLAG_CHAR 'u'
+# define     C_FLAG_CHAR 'c'
 
 # define     BLOCK        'b'
 # define     CHARACTER    'c'
@@ -32,7 +34,7 @@
 # define    NEW 0
 # define    OLD 1
 
-# define    NB_FLAG 7
+# define    NB_FLAG 9
 
 enum e_flag  {
     UNKNOW=0,
@@ -42,6 +44,8 @@ enum e_flag  {
     REVERSE_OPTION=8,
     R_OPTION=16,
     Z_OPTION=32,
+    U_OPTION=64,
+    C_OPTION=128,
 };
 
 enum e_space  {

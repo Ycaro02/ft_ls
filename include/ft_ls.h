@@ -44,6 +44,8 @@ typedef struct s_file
     off_t       size;
     off_t       total_size;
     blkcnt_t    nb_block;
+    time_t      last_status_change;
+    time_t      last_access;
     time_t      last_change;
     char        *name;
     char        *parrent;
