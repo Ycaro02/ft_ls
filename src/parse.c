@@ -64,13 +64,9 @@ static int check_args(char *str, t_list **new, int *found, int *error)
 
 t_list *get_dir_args(char **argv, int *error)
 {
-    int i;
-    t_list *new;
-    int found;
-
-    found = 0;
-    new = NULL;
-    i = 0;
+    int i = 0;
+    t_list *new = NULL;
+    int found = 0;
     while (argv && argv[i])
     {
         if (argv[i][0] != '-')

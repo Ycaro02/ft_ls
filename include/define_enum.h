@@ -1,6 +1,16 @@
 #ifndef FT_LS_DEFINE_ENUM_H
 # define FT_LS_DEFINE_ENUM_H
 
+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//                                                                            //
+//                                DEFINE                                      //
+//                                                                            //
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+//-------------------------------
+//      COLOR                  //
+//-------------------------------
 # define    RED "\033[1;31m"
 # define    GREEN "\033[1;32m"
 # define    YELLOW "\033[1;33m"
@@ -9,24 +19,18 @@
 # define    CYAN "\033[1;36m"
 # define    RESET "\033[0m"
 
+//-------------------------------
+//      BUFFER                 //
+//-------------------------------
 # define     BUFFER_LEN 10000
 # define     PRINT_SIZE 8000
 
-# define     L_FLAG_CHAR 'l'
-# define     R_FLAG_CHAR 'R'
-# define     REVERSE_FLAG_CHAR 'r'
-# define     A_FLAG_CHAR 'a'
-# define     T_FLAG_CHAR 't'
-// BONUS FLAG
-# define     ACL_EXT_Z_FLAG 'z'
-# define     U_FLAG_CHAR 'u'
-# define     C_FLAG_CHAR 'c'
-# define     G_FLAG_CHAR 'g'
-# define     G_FLAG_CHAR 'g'
-# define     F_FLAG_CHAR 'f'
-# define     D_FLAG_CHAR 'd'
-# define     N_FLAG_CHAR 'n'
 
+// 
+
+//-------------------------------
+//      FILE_TYPE              //
+//-------------------------------
 # define     BLOCK        'b'
 # define     CHARACTER    'c'
 # define     DIRECTORY    'd'
@@ -37,6 +41,9 @@
 # define     UNDIFINED    '?'
 # define     EXEC         'x'
 
+//-------------------------------
+//      --HELP                 //
+//-------------------------------
 # define HELP_STR  "\
 Usage: ./ft_ls [OPTION]... [FILE]...\n\
 List information about the FILEs (the current directory by default).\n\
@@ -45,11 +52,43 @@ List information about the FILEs (the current directory by default).\n\
 -c : Sort by last status change\n-g : Like -l but don't list owner \n-f : Don't sort, enable -a option\n\
 -d : List only directory, no content\n-n : Like -l but list id instead of name\n"
 
+//-------------------------------
+//     TIME                     // (after or before 6month ago)
+//-------------------------------
 # define    NEW 0
 # define    OLD 1
 
-# define    NB_FLAG 13
 
+//-------------------------------
+//      FLAG                   //
+//-------------------------------
+# define     L_FLAG_CHAR 'l'
+# define     A_FLAG_CHAR 'a'
+# define     T_FLAG_CHAR 't'
+# define     REVERSE_FLAG_CHAR 'r'
+# define     R_FLAG_CHAR 'R'
+// BONUS FLAG
+# define     ACL_EXT_Z_FLAG 'z'
+# define     U_FLAG_CHAR 'u'
+# define     C_FLAG_CHAR 'c'
+# define     G_FLAG_CHAR 'g'
+# define     G_FLAG_CHAR 'g'
+# define     F_FLAG_CHAR 'f'
+# define     D_FLAG_CHAR 'd'
+# define     N_FLAG_CHAR 'n'
+# define     NB_FLAG 13
+# define     ALL_FLAG "latrRzucgfdn"
+
+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//                                                                            //
+//                                  ENUM                                      //
+//                                                                            //
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+//-------------------------------
+//      FLAG                   //
+//-------------------------------
 enum e_flag  {
     UNKNOW=0,
     L_OPTION=1,
@@ -66,6 +105,9 @@ enum e_flag  {
     N_OPTION=2048,
 };
 
+//-------------------------------
+//      SPACE                   // For -l option
+//-------------------------------
 enum e_space  {
     S_USER,
     S_GROUP,
@@ -76,6 +118,9 @@ enum e_space  {
     S_HOUR,
 };
 
+//-------------------------------
+//      COLOR                   //
+//-------------------------------
 enum e_color  {
     E_NONE,
     E_RED,
@@ -86,6 +131,9 @@ enum e_color  {
     E_CYAN,
 };
 
+//-------------------------------
+//      ERROR                   //
+//-------------------------------
 enum e_error {
     ANY_ERR,
     NO_ACCESS_ERR,
