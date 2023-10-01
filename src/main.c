@@ -66,12 +66,27 @@ int ft_ls(char **argv, int flag_nb, int* error)
     return (*error);
 }
 
+static int check_display_help(int argc, char**argv)
+{
+    if (argc >= 2)
+    {
+        if (ft_strcmp(argv[1], "--help") == 0)
+        {
+            ft_printf_fd(1, HELP_STR);
+            return (0);
+        }
+    }
+    return (1);
+}
+
 int main (int argc, char **argv)
 {
     int error;
     int flag_nb;
 
     error = 0;
+    if (check_display_help(argc, argv) == 0)
+        return (0);
     ft_bzero(g_buff.buffer, BUFFER_LEN - 1);
     enum e_flag *flag = check_for_flag(argc, argv);
     if (!flag)

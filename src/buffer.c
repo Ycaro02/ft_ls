@@ -25,7 +25,7 @@ int fill_l_buffer(t_list *lst, int flag_nb)
     int *space;
 
     current = lst;
-    space = get_all_space(current);
+    space = get_all_space(current, flag_nb);
     if (!space)
         return (MALLOC_ERR);
     while (current)

@@ -18,21 +18,13 @@
 # include "../libft/libft.h"
 # include "define_enum.h"
 
-/*TODO  -clean all
-      -add many crazy option
-        -u (access time) man ls:
-            with -lt : sort by u, display access time       ==> done
-            with -l  : sort by name. display acces time     ==> done  
-            else     : sort by access time newest first     ==> done  
-        - c (ctime) like -u but with ctime                  ==> done  Try to get nsec for fix precision 
-        - g like -l but don't list owner                    ==> done
+/*TODO:
+      -clean all
+        - '-c -u -t':                                       ==> done  Try to get nsec for fix precision 
         - f not sort, enable 2 option                       ==> done, (need to remove color)
-            a : list hiden file
-            U : do not sort; list entries in directory order)
-        - d list just directory not their content           ==> done
         ///
         - 1 one filename per line (already done for z)
-        - n  like -l but list id of user/group instead of their name => easy to set-up same way -g
+        - protect malloc in all little get len manage_space.c ==> in progress
 */
 typedef struct s_file 
 {
