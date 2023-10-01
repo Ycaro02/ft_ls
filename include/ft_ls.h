@@ -25,10 +25,10 @@
             with -l  : sort by name. display acces time     ==> done  
             else     : sort by access time newest first     ==> done  
         - c (ctime) like -u but with ctime                  ==> done  Try to get nsec for fix precision 
+        - g like -l but don't list owner
         - f not sort, enable 2 option
             a : list hiden file
             U : do not sort; list entries in directory order)
-        - g like -l but don't list owner
         - d list just directory not their content
         ///
         - 1 one filename per line (already done for z)

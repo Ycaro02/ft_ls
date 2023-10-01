@@ -118,12 +118,11 @@ void sort_lst(t_list *lst, int flag_nb)
         }
         else if (flag_nb & U_OPTION || flag_nb & C_OPTION)
             sort_by_name(lst, flag_nb);
+        else
+            sort_by_name(lst, flag_nb);
     }
     else if (flag_nb & U_OPTION)
-    {
             sort_by_time(lst, flag_nb, 'u'); // u -u take priotiry tested with ls -u -ut -utc
-            printf("yo walter\n");
-    }
     else if (flag_nb & C_OPTION)
             sort_by_time(lst, flag_nb, 'c'); // c
     else if (flag_nb & T_OPTION)

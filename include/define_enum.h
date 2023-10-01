@@ -20,6 +20,7 @@
 # define     ACL_EXT_Z_FLAG 'z'
 # define     U_FLAG_CHAR 'u'
 # define     C_FLAG_CHAR 'c'
+# define     G_FLAG_CHAR 'g'
 
 # define     BLOCK        'b'
 # define     CHARACTER    'c'
@@ -34,7 +35,7 @@
 # define    NEW 0
 # define    OLD 1
 
-# define    NB_FLAG 9
+# define    NB_FLAG 10
 
 enum e_flag  {
     UNKNOW=0,
@@ -46,6 +47,7 @@ enum e_flag  {
     Z_OPTION=32,
     U_OPTION=64,
     C_OPTION=128,
+    G_OPTION=256,
 };
 
 enum e_space  {

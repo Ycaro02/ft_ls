@@ -326,7 +326,8 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
     if (write_perm(file, &is_exec) == MALLOC_ERR || \
         write_nb_link(file.nb_link, space[S_LINK]) == MALLOC_ERR)
         return (MALLOC_ERR);
-    write_user_name(file.user_id, space[S_USER]);
+    if (!(flag_nb & G_OPTION))
+        write_user_name(file.user_id, space[S_USER]);
     write_group_name(file.group_id, space[S_GROUP]);
     if (write_size(file.size, space[S_SIZE]) == MALLOC_ERR || \
         write_date(file, space, flag_nb) == MALLOC_ERR || \
