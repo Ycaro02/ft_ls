@@ -63,7 +63,6 @@ int is_point_dir(char *path, int flag_nb, int display)
         else
             if (path && path[0] == '.')
                 return (0);
-        return (1);
     }
     else
     {

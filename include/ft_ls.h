@@ -54,9 +54,9 @@ int             get_stdout_width();
 void            update_error(int *error);
 int             print_error(char *msg, char* str, int error_type, int use_perror);
 int             get_lst_len(t_list *lst);
-int             is_point_dir(char *path, int flag_nb, int display);
 int             last_char_is_slash(char *str);
 void	        new_lstclear(t_list **lst, void (*del)(void*));
+int             is_point_dir(char *path, int flag_nb, int display);
 char            *join_parent_name(char* parent_name, char* path);
 void            display_file_lst(t_list *lst);
 

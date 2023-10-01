@@ -66,6 +66,7 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
     }
     if (lst_len > 0)
     {
+        fill_buffer("\n");
         fill_buffer(file->name);
         fill_buffer(":\n");
     }

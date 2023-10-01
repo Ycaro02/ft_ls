@@ -351,7 +351,7 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
     if (write_size(file.size, space[S_SIZE]) == MALLOC_ERR || \
         write_date(file, space, flag_nb) == MALLOC_ERR || \
         write_file_name(file, is_exec, L_OPTION) == MALLOC_ERR)
-        return (MALLOC_ERR);
+            return (MALLOC_ERR);
     if (flag_nb & Z_OPTION)
         diplay_xattr_acl(&file);
     return (0);
