@@ -20,11 +20,8 @@
 
 /*TODO:
       -clean all
-        - '-c -u -t':                                       ==> done  Try to get nsec for fix precision 
-        - f not sort, enable 2 option                       ==> done, (need to remove color)
-        ///
-        - 1 one filename per line (already done for z)
-        - protect malloc in all little get len manage_space.c ==> in progress
+        - '-c -u -t':                       ==> done  Try to get nsec for fix precision 
+        - f not sort, enable 2 option       ==> done, (need to remove color)
 */
 typedef struct s_file 
 {
@@ -90,7 +87,6 @@ void            write_group_name(long group_id, int space, int flag_nb);
 
 // manage_space.c
 int			     *get_all_space(t_list *lst, int flag_nb);
-int              get_nb_space(t_list *lst, int(*get_len_info)(t_file));
 
 // time gestion.c
 char            **get_printable_date(time_t *time);

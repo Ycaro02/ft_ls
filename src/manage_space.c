@@ -5,7 +5,9 @@ static int get_len_size(t_file file)
     char    *tmp;
     int     max;
 
-    tmp = ft_itoa((int)file.size);
+    tmp = ft_ltoa(file.size);
+    if (!tmp)
+        return (MALLOC_ERR);
     max = ft_strlen(tmp);
     free(tmp);
     return (max);
@@ -14,6 +16,8 @@ static int get_len_size(t_file file)
 static int get_user_id_len(t_file file)
 {
     char *tmp = ft_ltoa(file.user_id);
+    if (!tmp)
+        return (MALLOC_ERR);
     int nb = ft_strlen(tmp);
     return (nb);
 }
@@ -21,6 +25,8 @@ static int get_user_id_len(t_file file)
 static int get_group_id_len(t_file file)
 {
     char *tmp = ft_ltoa(file.group_id);
+    if (!tmp)
+        return (MALLOC_ERR);
     int nb = ft_strlen(tmp);
     return (nb);
 }
@@ -31,7 +37,7 @@ static int get_group_name_len(t_file file)
     if (!group)
     {
         perror("getgrgid");
-        return (-1);
+        return (ft_strlen("unknow"));
     }
     int nb = ft_strlen(group->gr_name);
     return (nb);
@@ -43,7 +49,7 @@ static int get_user_name_len(t_file file)
     if (!user)
     {
         perror("getpwuid");
-        return (-1);
+        return (ft_strlen("unknow"));
     }
     int nb = ft_strlen(user->pw_name);
     return (nb);
@@ -52,6 +58,8 @@ static int get_user_name_len(t_file file)
 static int get_len_date_month(t_file file)
 {
     char **tmp = get_printable_date(&file.last_change);
+    if (!tmp)
+        return (MALLOC_ERR);
     int nb = ft_strlen(tmp[0]);
     ft_free_tab(tmp);
     return (nb);
@@ -60,6 +68,8 @@ static int get_len_date_month(t_file file)
 static int get_len_date_day(t_file file)
 {
     char **tmp = get_printable_date(&file.last_change);
+    if (!tmp)
+        return (MALLOC_ERR);
     int nb = ft_strlen(tmp[1]);
     ft_free_tab(tmp);
     return (nb);
@@ -68,6 +78,8 @@ static int get_len_date_day(t_file file)
 static int get_len_date_hour(t_file file)
 {
     char **tmp = get_printable_date(&file.last_change);
+    if (!tmp)
+        return (MALLOC_ERR);
     int nb = ft_strlen(tmp[2]);
     ft_free_tab(tmp);
     return (nb);
@@ -77,12 +89,14 @@ static int get_len_date_hour(t_file file)
 static int get_len_nb_link(t_file file)
 {
     char *tmp = ft_itoa(file.nb_link);
+    if (!tmp)
+        return (MALLOC_ERR);
     int nb = ft_strlen(tmp);
     free(tmp);
     return (nb);
 }
 
-int get_nb_space(t_list *lst, int(*get_len_info)(t_file))
+static int get_nb_space(t_list *lst, int(*get_len_by_info)(t_file))
 {
     t_file *file;
     t_list *current = lst;
@@ -92,7 +106,9 @@ int get_nb_space(t_list *lst, int(*get_len_info)(t_file))
     while (current)
     {
         file = current->content;
-        int tmp = get_len_info(*file);
+        int tmp = get_len_by_info(*file);
+        if (tmp == MALLOC_ERR)
+            return (MALLOC_ERR);
         if (tmp > max)
             max = tmp;
         current = current->next;
@@ -100,11 +116,27 @@ int get_nb_space(t_list *lst, int(*get_len_info)(t_file))
     return (max);
 }
 
+static int check_malloc_err(int *array)
+{
+    int i = 0;
+
+    while (i <= S_HOUR)
+    {
+        if (array[i] == MALLOC_ERR)
+        {
+            free(array);
+            return (MALLOC_ERR);
+        }
+        i++;
+    }
+    return (0);
+}
+
 int *get_all_space(t_list *lst, int flag_nb)
 {
-    int *array;
+    int *array = NULL;
 
-    array = malloc(sizeof(int )* 7);
+    array = ft_calloc(sizeof(int), S_HOUR + 1);
     if (!array)
     {
         new_lstclear(&lst, free);
@@ -126,5 +158,7 @@ int *get_all_space(t_list *lst, int flag_nb)
     array[S_MONTH] = get_nb_space(lst, get_len_date_month);
     array[S_DAY] = get_nb_space(lst, get_len_date_day);
     array[S_HOUR] = get_nb_space(lst, get_len_date_hour);
+    if (check_malloc_err(array) == MALLOC_ERR)
+        return (NULL);
     return (array);
 }

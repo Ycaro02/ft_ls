@@ -38,7 +38,8 @@
 # define     EXEC         'x'
 
 # define HELP_STR  "\
-Usage: ./ft_ls [OPTION]... [FILE]...List information about the FILEs (the current directory by default).\n\
+Usage: ./ft_ls [OPTION]... [FILE]...\n\
+List information about the FILEs (the current directory by default).\n\
 -l : List detail option\n-a : List hiden file\n-t : Sort by last file modification\n-r : Reverse sort\n\
 -R : Search recurcive subdir\n-z : List extended attr and acccess control list\n-u : Sort by last access time\n\
 -c : Sort by last status change\n-g : Like -l but don't list owner \n-f : Don't sort, enable -a option\n\
