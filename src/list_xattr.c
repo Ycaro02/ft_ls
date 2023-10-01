@@ -28,9 +28,9 @@ static int display_acl(t_file file, char *str, char* full_name)
         return (-1);
     }
     multiple_fill_buff(str, "\n# owner : ", NULL, NULL);
-    write_user_name(file.user_id, -1);
+    write_user_name(file.user_id, -1, 0);
     multiple_fill_buff("\n", "# group : ", NULL, NULL);
-    write_group_name(file.group_id, -1);
+    write_group_name(file.group_id, -1, 0);
     text = acl_to_text(acl, NULL);
     multiple_fill_buff("\n", text, "\n", NULL);
     acl_free(text);

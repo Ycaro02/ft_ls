@@ -151,35 +151,55 @@ void insert_space(int nb)
     }
 }
 
-void write_user_name(long user_id, int space)
+void write_user_name(long user_id, int space, int flag_nb)
 {
-    struct passwd* user = getpwuid(user_id);
-    if (!user)
+    if (flag_nb & N_OPTION)
     {
-        perror("getpwuid");
-        fill_buffer("unknow");
+        char *tmp = ft_ltoa(user_id);
+        insert_space(space - ft_strlen(tmp));
+        fill_buffer(tmp);
+        free(tmp);
     }
     else
     {
-        insert_space(space - ft_strlen(user->pw_name));
-        fill_buffer(user->pw_name);
+        struct passwd* user = getpwuid(user_id);
+        if (!user)
+        {
+            perror("getpwuid");
+            fill_buffer("unknow");
+        }
+        else
+        {
+            insert_space(space - ft_strlen(user->pw_name));
+            fill_buffer(user->pw_name);
+        }
     }
     if (space != -1)
         fill_buffer_char(' ');
 }
 
-void write_group_name(long group_id, int space)
+void write_group_name(long group_id, int space, int flag_nb)
 {
-    struct group* group = getgrgid(group_id);
-    if (!group)
+    if (flag_nb & N_OPTION)
     {
-        perror("getgrgid");
-        fill_buffer("unknow");
+        char *tmp = ft_ltoa(group_id);
+        insert_space(space - ft_strlen(tmp));
+        fill_buffer(tmp);
+        free(tmp);
     }
     else
     {
-        insert_space(space - ft_strlen(group->gr_name));
-        fill_buffer(group->gr_name);
+        struct group* group = getgrgid(group_id);
+        if (!group)
+        {
+            perror("getgrgid");
+            fill_buffer("unknow");
+        }
+        else
+        {
+            insert_space(space - ft_strlen(group->gr_name));
+            fill_buffer(group->gr_name);
+        }
     }
     if (space != -1)
         fill_buffer_char(' ');
@@ -327,8 +347,8 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
         write_nb_link(file.nb_link, space[S_LINK]) == MALLOC_ERR)
         return (MALLOC_ERR);
     if (!(flag_nb & G_OPTION))
-        write_user_name(file.user_id, space[S_USER]);
-    write_group_name(file.group_id, space[S_GROUP]);
+        write_user_name(file.user_id, space[S_USER], flag_nb);
+    write_group_name(file.group_id, space[S_GROUP], flag_nb);
     if (write_size(file.size, space[S_SIZE]) == MALLOC_ERR || \
         write_date(file, space, flag_nb) == MALLOC_ERR || \
         write_file_name(file, is_exec, L_OPTION) == MALLOC_ERR)

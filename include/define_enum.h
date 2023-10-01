@@ -25,6 +25,7 @@
 # define     G_FLAG_CHAR 'g'
 # define     F_FLAG_CHAR 'f'
 # define     D_FLAG_CHAR 'd'
+# define     N_FLAG_CHAR 'n'
 
 # define     BLOCK        'b'
 # define     CHARACTER    'c'
@@ -39,7 +40,7 @@
 # define    NEW 0
 # define    OLD 1
 
-# define    NB_FLAG 12
+# define    NB_FLAG 13
 
 enum e_flag  {
     UNKNOW=0,
@@ -54,6 +55,7 @@ enum e_flag  {
     G_OPTION=256,
     F_OPTION=512,
     D_OPTION=1024,
+    N_OPTION=2048,
 };
 
 enum e_space  {

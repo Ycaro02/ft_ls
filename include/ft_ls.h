@@ -93,11 +93,11 @@ int             fill_buffer_l_option(t_file file, int* space, int nb_flag);
 int             write_file_name(t_file file, int is_exec, int option);
 char            *get_perm(int nbr);
 void            insert_space(int nb);
-void            write_user_name(long user_id, int space);
-void            write_group_name(long group_id, int space);
+void            write_user_name(long user_id, int space, int flag_nb);
+void            write_group_name(long group_id, int space, int flag_nb);
 
 // manage_space.c
-int			     *get_all_space(t_list *lst);
+int			     *get_all_space(t_list *lst, int flag_nb);
 int              get_nb_space(t_list *lst, int(*get_len_info)(t_file));
 
 // time gestion.c

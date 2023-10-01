@@ -11,6 +11,20 @@ static int get_len_size(t_file file)
     return (max);
 }
 
+static int get_user_id_len(t_file file)
+{
+    char *tmp = ft_ltoa(file.user_id);
+    int nb = ft_strlen(tmp);
+    return (nb);
+}
+
+static int get_group_id_len(t_file file)
+{
+    char *tmp = ft_ltoa(file.group_id);
+    int nb = ft_strlen(tmp);
+    return (nb);
+}
+
 static int get_group_name_len(t_file file)
 {
     struct group* group = getgrgid(file.group_id);
@@ -86,7 +100,7 @@ int get_nb_space(t_list *lst, int(*get_len_info)(t_file))
     return (max);
 }
 
-int *get_all_space(t_list *lst)
+int *get_all_space(t_list *lst, int flag_nb)
 {
     int *array;
 
@@ -97,8 +111,16 @@ int *get_all_space(t_list *lst)
         perror("Malloc");
         exit(1);
     }
-    array[S_USER] = get_nb_space(lst, get_user_name_len);
-    array[S_GROUP] = get_nb_space(lst, get_group_name_len);
+    if (flag_nb & N_OPTION)
+    {
+        array[S_USER] = get_nb_space(lst, get_user_id_len);
+        array[S_GROUP] = get_nb_space(lst, get_group_id_len);
+    }
+    else
+    {
+        array[S_USER] = get_nb_space(lst, get_user_name_len);
+        array[S_GROUP] = get_nb_space(lst, get_group_name_len);
+    }
     array[S_SIZE] = get_nb_space(lst, get_len_size);
     array[S_LINK] = get_nb_space(lst, get_len_nb_link);
     array[S_MONTH] = get_nb_space(lst, get_len_date_month);
