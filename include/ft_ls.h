@@ -13,11 +13,9 @@
 
 # include <sys/ioctl.h> // ioctl for manage_column
 # include <sys/xattr.h>
-# include </usr/include/linux/xattr.h> // for windows
 # include <sys/acl.h> 
 # include "../libft/libft.h"
 # include "define_enum.h"
-
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
@@ -106,8 +104,8 @@ void    write_group_name(long group_id, int space, int flag_nb);
 //-------------------------------
 //      l_option_utils.c       //
 //-------------------------------
-char   *get_perm(int nbr);
-void   fill_buffer_perm(char c, int *is_exec);
+char    *get_perm(int nbr);
+void    fill_buffer_perm(char c, int *is_exec);
 char    get_type(struct stat sb);
 //-------------------------------
 //      manage_space.c          //

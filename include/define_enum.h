@@ -1,13 +1,11 @@
 #ifndef FT_LS_DEFINE_ENUM_H
 # define FT_LS_DEFINE_ENUM_H
 
-
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
 //                                DEFINE                                      //
 //                                                                            //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 //-------------------------------
 //      COLOR                  //
 //-------------------------------
@@ -18,16 +16,11 @@
 # define    PURPLE "\033[1;35m"
 # define    CYAN "\033[1;36m"
 # define    RESET "\033[0m"
-
 //-------------------------------
 //      BUFFER                 //
 //-------------------------------
 # define     BUFFER_LEN 10000
 # define     PRINT_SIZE 8000
-
-
-// 
-
 //-------------------------------
 //      FILE_TYPE              //
 //-------------------------------
@@ -40,7 +33,6 @@
 # define     SOCKET       's'
 # define     UNDIFINED    '?'
 # define     EXEC         'x'
-
 //-------------------------------
 //      --HELP                 //
 //-------------------------------
@@ -51,14 +43,11 @@ List information about the FILEs (the current directory by default).\n\
 -R : Search recurcive subdir\n-z : List extended attr and acccess control list\n-u : Sort by last access time\n\
 -c : Sort by last status change\n-g : Like -l but don't list owner \n-f : Don't sort, enable -a option\n\
 -d : List only directory, no content\n-n : Like -l but list id instead of name\n"
-
 //-------------------------------
 //     TIME                     // (after or before 6month ago)
 //-------------------------------
 # define    NEW 0
 # define    OLD 1
-
-
 //-------------------------------
 //      FLAG                   //
 //-------------------------------
@@ -67,7 +56,6 @@ List information about the FILEs (the current directory by default).\n\
 # define     T_FLAG_CHAR 't'
 # define     REVERSE_FLAG_CHAR 'r'
 # define     R_FLAG_CHAR 'R'
-// BONUS FLAG
 # define     ACL_EXT_Z_FLAG 'z'
 # define     U_FLAG_CHAR 'u'
 # define     C_FLAG_CHAR 'c'
@@ -78,14 +66,11 @@ List information about the FILEs (the current directory by default).\n\
 # define     N_FLAG_CHAR 'n'
 # define     NB_FLAG 13
 # define     ALL_FLAG "latrRzucgfdn"
-
-
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
 //                                  ENUM                                      //
 //                                                                            //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 //-------------------------------
 //      FLAG                   //
 //-------------------------------
@@ -104,7 +89,6 @@ enum e_flag  {
     D_OPTION=1024,
     N_OPTION=2048,
 };
-
 //-------------------------------
 //      SPACE                   // For -l option
 //-------------------------------
@@ -117,7 +101,6 @@ enum e_space  {
     S_DAY,
     S_HOUR,
 };
-
 //-------------------------------
 //      COLOR                   //
 //-------------------------------
@@ -130,7 +113,6 @@ enum e_color  {
     E_PURPLE,
     E_CYAN,
 };
-
 //-------------------------------
 //      ERROR                   //
 //-------------------------------
