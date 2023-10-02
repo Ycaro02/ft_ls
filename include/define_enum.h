@@ -64,8 +64,8 @@ List information about the FILEs (the current directory by default).\n\
 # define     F_FLAG_CHAR 'f'
 # define     D_FLAG_CHAR 'd'
 # define     N_FLAG_CHAR 'n'
-# define     NB_FLAG 13
-# define     ALL_FLAG "latrRzucgfdn"
+# define     NB_FLAG 14
+# define     ALL_FLAG "latrRzucgfdnG"
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
 //                                  ENUM                                      //
@@ -88,6 +88,7 @@ enum e_flag  {
     F_OPTION=512,
     D_OPTION=1024,
     N_OPTION=2048,
+    COLOR_OPTION=4096,
 };
 //-------------------------------
 //      SPACE                   // For -l option

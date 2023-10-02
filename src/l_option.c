@@ -82,13 +82,13 @@ static int write_nb_link(long long nb_link, int space)
 }
 
 
-static int write_symlink(char *path, char *parrent_path, int option)
+static int write_symlink(char *path, char *parrent_path, int flag_nb)
 {
     char    buff[500];
     char    *tmp;
 
-    fill_buffer_color(path, E_CYAN);
-    if (option == L_OPTION)
+    fill_buffer_color(path, E_CYAN, flag_nb);
+    if (flag_nb & L_OPTION)
     {
         if (parrent_path)
             tmp = join_parent_name(parrent_path, path);
@@ -110,20 +110,21 @@ static int write_symlink(char *path, char *parrent_path, int option)
     return (0);
 }
 
-int write_file_name(t_file file, int is_exec, int option)
+int write_file_name(t_file file, int is_exec, int flag_nb)
 {
     if(file.type == SYMLINK)
     {
-        if (write_symlink(file.name, file.parrent, option) == MALLOC_ERR)
+        if (write_symlink(file.name, file.parrent, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
     }
     else if (file.type == DIRECTORY)
-        fill_buffer_color(file.name, E_BLUE);
+        fill_buffer_color(file.name, E_BLUE, flag_nb);
     else if (is_exec == 0)
-        fill_buffer_color(file.name, E_GREEN);
+        fill_buffer_color(file.name, E_GREEN, flag_nb);
     else
         fill_buffer(file.name);
-    if (option == L_OPTION)
+    // if (option == L_OPTION)
+    if (flag_nb & L_OPTION)
         fill_buffer_char('\n');
     else
         fill_buffer(" ");
@@ -212,7 +213,7 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
     write_group_name(file.group_id, space[S_GROUP], flag_nb);
     if (write_size(file.size, space[S_SIZE]) == MALLOC_ERR || \
         write_date(file, space, flag_nb) == MALLOC_ERR || \
-        write_file_name(file, is_exec, L_OPTION) == MALLOC_ERR)
+        write_file_name(file, is_exec, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
     if (flag_nb & Z_OPTION)
         diplay_xattr_acl(&file);

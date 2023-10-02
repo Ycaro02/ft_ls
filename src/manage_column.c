@@ -354,11 +354,14 @@ static void add_color(char *str, int nb_raw ,char *type, int raw)
     }
 }
 
-int fill_buffer_with_column(char **tab, int nb_raw, t_list **lst)
+int fill_buffer_with_column(char **tab, int nb_raw, t_list **lst, int flag_nb)
 {
     for (int i = 0; i < nb_raw; i++)
     {
-        add_color(tab[i], nb_raw, tab[nb_raw], i);
+        if (flag_nb & COLOR_OPTION)
+            add_color(tab[i], nb_raw, tab[nb_raw], i);
+        else
+            fill_buffer(tab[i]);
         if (i != nb_raw - 1)
             fill_buffer_char('\n');
     }

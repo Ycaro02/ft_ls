@@ -100,7 +100,7 @@ int     search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error);
 //-------------------------------
 void    insert_space(int nb);
 int     fill_buffer_l_option(t_file file, int* space, int nb_flag);
-int     write_file_name(t_file file, int is_exec, int option);
+int     write_file_name(t_file file, int is_exec, int flag_nb);
 void    write_user_name(long user_id, int space, int flag_nb);
 void    write_group_name(long group_id, int space, int flag_nb);
 //-------------------------------
@@ -129,7 +129,7 @@ int     safe_reverse_lst(t_list **lst,  int* error, int flag_nb);
 void    fill_buffer(char *str);
 int     fill_l_buffer(t_list *lst, int flag_nb);
 void    fill_buffer_char(char c);
-void    fill_buffer_color(char *str, enum e_color color);
+void    fill_buffer_color(char *str, enum e_color color, int flag_nb);
 int     store_in_buffer(t_list *lst, int flag_nb);
 void    print_and_clear();
 void    finish_print_buffer();
@@ -138,7 +138,7 @@ void    fill_color(enum e_color color);
 //-------------------------------
 //      manage_column.c         //
 //-------------------------------
-int    fill_buffer_with_column(char **tab, int nb_raw, t_list **lst);
+int    fill_buffer_with_column(char **tab, int nb_raw, t_list **lst, int flag_nb);
 char   **check_manage_colum(t_list *lst, int *err, int *value, int lst_len);
 //-------------------------------
 //      list_xattr.c           //

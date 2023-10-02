@@ -1,5 +1,21 @@
 #include "../include/ft_ls.h"
 
+static int manage_bonus_option(int nb)
+{
+    if (nb & G_OPTION && !(nb & L_OPTION))
+        nb += L_OPTION;
+    if (nb & N_OPTION && !(nb & L_OPTION))
+        nb += L_OPTION;
+    if (nb & F_OPTION)
+    {
+        if (!(nb & A_OPTION))
+            nb += A_OPTION;
+        if (nb & COLOR_OPTION)
+            nb -= COLOR_OPTION;
+    }
+    return (nb);
+}
+
 int get_flag(enum e_flag *flag)
 {
     int i = 0;
@@ -9,12 +25,7 @@ int get_flag(enum e_flag *flag)
         nb += flag[i];
         i++;
     }
-    if (nb & G_OPTION && !(nb & L_OPTION))
-        nb += L_OPTION;
-    if (nb & N_OPTION && !(nb & L_OPTION))
-        nb += L_OPTION;
-    if (nb & F_OPTION && !(nb & A_OPTION))
-        nb += A_OPTION;
+    nb = manage_bonus_option(nb);
     return (nb);
 }
 

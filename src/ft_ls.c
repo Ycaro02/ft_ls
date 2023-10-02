@@ -53,7 +53,7 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
     t_list *lst;
     if (flag_nb & D_OPTION)
     {
-        fill_buffer_color(file->name, E_BLUE);
+        fill_buffer_color(file->name, E_BLUE, flag_nb);
         fill_buffer_char(' ');
         free(file->parrent);
         free(file->name);

@@ -69,11 +69,11 @@ void fill_color(enum e_color color)
         fill_buffer(CYAN);
 }
 
-void fill_buffer_color(char *str, enum e_color color)
+void fill_buffer_color(char *str, enum e_color color, int flag_nb)
 {
     if (!str)
         return ;
-    if (color != E_NONE)
+    if (color != E_NONE && flag_nb & COLOR_OPTION)
     {
         fill_color(color);
         fill_buffer(str);
@@ -134,7 +134,7 @@ int store_in_buffer(t_list *lst, int flag_nb)
         return (MALLOC_ERR);
     }
     else if (tab != NULL && !(flag_nb & Z_OPTION))
-        return (fill_buffer_with_column(tab, nb_raw, &lst));
+        return (fill_buffer_with_column(tab, nb_raw, &lst, flag_nb));
     if (tab)
         ft_free_tab(tab);
     return (classic_store(lst, flag_nb));
