@@ -1,5 +1,13 @@
 #include "../include/ft_ls.h"
 
+int ft_strlen_word(char *s)
+{
+	int i =0;
+	while (s && s[i] && s[i] != ' ')
+		i++;
+	return (i);
+}
+
 int check_file_perm(int perm, int to_check)
 {
     char    *tmp;

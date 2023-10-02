@@ -132,7 +132,7 @@ int write_file_name(t_file file, int is_exec, int flag_nb)
 }
 
 
-static int write_perm(t_file file, int *is_exec)
+static int write_perm(t_file file, int *is_exec, int space)
 {
     char    *tmp;
     int     len;
@@ -153,6 +153,12 @@ static int write_perm(t_file file, int *is_exec)
         i++;
     }
     free(tmp);
+    int ret = check_acl(&file);
+    if (ret == 0)
+        fill_buffer_char('+');
+    else if (ret == MALLOC_ERR)
+        return (ret);
+    insert_space(space - (10 + (ret == 0)));
     return (0);
 }
 
@@ -205,7 +211,7 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
 
     is_exec = 1;
     fill_buffer_char(file.type);
-    if (write_perm(file, &is_exec) == MALLOC_ERR || \
+    if (write_perm(file, &is_exec, space[S_PERM]) == MALLOC_ERR || \
         write_nb_link(file.nb_link, space[S_LINK]) == MALLOC_ERR)
         return (MALLOC_ERR);
     if (!(flag_nb & G_OPTION))

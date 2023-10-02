@@ -94,6 +94,7 @@ enum e_flag  {
 //      SPACE                   // For -l option
 //-------------------------------
 enum e_space  {
+    S_PERM,
     S_USER,
     S_GROUP,
     S_SIZE,

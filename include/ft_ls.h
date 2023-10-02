@@ -17,7 +17,9 @@
 # include "../libft/libft.h"
 # include "define_enum.h"
 
-//TODO color = option
+//TODO ls -l on a signe file list it witg detailed format -l
+//  - '+' catactere at the end of perm list with -l option when the file have acl permission
+
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
@@ -66,6 +68,7 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent);
 //-------------------------------
 //      utils.c                 //
 //-------------------------------
+int     ft_strlen_word(char *s);
 int     check_file_perm(int perm, int to_check);
 int     get_stdout_width();
 void    update_error(int *error);
@@ -144,5 +147,9 @@ char   **check_manage_colum(t_list *lst, int *err, int *value, int lst_len);
 //      list_xattr.c           //
 //-------------------------------
 int    diplay_xattr_acl(t_file *file);
+char   *get_new_path(t_file *file);
+int     list_xattr(char *path, char *list);
+int     check_lst_acl(t_list *lst);
+int     check_acl(t_file *file);
 
 #endif

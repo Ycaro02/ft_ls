@@ -1,14 +1,7 @@
 #include "../include/ft_ls.h"
 
-int ft_strlen_word(char *s)
-{
-	int i =0;
-	while (s && s[i] && s[i] != ' ')
-		i++;
-	return (i);
-}
 
-static int list_xattr(char *path, char *list)
+int list_xattr(char *path, char *list)
 {
     ft_bzero(list, BUFSIZ);
     int listen_len = listxattr(path, list, BUFSIZ);
@@ -57,7 +50,7 @@ static int fill_acl_attr(t_file *file, char *str, char *value, char *tmp)
     return (0);
 }
 
-static char *get_new_path(t_file *file)
+char *get_new_path(t_file *file)
 {
     char *tmp;
 
@@ -100,4 +93,42 @@ int diplay_xattr_acl(t_file *file)
     }
     free(tmp);
     return (0);
+}
+
+int check_acl(t_file *file)
+{
+    char list[BUFSIZ];
+    int i = 0, listen_len = 0;
+    char *tmp = NULL;
+//
+    tmp = get_new_path(file);
+    if (!tmp)
+        return (MALLOC_ERR);
+    listen_len = list_xattr(tmp, list);
+    if (listen_len == -1)
+    {
+        free(tmp);
+        return (1);
+    }
+    while (i < listen_len)
+    {
+        if (ft_strncmp(&list[i], "system.posix_acl_", 17) == 0)
+            return (0);
+        i += ft_strlen_word(&list[i]) + 1;
+    }
+    return (1);   
+}
+
+int check_lst_acl(t_list *lst)
+{
+    int ret = 0;
+
+    while (lst)
+    {
+        ret = check_acl(lst->content);
+        if (ret == 0 || ret == MALLOC_ERR)
+            break;
+        lst = lst->next;
+    }
+    return (ret);
 }

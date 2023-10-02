@@ -145,6 +145,12 @@ int *get_all_space(t_list *lst, int flag_nb)
         perror("Malloc");
         exit(1);
     }
+    array[S_PERM] = 10;
+    int ret = check_lst_acl(lst);
+    if (ret == 0)
+        array[S_PERM] = 11;
+    else if (ret == MALLOC_ERR)
+        return (NULL);
     if (flag_nb & N_OPTION)
     {
         array[S_USER] = get_nb_space(lst, get_user_id_len);
