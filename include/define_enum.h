@@ -125,4 +125,4 @@ enum e_error {
     MALLOC_ERR=-10,
 };
 
-#endif
+#endif /* FT_LS_DEFINE_ENUM_H */

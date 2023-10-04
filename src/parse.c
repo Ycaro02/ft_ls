@@ -20,7 +20,7 @@ static t_file *default_file_struct()
     return (file);
 }
 
-static int build_file_lst(struct stat sb, char *str, t_list **new, int *found)
+static int build_file_lst(struct stat sb, char *str, t_list **new, int *found, int flag_nb)
 {
     t_file *file;
     
@@ -35,7 +35,16 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found)
     else
     {
         *found = 1;
-        ft_printf_fd(1, "%s\n", str);
+        if (flag_nb & L_OPTION)
+        {
+            int error = 0;
+            int array[S_HOUR + 1] = {0};
+            fill_buffer_l_option(*file, array, flag_nb);
+            if (error == MALLOC_ERR)
+                return (MALLOC_ERR);
+        }
+        else
+            ft_printf_fd(1, "%s\n", str);
         if (file->parrent)
             free(file->parrent);
         free(file->name);
@@ -45,7 +54,7 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found)
 }
 
 
-static int check_args(char *str, t_list **new, int *found, int *error)
+static int check_args(char *str, t_list **new, int *found, int *error, int flag_nb)
 {
     struct stat sb;
 
@@ -57,12 +66,12 @@ static int check_args(char *str, t_list **new, int *found, int *error)
         perror(str);
         return (0);
     }
-    if (build_file_lst(sb, str, new, found) == MALLOC_ERR)
+    if (build_file_lst(sb, str, new, found, flag_nb) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);
 }
 
-t_list *get_dir_args(char **argv, int *error)
+t_list *get_dir_args(char **argv, int *error, int flag_nb)
 {
     int i = 0;
     t_list *new = NULL;
@@ -71,7 +80,7 @@ t_list *get_dir_args(char **argv, int *error)
     {
         if (argv[i][0] != '-')
         {
-            if (check_args(argv[i], &new, &found, error) == MALLOC_ERR)
+            if (check_args(argv[i], &new, &found, error, flag_nb) == MALLOC_ERR)
             {
                 *error = MALLOC_ERR;
                 return (NULL);

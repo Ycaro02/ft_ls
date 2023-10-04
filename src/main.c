@@ -60,14 +60,14 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error)
         ft_printf_fd(2, "Malloc error exit\n");
         exit(MALLOC_ERR);
     }
-    finish_print_buffer();
+    // finish_print_buffer();
 }
 
 int ft_ls(char **argv, int flag_nb, int* error)
 {
     t_list *dir_lst;
     
-    dir_lst = get_dir_args(&argv[1], error);
+    dir_lst = get_dir_args(&argv[1], error, flag_nb);
     if (!dir_lst && *error == MALLOC_ERR)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
     else if (!dir_lst)
@@ -115,6 +115,6 @@ int main (int argc, char **argv)
     flag_nb = get_flag(flag);
     free(flag);
     error = ft_ls(argv, flag_nb, &error);
-
+    finish_print_buffer();
     return (error);
 }

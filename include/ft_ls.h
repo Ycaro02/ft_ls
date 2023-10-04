@@ -11,15 +11,14 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 
-# include <sys/ioctl.h> // ioctl for manage_column
-# include <sys/xattr.h>
-# include "../acl/acl.h"
-// # include <sys/acl.h> 
+# include <sys/ioctl.h>  // ioctl for manage_column
+# include <sys/xattr.h>  // extended attr 
+# include "../acl/acl.h" // classic <sys/acl.h> not present on 42 computer, same for -lacl
 # include "../libft/libft.h"
 # include "define_enum.h"
+// # include <sys/acl.h> 
 
 //TODO ls -l on a signe file list it witg detailed format -l
-//  - '+' catactere at the end of perm list with -l option when the file have acl permission
 
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -38,8 +37,8 @@ typedef struct s_file
     nlink_t     nb_link;
     uid_t       user_id;
     gid_t       group_id;
-    off_t       size;
-    off_t       total_size;
+    long        size;
+    long        total_size;
     blkcnt_t    nb_block;
     t_timespec  last_status_change;
     t_timespec  last_access;
@@ -89,7 +88,7 @@ t_eflag *check_for_flag(int argc, char **argv);
 //      parse.c                //
 //-------------------------------
 t_list  *get_all_file_struct(t_file *file, int flag_nb, int* error);
-t_list  *get_dir_args(char **argv, int *error);
+t_list  *get_dir_args(char **argv, int *error, int flag_nb);
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------
@@ -153,4 +152,4 @@ int     list_xattr(char *path, char *list);
 int     check_lst_acl(t_list *lst);
 int     check_acl(t_file *file);
 
-#endif
+#endif /* FT_LS_H */
