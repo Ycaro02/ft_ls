@@ -39,6 +39,8 @@ RM	= rm -f
 
 LIBFT = libft/libft.a
 
+LIBACL = acl/libacl.a
+
 all:		${NAME}
 
 %.o : %.c
@@ -49,7 +51,7 @@ ${NAME}:	$(OBJ)
 			@make -s -C libft bonus
 			@echo "\033[7;32m -----  Compiling libft  ----- \033[0m\n"
 			@echo " \033[5;36m ----- Compiling ft_ls project...  ----- \033[0m\n"
-			@${CC} $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) -lacl
+			@${CC} $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) $(LIBACL)
 			@echo "\033[7;32m -----  Compiling ft_ls done  ----- \033[0m\n"
 
 clean:
