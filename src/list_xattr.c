@@ -113,9 +113,13 @@ int check_acl(t_file *file)
     while (i < listen_len)
     {
         if (ft_strncmp(&list[i], "system.posix_acl_", 17) == 0)
+        {
+            free(tmp);
             return (0);
+        }
         i += ft_strlen_word(&list[i]) + 1;
     }
+    free(tmp);
     return (1);   
 }
 

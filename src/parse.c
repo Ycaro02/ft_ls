@@ -37,11 +37,8 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found, i
         *found = 1;
         if (flag_nb & L_OPTION)
         {
-            int error = 0;
             int array[S_HOUR + 1] = {0};
             fill_buffer_l_option(*file, array, flag_nb);
-            if (error == MALLOC_ERR)
-                return (MALLOC_ERR);
         }
         else
             ft_printf_fd(1, "%s\n", str);
