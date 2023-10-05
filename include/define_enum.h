@@ -37,12 +37,27 @@
 //      --HELP                 //
 //-------------------------------
 # define HELP_STR  "\
-Usage: ./ft_ls [OPTION]... [FILE]...\n\
+"YELLOW"Usage: ./ft_ls [OPTION]... [FILE]...\n\
 List information about the FILEs (the current directory by default).\n\
--l : List detail option\n-a : List hiden file\n-t : Sort by last file modification\n-r : Reverse sort\n\
--R : Search recurcive subdir\n-z : List extended attr and acccess control list\n-u : Sort by last access time\n\
--c : Sort by last status change\n-g : Like -l but don't list owner \n-f : Don't sort, enable -a option\n\
--d : List only directory, no content\n-n : Like -l but list id instead of name\n"
+Sort by alphabetical order by default\n\
+Exit code:"RESET"\n\
+"GREEN"0"RESET"  : Can access all file\n\
+"PURPLE"1"RESET"  : Cannot access subdirectory\n\
+"RED"2"RESET"  : Cannot access command-line argument\n\
+"YELLOW"Option:"RESET"\n\
+"CYAN"-l"RESET" : List detail option\n\
+"CYAN"-a"RESET" : List hiden file\n\
+"CYAN"-r"RESET" : Reverse sort\n\
+"CYAN"-R"RESET" : Search recurcive subdir\n\
+"CYAN"-t"RESET" : Sort by last file modification\n\
+"CYAN"-u"RESET" : Sort by last access time\n\
+"CYAN"-c"RESET" : Sort by last status change\n\
+"CYAN"-f"RESET" : Don't sort, enable -a option\n\
+"CYAN"-z"RESET" : List extended attr and acccess control list\n\
+"CYAN"-g"RESET" : Like -l but don't list owner \n\
+"CYAN"-d"RESET" : List only directory, no content\n\
+"CYAN"-n"RESET" : Like -l but list id instead of name\n"
+
 //-------------------------------
 //     TIME                     // (after or before 6month ago)
 //-------------------------------
