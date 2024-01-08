@@ -47,6 +47,38 @@ int safe_reverse_lst(t_list **lst,  int* error, int flag_nb)
     return (0);
 }
 
+// if in string -> simple quote: don't take in special char
+// ! $ ^ & * ( ) = < > ? ; [ ] ` ~
+// SEMICOLONE ARE HEREEEE
+// cant / EXCLU DIR
+// ' : add ""
+// " : add ''
+
+// special logic, alway simple quote when alone { || }
+// remove simple quote whenn add ever char : 
+ // {{ : no simple quote != ## : simple quote
+// at begin simple quote on: # 
+
+
+// no care: @ % - _ + . , :
+// simple double point
+int is_special_char(char c)
+{
+    /* all no care char */
+    if (c == '@' || c == '%' || c == '-'\
+        || c == '_' || c == '+' || c == '.' || c == ',' || c == ':')
+        return (0);
+    if ( c == '{' || c == '}' || c == '#')
+        return (0);
+    return (1);
+}
+
+int special_char_gestion(char *current, char* min)
+{
+    
+    return (1);
+}
+
 void sort_by_name(t_list *lst, int flag_nb)
 {
     if (!lst)
@@ -59,8 +91,11 @@ void sort_by_name(t_list *lst, int flag_nb)
             min = lst;
         t_file *current = (t_file *)lst->content;
         t_file *min_file = (t_file *)min->content;
-        if (ft_lower_strcmp(current->name, min_file->name) < 0)
+        if (special_char_gestion(current->name, min_file->name) == 0)
             min = lst;
+        else if (ft_lower_strcmp(current->name, min_file->name) < 0)
+            min = lst;
+        // ft_printf_fd(2, "curr %s, min %s\n", current->name, min_file->name);
         lst = lst->next;
     }
     t_file *tmp = head->content;

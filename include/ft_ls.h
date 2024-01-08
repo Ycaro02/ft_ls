@@ -18,9 +18,6 @@
 # include "define_enum.h"
 // # include <sys/acl.h> 
 
-//TODO ls -l on a signe file list it witg detailed format -l
-
-
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
 //                                  STRUCT                                    //

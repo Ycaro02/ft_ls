@@ -123,7 +123,6 @@ int write_file_name(t_file file, int is_exec, int flag_nb)
         fill_buffer_color(file.name, E_GREEN, flag_nb);
     else
         fill_buffer(file.name);
-    // if (option == L_OPTION)
     if (flag_nb & L_OPTION)
         fill_buffer_char('\n');
     else
