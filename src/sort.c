@@ -62,22 +62,55 @@ int safe_reverse_lst(t_list **lst,  int* error, int flag_nb)
 
 // no care: @ % - _ + . , :
 // simple double point
+# define NORMAL_CHAR            0
+# define NOEFFECT_CHAR          1   // @ % - _ + . , :
+# define BRACKET_CHAR           2   // { }
+# define DIEZE_CHAR             3   // #
+# define ADD_SIMPLE_QUOTE_CHAR  4   // ! $ ^ & * ( ) = < > ? ; [ ] ` ~ "
+# define ADD_DOUBLE_QUOTE_CHAR  5   // '
+
 int is_special_char(char c)
 {
     /* all no care char */
     if (c == '@' || c == '%' || c == '-'\
         || c == '_' || c == '+' || c == '.' || c == ',' || c == ':')
-        return (0);
-    if ( c == '{' || c == '}' || c == '#')
-        return (0);
-    return (1);
+        return (NOEFFECT_CHAR);
+    /* special rule */
+    if ( c == '{' || c == '}')
+        return (BRACKET_CHAR);
+    if (c == '#')
+        return (DIEZE_CHAR);
+    if (c == '\'')
+        return (ADD_DOUBLE_QUOTE_CHAR);
+    /* alway add quote. special rule for ' or "*/
+    if (c == '!' || c == '$' || c == '^' || c == '&' || c == '*' || c == '('\
+        || c == ')' || c == '=' || c == '<' || c == '>' || c == '?' || c == ';'\
+        || c == '[' || c == ']' || c == '`' || c == '~' || c == '\"')
+            return (ADD_SIMPLE_QUOTE_CHAR);
+    return (NORMAL_CHAR);
 }
 
-int special_char_gestion(char *current, char* min)
+int strcmp_without_spe_char(char *s1, char *s2)
 {
-    
-    return (1);
+    int i = 0;
+    int j = 0;
+    while (s1[i] && is_special_char(s1[i]) != NORMAL_CHAR)
+        i++;
+    while (s2[j] && is_special_char(s2[j]) != NORMAL_CHAR)
+        j++;
+
+
+
+    return (0);
+
 }
+
+// int special_char_gestion(char *current, char* min)
+// {
+//     strcmp_without_spe_char(current, min);
+
+//     return (1);
+// }
 
 void sort_by_name(t_list *lst, int flag_nb)
 {
@@ -91,9 +124,9 @@ void sort_by_name(t_list *lst, int flag_nb)
             min = lst;
         t_file *current = (t_file *)lst->content;
         t_file *min_file = (t_file *)min->content;
-        if (special_char_gestion(current->name, min_file->name) == 0)
-            min = lst;
-        else if (ft_lower_strcmp(current->name, min_file->name) < 0)
+        // if (special_char_gestion(current->name, min_file->name) == 0)
+            // min = lst;
+        if (ft_lower_strcmp(current->name, min_file->name) < 0)
             min = lst;
         // ft_printf_fd(2, "curr %s, min %s\n", current->name, min_file->name);
         lst = lst->next;
