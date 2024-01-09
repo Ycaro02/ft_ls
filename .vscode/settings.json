@@ -5,7 +5,6 @@
     "editor.tabSize": 4,
     "window.zoomLevel": -1,
     "zenMode.hideLineNumbers": false,
-    "zenMode.hideTabs": false,
     "zenMode.hideActivityBar": false,
     "highlight.regexes": {
             "(#.*)": {

@@ -90,27 +90,78 @@ int is_special_char(char c)
     return (NORMAL_CHAR);
 }
 
-int strcmp_without_spe_char(char *s1, char *s2)
+# define TOKEN_NO_CASE_SENSITIVE 0
+# define TOKEN_CHECK_SPE_CHAR 1
+
+int special_strcmp(char *s1, char *s2, int flag)
 {
+    char first = 0;
+    char second = 0;
     int i = 0;
     int j = 0;
+    /*  skip special char before first count char */
     while (s1[i] && is_special_char(s1[i]) != NORMAL_CHAR)
         i++;
     while (s2[j] && is_special_char(s2[j]) != NORMAL_CHAR)
         j++;
-
-
-
-    return (0);
-
+    /* compare all 'count' char */
+    while (s1[i] || s2[j])
+    {
+        if (is_special_char(s1[i]) != NORMAL_CHAR)
+            i++;
+        else if (is_special_char(s2[j]) != NORMAL_CHAR)
+            j++;
+        else 
+        {
+            first = s1[i];
+            second = s2[j];
+            if (flag == TOKEN_NO_CASE_SENSITIVE)
+            {
+                first = ft_tolower(s1[i]);
+                second = ft_tolower(s2[j]);
+            }
+            if (first != second)
+                return (first - second);
+            if (s1[i])
+                i++;
+            if (s2[j])
+                j++;
+        }
+    }
+    /* skip all special char after count char */
+    while (s1[i] && is_special_char(s1[i]) != NORMAL_CHAR)
+        i++;
+    while (s2[j] && is_special_char(s2[j]) != NORMAL_CHAR)
+        j++;
+    return (first - second);
 }
 
-// int special_char_gestion(char *current, char* min)
-// {
-//     strcmp_without_spe_char(current, min);
-
-//     return (1);
-// }
+int special_char_gestion(char *current, char* min)
+{
+    /*  if is same letter no case sentive no special char exemple: ..a == _A */
+    int ret = special_strcmp(current, min, TOKEN_NO_CASE_SENSITIVE); 
+    if (ret == 0)
+    {
+        // ft_printf_fd(2, "without case ret 0 for %s == %s\n", current, min);
+        /*  if we are here we are on egality on same letter, we need to check the case
+            ret 0 for ..a == -a 
+        */
+        ret = special_strcmp(current, min, -1);
+        if (ret == 0)
+        {
+            // int len_1 = ft_strlen(current);
+            // int len_2 = ft_strlen(min);
+            if (ft_strcmp(current, min) < 0)
+                return (1);
+        }
+        else if (ret > 0) // ret > 0 because we want to print a before A
+            return (1);
+            // ft_printf_fd(2, "with case ret 0 for %s == %s\n", current, min);
+    }
+    else if (ret < 0)
+        return (1);
+    return (0);
+}
 
 void sort_by_name(t_list *lst, int flag_nb)
 {
@@ -124,11 +175,8 @@ void sort_by_name(t_list *lst, int flag_nb)
             min = lst;
         t_file *current = (t_file *)lst->content;
         t_file *min_file = (t_file *)min->content;
-        // if (special_char_gestion(current->name, min_file->name) == 0)
-            // min = lst;
-        if (ft_lower_strcmp(current->name, min_file->name) < 0)
+        if (special_char_gestion(current->name, min_file->name) == 1)
             min = lst;
-        // ft_printf_fd(2, "curr %s, min %s\n", current->name, min_file->name);
         lst = lst->next;
     }
     t_file *tmp = head->content;
