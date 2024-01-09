@@ -142,21 +142,16 @@ int special_char_gestion(char *current, char* min)
     int ret = special_strcmp(current, min, TOKEN_NO_CASE_SENSITIVE); 
     if (ret == 0)
     {
-        // ft_printf_fd(2, "without case ret 0 for %s == %s\n", current, min);
         /*  if we are here we are on egality on same letter, we need to check the case
-            ret 0 for ..a == -a 
-        */
+            ret 0 for ..a == -a  */
         ret = special_strcmp(current, min, -1);
-        if (ret == 0)
+        if (ret == 0) 
         {
-            // int len_1 = ft_strlen(current);
-            // int len_2 = ft_strlen(min);
-            if (ft_strcmp(current, min) < 0)
+            if (ft_lower_strcmp(current, min) < 0)
                 return (1);
         }
         else if (ret > 0) // ret > 0 because we want to print a before A
             return (1);
-            // ft_printf_fd(2, "with case ret 0 for %s == %s\n", current, min);
     }
     else if (ret < 0)
         return (1);
