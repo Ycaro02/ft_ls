@@ -20,6 +20,13 @@ void fill_buffer_perm(char c, int *is_exec)
     fill_buffer_char(x);
 }
 
+/* sdas
+dsad
+sddsa
+dsakldjsklad
+fdsfdsjfdskl
+*/
+
 void convert_ato(char* perm, int nbr, int index) // array to octal
 {
         int             b_size = 8;
