@@ -19,7 +19,7 @@ static int get_len_size(t_file file)
     // }
     if (file.type != CHARACTER)
     {
-        tmp = ft_ltoa(file.size);
+        tmp = ft_ultoa(file.size);
         if (!tmp)
             return (MALLOC_ERR);
         max = ft_strlen(tmp);

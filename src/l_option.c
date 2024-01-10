@@ -187,9 +187,15 @@ static int write_size(t_file file, int *space)
         }
         else
         {
-            int compute_space = (space[S_MINOR_SIZE] - ft_strlen(tmp2)) - 2;
+
+            insert_space(space[S_MAJOR_SIZE] - ft_strlen(tmp));
             fill_buffer(tmp);
-            insert_space(compute_space);
+            fill_buffer(", ");
+            insert_space((space[S_MINOR_SIZE])- ft_strlen(tmp2));
+            fill_buffer(tmp2)
+            // int compute_space = (space[S_MINOR_SIZE] - ft_strlen(tmp2)) - 2;
+            // fill_buffer(tmp);
+            // insert_space(compute_space);
         }
         // fill_buffer(tmp2);
         
