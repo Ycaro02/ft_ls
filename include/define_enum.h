@@ -1,6 +1,16 @@
 #ifndef FT_LS_DEFINE_ENUM_H
 # define FT_LS_DEFINE_ENUM_H
 
+# define MINORBITS 8
+# define MINORMASK ((1U << MINORBITS) - 1)
+
+# define MAJOR(dev) (dev >> MINORBITS)
+# define MINOR(dev) (dev & MINORMASK)
+
+
+// # define MINOR(dev) (dev & ) 
+
+
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
 //                                DEFINE                                      //
@@ -117,6 +127,9 @@ enum e_space  {
     S_MONTH,
     S_DAY,
     S_HOUR,
+    S_MINOR_SIZE,
+    S_MAJOR_SIZE,
+    S_MAX,
 };
 //-------------------------------
 //      COLOR                   //

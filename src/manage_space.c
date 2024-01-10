@@ -5,6 +5,19 @@ static int get_len_size(t_file file)
     char    *tmp;
     int     max;
 
+    if (file.type == CHARACTER)
+    {
+        char *tmp = ft_strjoin_free(ft_itoa(MAJOR(file.rdev)), ", ", 'f');
+        if (!tmp)
+            return (MALLOC_ERR);
+        tmp = ft_strjoin_free(tmp, ft_itoa(MINOR(file.rdev)), 'a');
+        if (!tmp)
+            return (MALLOC_ERR);
+        max = ft_strlen(tmp) + 2;
+        free(tmp);
+        return (max);
+    }
+
     tmp = ft_ltoa(file.size);
     if (!tmp)
         return (MALLOC_ERR);
@@ -38,7 +51,7 @@ static int get_group_name_len(t_file file)
     struct group* group = getgrgid(file.group_id);
     if (!group)
     {
-        perror("getgrgid");
+        perror("getgrgid"); // todo change this accordate with change with l_option, print pid insteand, get number into array len
         return (ft_strlen("unknow"));
     }
     int nb = ft_strlen(group->gr_name);
@@ -134,11 +147,36 @@ static int check_malloc_err(int *array)
     return (0);
 }
 
+
+int get_minor_size(t_file file)
+{
+    int ret = 0;
+    if (file.type == CHARACTER)
+    {
+        char *tmp = ft_itoa(MINOR(file.rdev));
+        ret = ft_strlen(tmp);
+        free(tmp);
+    }
+    return (ret + 2); // + 2 for ', '
+}
+
+
+int get_major_size(t_file file)
+{
+    int ret = 0;
+    if (file.type == CHARACTER)
+    {
+        char *tmp = ft_itoa(MAJOR(file.rdev));
+        ret = ft_strlen(tmp);
+        free(tmp);
+    }
+    return (ret);
+}
+
 int *get_all_space(t_list *lst, int flag_nb)
 {
     int *array = NULL;
-
-    array = ft_calloc(sizeof(int), S_HOUR + 1);
+    array = ft_calloc(sizeof(int), S_MAX);
     if (!array)
     {
         new_lstclear(&lst, free);
@@ -166,6 +204,12 @@ int *get_all_space(t_list *lst, int flag_nb)
     array[S_MONTH] = get_nb_space(lst, get_len_date_month);
     array[S_DAY] = get_nb_space(lst, get_len_date_day);
     array[S_HOUR] = get_nb_space(lst, get_len_date_hour);
+
+    array[S_MINOR_SIZE] = get_nb_space(lst, get_minor_size);
+    array[S_MAJOR_SIZE] = get_nb_space(lst, get_major_size);
+
+    // if (array[S_MINOR_SIZE] + array[S_MAJOR_SIZE] > 0)
+        // array[S_SIZE] = array[S_MINOR_SIZE] + array[S_MAJOR_SIZE] + 1; // 2 for ', '
     if (check_malloc_err(array) == MALLOC_ERR)
         return (NULL);
     return (array);

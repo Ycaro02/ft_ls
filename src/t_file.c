@@ -34,6 +34,7 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
     file->user_id = sb.st_uid;
     file->group_id = sb.st_gid;
     file->nb_block = sb.st_blocks;
+    file->rdev = sb.st_rdev;
     if (fill_name_and_parent(file, path, parent) == MALLOC_ERR)
         return (NULL);
     return (file);

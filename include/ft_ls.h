@@ -37,6 +37,7 @@ typedef struct s_file
     long        size;
     long        total_size;
     blkcnt_t    nb_block;
+    dev_t       rdev;
     t_timespec  last_status_change;
     t_timespec  last_access;
     t_timespec  last_change;

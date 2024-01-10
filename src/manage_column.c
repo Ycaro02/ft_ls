@@ -271,7 +271,7 @@ char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len)
         *err = MALLOC_ERR;
         return (NULL);
     }
-    *value = nb_raw;
+    *value = nb_raw; // second return need to kept nb_raw
     max_per_raw  = (int)(lst_len / nb_raw) + (lst_len % nb_raw != 0); // add 1 if (lst_len % nb_raw != 0)
     if (get_total_len(lst) > (long long)stdout_width)
     {
