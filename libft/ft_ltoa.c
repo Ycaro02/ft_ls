@@ -52,3 +52,43 @@ char	*ft_ltoa(long n)
 	return (dst);
 }
 
+
+static char	*ft_make_ul(unsigned long n, char *dst, int count)
+{
+	if (n == 0)
+	{
+		dst = ft_calloc(sizeof(char), 2);
+		dst[0] = '0';
+		dst[1] = '\0';
+		return (dst);
+	}
+	dst = ft_calloc(sizeof(char), count + 1);
+	if (dst == NULL)
+		return (NULL);
+	count--;
+	while (count >= 0)
+	{
+		dst[count] = (n % 10) + 48;
+		n /= 10;
+		count--;
+	}
+	return (dst);
+}
+
+char	*ft_ultoa(unsigned long n)
+{
+	int				count;
+	char			*dst;
+	unsigned long	tmp;
+
+	dst = NULL;
+	count = 0;
+	tmp = n;
+	while (tmp != 0)
+	{
+		tmp /= 10;
+		count++;
+	}
+	dst = ft_make_ul(n, dst, count);
+	return (dst);
+}

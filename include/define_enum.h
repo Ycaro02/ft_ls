@@ -1,11 +1,12 @@
 #ifndef FT_LS_DEFINE_ENUM_H
 # define FT_LS_DEFINE_ENUM_H
 
-# define MINORBITS 8
-# define MINORMASK ((1U << MINORBITS) - 1)
 
-# define MAJOR(dev) (dev >> MINORBITS)
-# define MINOR(dev) (dev & MINORMASK)
+// # define MINORBITS 8
+// # define MINORMASK ((1U << MINORBITS) - 1)
+
+// # define MAJOR(dev) ((unsigned int)(dev >> MINORBITS))
+// # define MINOR(dev) ((unsigned int)(dev & MINORMASK))
 
 
 // # define MINOR(dev) (dev & ) 

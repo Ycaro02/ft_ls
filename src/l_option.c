@@ -171,28 +171,31 @@ static int write_perm(t_file file, int *is_exec, int space)
 static int write_size(t_file file, int *space)
 {
     char *tmp;
-
-
     // printf("size: %d minor:%d major: %d\n", space[S_SIZE], space[S_MINOR_SIZE], space[S_MAJOR_SIZE]);
     if (file.type == CHARACTER)
     {
-        char *tmp = ft_itoa(MAJOR(file.rdev));
-        insert_space(space[S_MAJOR_SIZE] - ft_strlen(tmp));
         // printf("for %s size :%ld\n", file.name, (space[S_MAJOR_SIZE] - ft_strlen(tmp)));
-        fill_buffer(tmp);
-        fill_buffer(", ");
-        char* tmp2 = ft_itoa(MINOR(file.rdev));
+        char *tmp = ft_ultoa(major(file.rdev));
+        char* tmp2 = ft_ultoa(minor(file.rdev));
         if (space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] > space[S_SIZE])
+        {
+            insert_space(space[S_MAJOR_SIZE] - ft_strlen(tmp));
+            fill_buffer(tmp);
+            fill_buffer(", ");
             insert_space((space[S_MINOR_SIZE])- ft_strlen(tmp2));
+            fill_buffer(tmp2);
+        }
         else
         {
             int compute_space = (space[S_MINOR_SIZE] - ft_strlen(tmp2)) - 2;
+            fill_buffer(tmp);
             insert_space(compute_space);
         }
+        // fill_buffer(tmp2);
+        
         free(tmp);
-        fill_buffer(tmp2);
-        fill_buffer_char(' ');
         free(tmp2);
+        fill_buffer_char(' ');
         // ft_printf_fd(2, "MINOR :%d\n", MINOR(file.rdev));
         // ft_printf_fd(2, "MAJOR :%d\n", MAJOR(file.rdev));
         return (0);
@@ -203,7 +206,7 @@ static int write_size(t_file file, int *space)
         if (!tmp)
             return (MALLOC_ERR);
         if (space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] > space[S_SIZE])
-            insert_space(space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] - ft_strlen(tmp));
+            insert_space(space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] + 2 - ft_strlen(tmp));
         else
             insert_space(space[S_SIZE] - ft_strlen(tmp) - 1); // DEVIL - 1
         fill_buffer(tmp);

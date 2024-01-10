@@ -3,26 +3,28 @@
 static int get_len_size(t_file file)
 {
     char    *tmp;
-    int     max;
+    int     max = 0;
 
-    if (file.type == CHARACTER)
+    // if (file.type == CHARACTER)
+    // {
+    //     char *tmp = ft_strjoin_free(ft_itoa(MAJOR(file.rdev)), ", ", 'f');
+    //     if (!tmp)
+    //         return (MALLOC_ERR);
+    //     tmp = ft_strjoin_free(tmp, ft_itoa(MINOR(file.rdev)), 'a');
+    //     if (!tmp)
+    //         return (MALLOC_ERR);
+    //     max = ft_strlen(tmp);
+    //     free(tmp);
+    //     return (max);
+    // }
+    if (file.type != CHARACTER)
     {
-        char *tmp = ft_strjoin_free(ft_itoa(MAJOR(file.rdev)), ", ", 'f');
+        tmp = ft_ltoa(file.size);
         if (!tmp)
             return (MALLOC_ERR);
-        tmp = ft_strjoin_free(tmp, ft_itoa(MINOR(file.rdev)), 'a');
-        if (!tmp)
-            return (MALLOC_ERR);
-        max = ft_strlen(tmp) + 2;
+        max = ft_strlen(tmp);
         free(tmp);
-        return (max);
     }
-
-    tmp = ft_ltoa(file.size);
-    if (!tmp)
-        return (MALLOC_ERR);
-    max = ft_strlen(tmp);
-    free(tmp);
     return (max);
 }
 
@@ -153,11 +155,12 @@ int get_minor_size(t_file file)
     int ret = 0;
     if (file.type == CHARACTER)
     {
-        char *tmp = ft_itoa(MINOR(file.rdev));
-        ret = ft_strlen(tmp);
+        char *tmp = ft_ultoa(minor(file.rdev));
+        ret = ft_strlen(tmp) + 2;
+        // printf("for minor tmp %s ret = %d\n", tmp, ret);
         free(tmp);
     }
-    return (ret + 2); // + 2 for ', '
+    return (ret); // + 2 for ', '
 }
 
 
@@ -166,7 +169,7 @@ int get_major_size(t_file file)
     int ret = 0;
     if (file.type == CHARACTER)
     {
-        char *tmp = ft_itoa(MAJOR(file.rdev));
+        char *tmp = ft_ultoa(major(file.rdev));
         ret = ft_strlen(tmp);
         free(tmp);
     }
