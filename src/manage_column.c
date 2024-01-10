@@ -300,6 +300,8 @@ static enum e_color get_color_by_index(char *type, int index)
         return (E_CYAN);
     if (c == EXEC)
         return (E_GREEN);
+    if (c == CHARACTER)
+        return (E_YELLOW);
     return(E_NONE);
 }
 

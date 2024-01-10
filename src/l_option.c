@@ -128,6 +128,8 @@ int write_file_name(t_file file, int is_exec, int flag_nb)
         fill_buffer_color(file.name, E_BLUE, flag_nb);
     else if (is_exec == 0)
         fill_buffer_color(file.name, E_GREEN, flag_nb);
+    else if (file.type == CHARACTER)
+        fill_buffer_color(file.name, E_YELLOW, flag_nb);
     else
         fill_buffer(file.name);
     if (flag_nb & L_OPTION)
