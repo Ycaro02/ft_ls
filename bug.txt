@@ -1,0 +1,2 @@
+bug: ls -l /bin link at the root of directory
+need to check minor major padding in /dev
