@@ -76,7 +76,7 @@ void write_group_name(long group_id, int space, int flag_nb)
 static int write_nb_link(long long nb_link, int space)
 {
     char *tmp;
-    
+
     tmp = ft_itoa((int)nb_link);
     if (!tmp)
         return (MALLOC_ERR);
@@ -107,9 +107,9 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb)
         int ret = readlink(tmp, buff, 199);
         if (ret == -1)
             perror("readlink");
-        else 
+        else
         {
-            buff[ret] = '\0'; 
+            buff[ret] = '\0';
             fill_buffer(buff);
         }
         free(tmp);
@@ -143,7 +143,7 @@ static int write_perm(t_file file, int *is_exec, int space)
     char    *tmp;
     int     len;
     int     i;
-    
+
     i = 0;
     tmp = get_perm(file.perm);
     if (!tmp)
@@ -187,18 +187,17 @@ static int write_size(t_file file, int *space)
         }
         else
         {
-
-            insert_space(space[S_MAJOR_SIZE] - ft_strlen(tmp));
+            // need to take all minor,major size and padd it
+            // int total_len = (space[S_MAJOR_SIZE] - ft_strlen(tmp)) + (space[S_MINOR_SIZE] - ft_strlen(tmp2));
+            int pad_len = space[S_MINOR_SIZE] + ft_strlen(tmp);
+            insert_space(space[S_SIZE] - pad_len);
             fill_buffer(tmp);
             fill_buffer(", ");
-            insert_space((space[S_MINOR_SIZE])- ft_strlen(tmp2));
-            fill_buffer(tmp2)
-            // int compute_space = (space[S_MINOR_SIZE] - ft_strlen(tmp2)) - 2;
-            // fill_buffer(tmp);
-            // insert_space(compute_space);
+            insert_space(space[S_MINOR_SIZE] - ft_strlen(tmp2) - 2);
+            fill_buffer(tmp2);
         }
         // fill_buffer(tmp2);
-        
+
         free(tmp);
         free(tmp2);
         fill_buffer_char(' ');
@@ -214,7 +213,13 @@ static int write_size(t_file file, int *space)
         if (space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] > space[S_SIZE])
             insert_space(space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] + 2 - ft_strlen(tmp));
         else
-            insert_space(space[S_SIZE] - ft_strlen(tmp) - 1); // DEVIL - 1
+        {
+            // if ((int)ft_strlen(tmp) != space[S_SIZE])
+            if ((int)ft_strlen(tmp) == space[S_SIZE])
+                insert_space(space[S_SIZE] - 1 - ft_strlen(tmp)); // DEVIL - 1
+            else
+                insert_space(space[S_SIZE] - ft_strlen(tmp)); // DEVIL - 1
+        }
         fill_buffer(tmp);
         free(tmp);
     }
@@ -252,7 +257,7 @@ static int write_date(t_file file, int* space, int flag_nb)
 }
 
 int fill_buffer_l_option(t_file file, int *space, int flag_nb)
-{   
+{
     int is_exec;
 
     is_exec = 1;
