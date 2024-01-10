@@ -11,8 +11,14 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 
-#include <sys/sysmacros.h> // major minor for C file
 
+
+// # define MINORBITS 8
+// # define MINORMASK ((1U << MINORBITS) - 1)
+// # define MAJOR(dev) ((unsigned int)(dev >> MINORBITS))
+// # define MINOR(dev) ((unsigned int)(dev & MINORMASK))
+// # define MINOR(dev) (dev & ) 
+#include <sys/sysmacros.h> // major minor macro for C file
 
 # include <sys/ioctl.h>  // ioctl for manage_column
 # include <sys/xattr.h>  // extended attr 

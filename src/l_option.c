@@ -189,8 +189,6 @@ static int write_size(t_file file, int *space)
         }
         else
         {
-            // need to take all minor,major size and padd it
-            // int total_len = (space[S_MAJOR_SIZE] - ft_strlen(tmp)) + (space[S_MINOR_SIZE] - ft_strlen(tmp2));
             int pad_len = space[S_MINOR_SIZE] + ft_strlen(tmp);
             insert_space(space[S_SIZE] - pad_len);
             fill_buffer(tmp);
@@ -198,13 +196,11 @@ static int write_size(t_file file, int *space)
             insert_space(space[S_MINOR_SIZE] - ft_strlen(tmp2) - 2);
             fill_buffer(tmp2);
         }
-        // fill_buffer(tmp2);
-
         free(tmp);
         free(tmp2);
         fill_buffer_char(' ');
-        // ft_printf_fd(2, "MINOR :%d\n", MINOR(file.rdev));
-        // ft_printf_fd(2, "MAJOR :%d\n", MAJOR(file.rdev));
+        // ft_printf_fd(2, "MINOR :%d\n", minor(file.rdev));
+        // ft_printf_fd(2, "MAJOR :%d\n", major(file.rdev));
         return (0);
     }
     else
