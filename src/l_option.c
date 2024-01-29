@@ -97,10 +97,13 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb)
     fill_buffer_color(path, E_CYAN, flag_nb);
     if (flag_nb & L_OPTION)
     {
-        if (parrent_path)
+        // ft_printf_fd(2, "%sFor path: %s, parent |%s|%s\n", CYAN, path, parrent_path, RESET);
+        
+        if (parrent_path && path[0] != '/') /* avoid /bin/bin case*/
             tmp = join_parent_name(parrent_path, path);
         else
             tmp = ft_strjoin(path, "");
+
         if (!tmp)
             return (MALLOC_ERR);
         fill_buffer(" -> ");

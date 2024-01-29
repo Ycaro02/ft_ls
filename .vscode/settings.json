@@ -3,7 +3,7 @@
     "git.openRepositoryInParentFolders": "never",
     "editor.insertSpaces": false,
     "editor.tabSize": 4,
-    "window.zoomLevel": 0,
+    "window.zoomLevel": 2,
     "zenMode.hideLineNumbers": false,
     "zenMode.hideActivityBar": false,
     "highlight.regexes": {
