@@ -176,6 +176,15 @@ int get_major_size(t_file file)
     return (ret);
 }
 
+int get_len_name_quote(t_file file)
+{
+    // if (file.quote != NORMAL_CHAR)
+        // return (1);
+    // return (0);
+    return (file.quote == NORMAL_CHAR ? 0 : 1);
+}
+
+
 int *get_all_space(t_list *lst, int flag_nb)
 {
     int *array = NULL;
@@ -210,6 +219,9 @@ int *get_all_space(t_list *lst, int flag_nb)
 
     array[S_MINOR_SIZE] = get_nb_space(lst, get_minor_size);
     array[S_MAJOR_SIZE] = get_nb_space(lst, get_major_size);
+
+    array[S_NAME_QUOTE] = get_nb_space(lst, get_len_name_quote);
+    
 
     // if (array[S_MINOR_SIZE] + array[S_MAJOR_SIZE] > 0)
         // array[S_SIZE] = array[S_MINOR_SIZE] + array[S_MAJOR_SIZE] + 1; // 2 for ', '

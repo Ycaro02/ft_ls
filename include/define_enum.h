@@ -122,6 +122,7 @@ enum e_space  {
     S_HOUR,
     S_MINOR_SIZE,
     S_MAJOR_SIZE,
+    S_NAME_QUOTE,
     S_MAX,
 };
 //-------------------------------

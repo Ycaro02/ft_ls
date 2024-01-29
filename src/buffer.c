@@ -101,10 +101,10 @@ static int classic_store(t_list *lst, int flag_nb)
         is_exec = check_file_perm(file->perm, 1);
         if (is_exec == MALLOC_ERR)
             return (MALLOC_ERR);
-        if (write_file_name(*file, is_exec, flag_nb) == MALLOC_ERR)
+        /* TOCHECK */
+        if (write_file_name(*file, is_exec, flag_nb , 1) == MALLOC_ERR)
             return (MALLOC_ERR);
-        if (flag_nb & Z_OPTION)
-        {
+        if (flag_nb & Z_OPTION) {
             fill_buffer_char('\n');
             diplay_xattr_acl(file);
             fill_buffer_char('\n');

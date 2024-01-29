@@ -118,3 +118,24 @@ int main (int argc, char **argv)
     finish_print_buffer();
     return (error);
 }
+
+int quotes_required(char *str)
+{
+    int i = 0;
+    int ret = NORMAL_CHAR;
+    int tmp = NORMAL_CHAR;
+
+    while (str && str[i]) {
+        tmp = is_special_char(str[i]);
+        if (tmp == DIEZE_CHAR)
+            tmp = i == 0 ? ADD_SIMPLE_QUOTE_CHAR : NORMAL_CHAR;
+        else if (tmp == BRACKET_CHAR) 
+            tmp = (ft_strlen(str) == 1 ? ADD_SIMPLE_QUOTE_CHAR : NORMAL_CHAR);
+        if (tmp != NORMAL_CHAR) {
+            if (ret < ADD_DOUBLE_QUOTE_CHAR)
+                ret = tmp;
+        }
+        ++i;
+    }
+    return (ret);
+}

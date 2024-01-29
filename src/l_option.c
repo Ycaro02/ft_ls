@@ -120,10 +120,17 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb)
     return (0);
 }
 
-int write_file_name(t_file file, int is_exec, int flag_nb)
+int write_file_name(t_file file, int is_exec, int flag_nb, int space)
 {
-    if(file.type == SYMLINK)
-    {
+    char c = ' ';
+
+    if (space != 0) {
+        if (file.quote != NORMAL_CHAR)
+            c = file.quote == ADD_SIMPLE_QUOTE_CHAR ? '\'' : '\"';
+        fill_buffer_char(c);
+    }
+
+    if(file.type == SYMLINK) {
         if (write_symlink(file.name, file.parrent, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
     }
@@ -135,6 +142,10 @@ int write_file_name(t_file file, int is_exec, int flag_nb)
         fill_buffer_color(file.name, E_YELLOW, flag_nb);
     else
         fill_buffer(file.name);
+
+    if (space != 0 && file.quote != NORMAL_CHAR)
+        fill_buffer_char(c);
+    
     if (flag_nb & L_OPTION)
         fill_buffer_char('\n');
     else
@@ -271,7 +282,7 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
     write_group_name(file.group_id, space[S_GROUP], flag_nb);
     if (write_size(file, space) == MALLOC_ERR || \
         write_date(file, space, flag_nb) == MALLOC_ERR || \
-        write_file_name(file, is_exec, flag_nb) == MALLOC_ERR)
+        write_file_name(file, is_exec, flag_nb, space[S_NAME_QUOTE]) == MALLOC_ERR)
             return (MALLOC_ERR);
     if (flag_nb & Z_OPTION)
         diplay_xattr_acl(&file);

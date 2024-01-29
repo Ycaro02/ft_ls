@@ -90,6 +90,7 @@ typedef struct s_file
     t_timespec  last_change;
     char        *name;
     char        *parrent;
+    int         quote;
 } t_file;
 
 typedef struct s_buff
@@ -105,6 +106,10 @@ typedef struct s_buff
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
+
+
+// main.c to move
+int quotes_required(char *str);
 
 //-------------------------------
 //      t_file.c               //
@@ -148,7 +153,7 @@ int     search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error);
 //-------------------------------
 void    insert_space(int nb);
 int     fill_buffer_l_option(t_file file, int* space, int nb_flag);
-int     write_file_name(t_file file, int is_exec, int flag_nb);
+int     write_file_name(t_file file, int is_exec, int flag_nb, int space);
 void    write_user_name(long user_id, int space, int flag_nb);
 void    write_group_name(long group_id, int space, int flag_nb);
 //-------------------------------

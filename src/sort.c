@@ -47,6 +47,9 @@ int safe_reverse_lst(t_list **lst,  int* error, int flag_nb)
     return (0);
 }
 
+/**
+* parse special char
+*/
 int is_special_char(char c)
 {
     /* all no care char */
