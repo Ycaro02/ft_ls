@@ -27,7 +27,7 @@ void write_user_name(long user_id, int space, int flag_nb)
         if (!user)
         {
             // perror("getpwuid");
-            char *tmp_buff = ft_itoa(user_id);
+            char *tmp_buff = ft_ltoa(user_id);
             fill_buffer(tmp_buff);
             insert_space(space - ft_strlen(tmp_buff));
             free(tmp_buff);
@@ -57,7 +57,7 @@ void write_group_name(long group_id, int space, int flag_nb)
         if (!group)
         {
             // perror("getgrgid");
-            char *tmp_buff = ft_itoa(group_id);
+            char *tmp_buff = ft_ltoa(group_id);
             fill_buffer(tmp_buff);
             insert_space(space - ft_strlen(tmp_buff));
             free(tmp_buff);
@@ -208,7 +208,7 @@ static int write_size(t_file file, int *space)
     }
     else
     {
-        tmp = ft_itoa((int)file.size);
+        tmp = ft_ltoa(file.size);
         if (!tmp)
             return (MALLOC_ERR);
         if (space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] > space[S_SIZE])

@@ -4,7 +4,7 @@ static int display_dir_header(t_file file, int lst_len)
 {
     if (lst_len > 0)
         multiple_fill_buff("\n", file.name, ":\n", NULL);
-    char *total_str = ft_itoa(file.total_size);
+    char *total_str = ft_ltoa(file.total_size);
     if (!total_str)
         return (MALLOC_ERR);
     fill_buffer("total ");
