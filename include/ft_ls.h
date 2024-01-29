@@ -27,6 +27,44 @@
 # include "define_enum.h"
 // # include <sys/acl.h> 
 
+
+# define TOKEN_NO_CASE_SENSITIVE 0
+# define TOKEN_CHECK_SPE_CHAR 1
+
+/*
+    Parse rule
+
+If char in string -> simple quote:
+---------------------------------------
+    ! $ ^ & * ( ) = < > ? ; [ ] ` ~
+---------------------------------------
+ 
+ Cant use '/' exclusif for directory
+Special char :
+
+Simple quote add double quotes
+ ' : add ""
+
+Double quote add simple quotes
+ " : add ''
+
+ BRACKET_CHAR :
+    - alway simple quote when alone { || }
+    - remove simple quote whenn add any char include { || }: 
+        - exemple: {{ : no simple quote != ## : simple quote
+DIEZE_CHAR :
+    - simple quote only when at idx 0
+*/
+
+enum special_char_e {
+    NORMAL_CHAR,                // all other char
+    NOEFFECT_CHAR,              // @ % - _ + . , : 
+    BRACKET_CHAR,               // { }
+    DIEZE_CHAR,                 // #
+    ADD_SIMPLE_QUOTE_CHAR,      // ! $ ^ & * ( ) = < > ? ; [ ] ` ~ "
+    ADD_DOUBLE_QUOTE_CHAR,      // '
+};
+
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
 //                                  STRUCT                                    //
@@ -133,6 +171,7 @@ char    **get_printable_date(t_timespec last_change);
 void    sort_lst(t_list *lst, int flag_nb);
 void    free_node_ptr(t_list **lst);
 int     safe_reverse_lst(t_list **lst,  int* error, int flag_nb);
+int     is_special_char(char c);
 //-------------------------------
 //      buffer.c                //
 //-------------------------------

@@ -47,28 +47,6 @@ int safe_reverse_lst(t_list **lst,  int* error, int flag_nb)
     return (0);
 }
 
-// if in string -> simple quote: don't take in special char
-// ! $ ^ & * ( ) = < > ? ; [ ] ` ~
-// SEMICOLONE ARE HEREEEE
-// cant / EXCLU DIR
-// ' : add ""
-// " : add ''
-
-// special logic, alway simple quote when alone { || }
-// remove simple quote whenn add ever char : 
- // {{ : no simple quote != ## : simple quote
-// at begin simple quote on: # 
-
-
-// no care: @ % - _ + . , :
-// simple double point
-# define NORMAL_CHAR            0
-# define NOEFFECT_CHAR          1   // @ % - _ + . , :
-# define BRACKET_CHAR           2   // { }
-# define DIEZE_CHAR             3   // #
-# define ADD_SIMPLE_QUOTE_CHAR  4   // ! $ ^ & * ( ) = < > ? ; [ ] ` ~ "
-# define ADD_DOUBLE_QUOTE_CHAR  5   // '
-
 int is_special_char(char c)
 {
     /* all no care char */
@@ -90,8 +68,6 @@ int is_special_char(char c)
     return (NORMAL_CHAR);
 }
 
-# define TOKEN_NO_CASE_SENSITIVE 0
-# define TOKEN_CHECK_SPE_CHAR 1
 
 int special_strcmp(char *s1, char *s2, int flag)
 {
