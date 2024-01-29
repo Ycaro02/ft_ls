@@ -70,15 +70,17 @@ static void remove_last_nchar(char* str, int nb)
         i--;
     }
 }
-
+/**
+ * Check if file is older than 6 month or more than 6 moth in future
+ * (current - six_month) > last_change : older than 6 month
+ * (current + six_month) < last_change: more than 6 month in futurre
+*/
 int check_six_month(time_t last_change)
 {
     time_t current = time(NULL);
-    time_t nb = (60 * 60 * 24 * 30 * 3) + (60 * 60 * 24 * 31 * 3);
-    time_t tmp = (current - nb);
-    if (tmp < last_change)
-        return (NEW);
-    else
+    time_t six_month = (60 * 60 * 24 * 30 * 3) + (60 * 60 * 24 * 31 * 3);
+
+    if ((current - six_month) > last_change || (current + six_month) < last_change)
         return (OLD);
     return (NEW);
 }
