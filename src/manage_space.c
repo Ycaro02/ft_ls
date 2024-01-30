@@ -218,7 +218,6 @@ int *get_all_space(t_list *lst, int flag_nb)
 
     array[S_MINOR_SIZE] = get_nb_space(lst, get_minor_size);
     array[S_MAJOR_SIZE] = get_nb_space(lst, get_major_size);
-
     array[S_NAME_QUOTE] = get_nb_space(lst, get_len_name_quote);
     
 

@@ -31,7 +31,6 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found, i
         ft_lstadd_back(new, ft_lstnew(file));
     else {
         *found = 1;
-        // if (flag_nb & L_OPTION)
         if (has_flag(flag_nb, L_OPTION)) {
             int array[S_HOUR + 1] = {0};
             fill_buffer_l_option(*file, array, flag_nb);

@@ -9,8 +9,7 @@ void free_node_ptr(t_list **lst)
 		return ;
 	current = *lst;
 	tmp = current;
-	while (tmp != NULL)
-	{
+	while (tmp != NULL) {
 		tmp = current->next;
 		free(current);
 		current = tmp;
@@ -23,8 +22,7 @@ static void reverse_lst(t_list *lst, t_list **new)
     t_list *current;
 
     current = lst;
-    while (current)
-    {
+    while (current) {
         ft_lstadd_front(new, ft_lstnew(current->content));
         current = current->next; 
     }
@@ -33,11 +31,10 @@ static void reverse_lst(t_list *lst, t_list **new)
 int safe_reverse_lst(t_list **lst,  int* error, int flag_nb)
 {
     t_list *reverse = NULL;
-    if (flag_nb & F_OPTION)
+    if (has_flag(flag_nb, F_OPTION))
         return (0);
     reverse_lst(*lst, &reverse);
-    if (!reverse)
-    {
+    if (!reverse) {
         if (error)
             *error = MALLOC_ERR;
         return (MALLOC_ERR);
@@ -84,18 +81,15 @@ int special_strcmp(char *s1, char *s2, int flag)
     while (s2[j] && is_special_char(s2[j]) != NORMAL_CHAR)
         j++;
     /* compare all 'count' char */
-    while (s1[i] || s2[j])
-    {
+    while (s1[i] || s2[j]) {
         if (is_special_char(s1[i]) != NORMAL_CHAR)
             i++;
         else if (is_special_char(s2[j]) != NORMAL_CHAR)
             j++;
-        else 
-        {
+        else  {
             first = s1[i];
             second = s2[j];
-            if (flag == TOKEN_NO_CASE_SENSITIVE)
-            {
+            if (flag == TOKEN_NO_CASE_SENSITIVE) {
                 first = ft_tolower(s1[i]);
                 second = ft_tolower(s2[j]);
             }
@@ -119,13 +113,11 @@ int special_char_gestion(char *current, char* min)
 {
     /*  if is same letter no case sentive no special char exemple: ..a == _A */
     int ret = special_strcmp(current, min, TOKEN_NO_CASE_SENSITIVE); 
-    if (ret == 0)
-    {
+    if (ret == 0) {
         /*  if we are here we are on egality on same letter, we need to check the case
             ret 0 for ..a == -a  */
         ret = special_strcmp(current, min, -1);
-        if (ret == 0) 
-        {
+        if (ret == 0)  {
             if (ft_lower_strcmp(current, min) < 0)
                 return (1);
         }
@@ -143,8 +135,7 @@ void sort_by_name(t_list *lst, int flag_nb)
         return ;
     t_list *head = lst;
     t_list *min = NULL;
-    while (lst) 
-    {
+    while (lst)  {
         if (!min)
             min = lst;
         t_file *current = (t_file *)lst->content;
@@ -166,8 +157,7 @@ static t_list *get_precise_value(t_list *min, t_list* lst, t_timespec current, t
 
     if (current.tv_sec > min_file.tv_sec)
         min = lst;
-    if (current.tv_sec == min_file.tv_sec)
-    {
+    if (current.tv_sec == min_file.tv_sec) {
         if (current.tv_nsec > min_file.tv_nsec)
             min = lst;
         if (current.tv_nsec == min_file.tv_nsec)    // if sec and microsec are equal sort by name
@@ -196,8 +186,8 @@ void sort_by_time(t_list *lst, int flag_nb, char option)
         return ;
     t_list *head = lst;
     t_list *min = NULL;
-    while (lst)
-    {
+
+    while (lst) {
         if (!min)
             min = lst;
         min = get_min_value(min, lst, option);
@@ -212,15 +202,13 @@ void sort_by_time(t_list *lst, int flag_nb, char option)
 
 void sort_lst(t_list *lst, int flag_nb)
 {
-    if (flag_nb & F_OPTION)
+    if (has_flag(flag_nb, F_OPTION))
         return ;
-    if (flag_nb & L_OPTION)
-    {
-        if (flag_nb & T_OPTION)
-        {
-            if (flag_nb & U_OPTION)
+    if (has_flag(flag_nb, L_OPTION)) {
+        if (has_flag(flag_nb, T_OPTION)) {
+            if (has_flag(flag_nb, U_OPTION))
                 sort_by_time(lst, flag_nb, U_FLAG_CHAR);
-            else if (flag_nb & C_OPTION)
+            else if (has_flag(flag_nb, C_OPTION))
                 sort_by_time(lst, flag_nb, C_FLAG_CHAR);
             else
                 sort_by_time(lst, flag_nb, T_FLAG_CHAR);
@@ -228,11 +216,11 @@ void sort_lst(t_list *lst, int flag_nb)
         else
             sort_by_name(lst, flag_nb);
     }
-    else if (flag_nb & U_OPTION)
+    else if (has_flag(flag_nb, U_OPTION))
             sort_by_time(lst, flag_nb, U_FLAG_CHAR); // u -u take priotiry
-    else if (flag_nb & C_OPTION)
+    else if (has_flag(flag_nb, C_OPTION))
             sort_by_time(lst, flag_nb, C_FLAG_CHAR); // c
-    else if (flag_nb & T_OPTION)
+    else if (has_flag(flag_nb, T_OPTION))
             sort_by_time(lst, flag_nb, T_FLAG_CHAR); // c
     else
         sort_by_name(lst, flag_nb);

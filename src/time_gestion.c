@@ -63,8 +63,7 @@ static void remove_last_nchar(char* str, int nb)
 {
     int len = ft_strlen(str);
     int i = len - 1;
-    while (nb != 0)
-    {
+    while (nb != 0) {
         str[i] = '\0';
         nb--;
         i--;
@@ -92,8 +91,7 @@ char **get_printable_date(t_timespec last_change)
     int old;
 
     old = check_six_month(last_change.tv_sec);
-    if (old == NEW)
-    {
+    if (old == NEW) {
         new = str_trim_patern(str_trim_patern(str, ' ', 1, 0), ' ', 3, 1);
         if (!new)
             return (NULL);
