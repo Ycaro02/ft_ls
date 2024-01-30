@@ -60,9 +60,9 @@ clean:
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
 test_sort:
-			export LC_COLLATE=en_US.utf8 && echo Real ls: && ls test/sort -la
+			export LC_COLLATE=en_US.utf8 && echo Real ls: && ls test/sort -a
 			echo My ls:
-			./ft_ls test/sort -laG
+			./ft_ls test/sort -aG
 
 fclean:		clean
 			@make -s -C libft fclean
