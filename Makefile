@@ -62,7 +62,6 @@ clean:
 test_sort:	${NAME}
 			export LC_COLLATE=en_US.utf8 && ls test/sort -a > real_ls_out
 			./ft_ls test/sort -a > myls_out
-			echo real: && cat real_ls_out && echo me: && cat myls_out
 			diff myls_out real_ls_out
 
 fclean:		clean
