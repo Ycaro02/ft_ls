@@ -110,7 +110,7 @@ static int get_len_nb_link(t_file file)
     return (nb);
 }
 
-static int get_nb_space(t_list *lst, int(*get_len_by_info)(t_file))
+int get_nb_space(t_list *lst, int(*get_len_by_info)(t_file))
 {
     t_file *file;
     t_list *current = lst;

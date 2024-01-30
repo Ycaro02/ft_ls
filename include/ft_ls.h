@@ -179,6 +179,8 @@ char    get_type(struct stat sb);
 //-------------------------------
 //      manage_space.c          //
 //-------------------------------
+int get_nb_space(t_list *lst, int(*get_len_by_info)(t_file));
+int get_len_name_quote(t_file file);
 int		*get_all_space(t_list *lst, int flag_nb);
 //-------------------------------
 //      time_gestion.c          //
@@ -206,7 +208,7 @@ void    fill_color(enum e_color color);
 //-------------------------------
 //      manage_column.c         //
 //-------------------------------
-int    fill_buffer_with_column(char **tab, int nb_raw, t_list **lst, int flag_nb);
+int    fill_buffer_with_column(char **tab, int nb_raw, t_list **lst, int flag_nb, int quote_space);
 char   **check_manage_colum(t_list *lst, int *err, int *value, int lst_len);
 //-------------------------------
 //      list_xattr.c           //

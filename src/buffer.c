@@ -124,13 +124,16 @@ int store_in_buffer(t_list *lst, int flag_nb)
     if (has_flag(flag_nb, REVERSE_OPTION))
         if (safe_reverse_lst(&lst, NULL, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
+
+    /* check for quote in lst and give bool */
+    int quote_space = get_nb_space(lst, get_len_name_quote); 
     tab = check_manage_colum(lst, &err, &nb_raw, get_lst_len(lst));
     if (err == MALLOC_ERR) {
         new_lstclear(&lst, free);
         return (MALLOC_ERR);
     }
     else if (tab != NULL && !has_flag(flag_nb, Z_OPTION))
-        return (fill_buffer_with_column(tab, nb_raw, &lst, flag_nb));
+        return (fill_buffer_with_column(tab, nb_raw, &lst, flag_nb, quote_space));
     if (tab)
         ft_free_tab(tab);
     return (classic_store(lst, flag_nb));
