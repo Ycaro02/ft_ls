@@ -50,23 +50,20 @@ static int get_group_id_len(t_file file)
 
 static int get_group_name_len(t_file file)
 {
+    int len = 0;
+
     struct group* group = getgrgid(file.group_id);
     if (!group)
-    {
-        perror("getgrgid"); // todo change this accordate with change with l_option, print pid insteand, get number into array len
-        return (ft_strlen("unknow"));
-    }
-    int nb = ft_strlen(group->gr_name);
-    return (nb);
+        return (get_group_id_len(file));
+    len = ft_strlen(group->gr_name);
+    return (len);
 }
 
 static int get_user_name_len(t_file file)
 {
     struct passwd* user = getpwuid(file.user_id);
-    if (!user)
-    {
-        perror("getpwuid");
-        return (ft_strlen("unknow"));
+    if (!user) {
+        return (get_user_id_len(file));
     }
     int nb = ft_strlen(user->pw_name);
     return (nb);

@@ -21,7 +21,6 @@ void write_user_name(long user_id, int space, int flag_nb)
     else {
         struct passwd* user = getpwuid(user_id);
         if (!user) {
-            // perror("getpwuid");
             char *tmp_buff = ft_ltoa(user_id);
             fill_buffer(tmp_buff);
             insert_space(space - ft_strlen(tmp_buff));
@@ -50,12 +49,10 @@ void write_group_name(long group_id, int space, int flag_nb)
         struct group* group = getgrgid(group_id);
         if (!group)
         {
-            // perror("getgrgid");
             char *tmp_buff = ft_ltoa(group_id);
             fill_buffer(tmp_buff);
             insert_space(space - ft_strlen(tmp_buff));
             free(tmp_buff);
-            // fill_buffer("unknow");
         }
         else
         {
