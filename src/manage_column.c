@@ -269,18 +269,17 @@ char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len, int sp
     int     nb_raw = 0, max_per_raw = 1;
     
     nb_raw = get_nb_raw(stdout_width, lst);
-    if (nb_raw == MALLOC_ERR)
-    {
+    if (nb_raw == MALLOC_ERR) {
         *err = MALLOC_ERR;
         return (NULL);
     }
+
     *value = nb_raw; // second return need to kept nb_raw
     max_per_raw  = (int)(lst_len / nb_raw) + (lst_len % nb_raw != 0); // add 1 if (lst_len % nb_raw != 0)
-    if (get_total_len(lst) > (long long)stdout_width)
-    {
+    
+    if (get_total_len(lst) > (long long)stdout_width) {
         tab_max_unit = get_max_by_column(lst, max_per_raw, nb_raw);
-        if (!tab_max_unit)
-        {
+        if (!tab_max_unit) {
             *err = MALLOC_ERR;
             return (NULL);
         }
