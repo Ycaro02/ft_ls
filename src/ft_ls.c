@@ -50,20 +50,47 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
     return (0);
 }
 
+void display_quote(int quote)
+{
+    if (quote == ADD_SIMPLE_QUOTE_CHAR)
+        fill_buffer_char('\'');
+    else if (quote == ADD_SIMPLE_QUOTE_CHAR)
+        fill_buffer_char('\"');
+    else
+        fill_buffer_char(' ');
+}
+
 int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 {
-    t_list *lst;
+    t_list *lst = NULL;
+
     if (has_flag(flag_nb, D_OPTION))
     {
-        fill_buffer_color(file->name, E_BLUE, flag_nb);
+        fill_buffer(BLUE);
+        display_quote(file->quote);
+        fill_buffer(file->name);
+        display_quote(file->quote);
+        fill_buffer(RESET);
+
         fill_buffer_char(' ');
         free(file->parrent);
         free(file->name);
         free(file);
         return (0);
     }
-    if (lst_len > 0)
-        multiple_fill_buff("\n", file->name, ":\n", NULL); // here first \n with ls -R
+    if (lst_len > 0) {
+        /*
+            need to detect before call and give it to args
+            if not first dir displayed print 
+            fill_buffer_char('\n');
+        */
+        fill_buffer_char('\n');
+        display_quote(file->quote);
+        fill_buffer(file->name);
+        display_quote(file->quote);
+        fill_buffer(":\n");
+    }
+    /* maybe manage space at this call for -l option */
     lst = get_all_file_struct(file, flag_nb, error);
     if (!lst && *error == MALLOC_ERR)
         return (MALLOC_ERR);

@@ -109,6 +109,8 @@ typedef struct s_buff
 
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
 
+int check_for_quote(char *str);
+
 //flag_gestion
 void set_flag(int *flags, int flag_val);
 void unset_flag(int *flags, int flag_val);
@@ -155,6 +157,7 @@ t_list  *get_dir_args(char **argv, int *error, int flag_nb);
 //-------------------------------
 int     ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int* error);
 int     ls_one_dir(t_file *file, int flag_nb, int lst_len, int* error);
+void    display_quote(int quote);
 //-------------------------------
 //      recurcive.c            //
 //-------------------------------

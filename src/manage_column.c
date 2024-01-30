@@ -17,22 +17,6 @@ static long long get_total_len(t_list *list)
     return (total);
 } 
 
-static void add_char(char *dst, char src, int *j)
-{
-    dst[*j] = src;
-    (*j)++;
-}
-
-static void insert_space_str(int max_unit_len, char *name, int *j, char *str)
-{
-    int space = max_unit_len - (int)ft_strlen(name);
-    while (space >= 0)
-    {
-        add_char(str, ' ', j);
-        space--;
-    }
-}
-
 int ft_strcpy(char* dst, char *src, int len)
 {
     int i = 0;
@@ -53,21 +37,22 @@ static int get_raw_len(int *max_unit_len, int max)
     while (i < max)
     {
         nb += max_unit_len[i];
-        nb += 2;
+        nb += 1;
         i++;
     }
+    // nb += 2;
     return (nb);
 }
 
 static char **alloc_tab(int nb_raw, int *max_unit_len, int max_per_raw, int lst_len)
 {
-    char **tab = ft_calloc(sizeof(char *), nb_raw + 2);
+    char **tab = ft_calloc(sizeof(char *), nb_raw + 2); /* 1 for type, 2 NULL*/
     if (!tab)
         return (NULL);
     int total = get_raw_len(max_unit_len, max_per_raw);
     for (int i = 0; i < nb_raw; i++)
     {
-        tab[i] = ft_calloc(sizeof(char), total + 2);
+        tab[i] = ft_calloc(sizeof(char), total + 2); /* +2 for two space between word */
         if (!tab[i])
             return (NULL);
     }
@@ -93,6 +78,25 @@ static int fill_type_str(char *str, int k, t_file file)
     return (0);
 }
 
+
+
+static void add_char(char *dst, char src, int *j)
+{
+    dst[*j] = src;
+    (*j)++;
+}
+
+static void insert_space_str(int max_unit_len, char *name, int *j, char *str)
+{
+    int space = max_unit_len - (int)ft_strlen(name);
+    // printf("Insert %d space after %s\n", space, name);
+    while (space > 0)
+    {
+        add_char(str, ' ', j);
+        space--;
+    }
+}
+
 static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int nb_raw)
 {
     int current_raw = 0, current_colum = 0, i = 0, j = 0;
@@ -102,6 +106,7 @@ static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int
     while (lst)
     {
         t_file *file = lst->content;
+
         if (fill_type_str(tab[nb_raw], j, *file) == MALLOC_ERR)
         {
             ft_free_tab(tab);
@@ -109,15 +114,14 @@ static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int
         }
         i += ft_strcpy(&tab[current_raw][i], file->name, ft_strlen(file->name));
         if (current_colum != max_per_raw - 1)
-            insert_space_str(max_unit_len[current_colum] + 2, file->name, &i, tab[current_raw]);
+            insert_space_str(max_unit_len[current_colum] + 1, file->name, &i, tab[current_raw]);
         current_raw++;
-        if (current_raw == nb_raw)
-        {
+        if (current_raw == nb_raw) {
             current_colum++;
             current_raw = 0;
         }
         i = get_raw_len(max_unit_len, current_colum);
-        j++;
+        ++j;
         lst = lst->next;
     }
     return (tab);
@@ -192,7 +196,8 @@ static int brut_test(int i, int test, int tab_len, int *all_len, int *local_spac
             break ;
         i += test;
     }
-    ret -= 2; // remove last spaces
+    ret += 4; // brut pad value
+    // ret -= 2; // remove last spaces
     // printf("ret = %d\n", ret);
     return (ret);
 }
@@ -205,11 +210,12 @@ static int test_all(int test, int* all_len, int tab_len, int stdout_w)
     while (i < test)
     {
         ret = brut_test(i, test, tab_len, all_len, local_space);
-        if (ret > stdout_w)
+        // printf("Ret = %d for [%d] width: %d\n", ret, test, stdout_w);
+        if (ret >= stdout_w)
             break ;
         i++;
     }
-    if (ret > stdout_w)
+    if (ret >= stdout_w)
         ret = -1;
     else
         ret = 0;
@@ -305,16 +311,34 @@ static enum e_color get_color_by_index(char *type, int index)
     return(E_NONE);
 }
 
-int fill_buffer_stop(char *str, char c)
+int fill_buff_stop_char(char *str, char c)
 {
     int i = 0;
-    while (str && str[i])
-    {
+
+
+    int count = 0;
+    while (str && str[count]) {
+        ++count;
+    if (str[count] == c)
+        break;
+    }
+    str[count] = '\0';
+
+    int quote = check_for_quote(str);
+    str[count] = ' ';
+    display_quote(quote);
+
+    /* Display name with coolor */
+    // test quote here
+
+    while (str && str[i]) {
         fill_buffer_char(str[i]);
         i++;
         if (str[i] == c)
             break;
     }
+
+    display_quote(quote);
     return (i);
 }
 
@@ -323,13 +347,17 @@ int fill_buffer_color_with_space(char *str, enum e_color color, char c)
     int i = 0;
     if (!str)
         return (-100000);
+
+
+
     if (color != E_NONE)
         fill_color(color);
-    i = fill_buffer_stop(str, c);
+    i = fill_buff_stop_char(str, c);
     if (color != E_NONE)
         fill_buffer(RESET);
-    while (str[i] && str[i] == c)
-    {
+
+    /* display space */
+    while (str[i] && str[i] == c) {
         fill_buffer_char(str[i]);
         i++;
     }
@@ -340,19 +368,23 @@ int fill_buffer_color_with_space(char *str, enum e_color color, char c)
     return (i);
 }
 
-static void add_color(char *str, int nb_raw ,char *type, int raw)
+static void add_color_quote(char **tab, int nb_raw, int raw)
 {
+    char *str = tab[raw];
+    char *type = tab[nb_raw];
+    // char *quote = tab[nb_raw + 1];
+    (void)nb_raw;
+
     int i = 0;
     int color = E_NONE;
-    int nb = raw;
-    while (str && str[i])
-    {
-        if (nb < (int)ft_strlen(type))
-            color = get_color_by_index(type, nb);
+    // int quote_val = 0;
+
+    while (str && str[i]) {
+        color = get_color_by_index(type, raw);
         i += fill_buffer_color_with_space(&str[i], color, ' ');
         if (i < 0)
             break;
-        nb += nb_raw;
+        raw += nb_raw;
     }
 }
 
@@ -361,7 +393,7 @@ int fill_buffer_with_column(char **tab, int nb_raw, t_list **lst, int flag_nb)
     for (int i = 0; i < nb_raw; i++)
     {
         if (has_flag(flag_nb , COLOR_OPTION))
-            add_color(tab[i], nb_raw, tab[nb_raw], i);
+            add_color_quote(tab, nb_raw, i);
         else
             fill_buffer(tab[i]);
         if (i != nb_raw - 1)

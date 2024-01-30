@@ -1,102 +1,82 @@
 {
-    "workbench.colorTheme": "GitHub Dark Dimmed",
     "git.openRepositoryInParentFolders": "never",
-    "editor.insertSpaces": false,
-    "editor.tabSize": 4,
-    "window.zoomLevel": 0,
     "zenMode.hideLineNumbers": false,
-    "zenMode.hideActivityBar": false,
-    "highlight.regexes": {
-            "(#.*)": {
-                "color": "#d13437",
-                "filterFileRegex": "\\.def$",
-              },
-              "([0-9].)": {
-                "color": "#00a0c8",
-                "filterFileRegex": "\\.def$"
-              },
-              "(name.)": {
-                "color": "#00ffff",
-                "filterFileRegex": "\\.def$"
-              },
-              "(id|width|height|max|anim_id|total_len|frame_max|anim_step|anim_width|anim_height|img_max|step_one|step_two|step_three)": {
-                "color": "#d1b337",
-                "filterFileRegex": "\\.def$"
-              },
-            
-              "(//.*.)": {
-                "color": "#6c9c54",
-                "filterFileRegex": "\\.c$"
-              },
-              "(\\//.*.)": {
-                "color": "#6c9c54",
-                "filterFileRegex": "\\.h$"
-              },
-        "((?:<!-- *)?(?:#|// @|//|./\\*+|<!--|--|\\* @|{!|{{!--|{{!) *TODO(?:\\s*\\([^)]+\\))?:?)((?!\\w)(?: *-->| *\\*/| *!}| *--}}| *}}|(?= *(?:[^:]//|/\\*+|<!--|@|--|{!|{{!--|{{!))|(?: +[^\\n@]*?)(?= *(?:[^:]//|/\\*+|<!--|@|--(?!>)|{!|{{!--|{{!))|(?: +[^@\\n]+)?))": {
-            "filterFileRegex": ".*(?<!CHANGELOG.md)$",
-            "decorations": [
+    "remote.SSH.remotePlatform": {
+        "192.168.1.17": "linux"
+    },
+    "editor.minimap.enabled": false,
+    "workbench.colorTheme": "GitHub Dark Default",
+
+    "editor.tokenColorCustomizations": {
+        "[GitHub Dark Default]": {
+            "textMateRules": [
                 {
-                    "overviewRulerColor": "#ffcc00",
-                    "backgroundColor": "#ffcc00",
-                    "color": "#1f1f1f",
-                    "fontWeight": "bold"
-                },
-                {
-                    "backgroundColor": "#ffcc00",
-                    "color": "#1f1f1f"
-                }
-            ]
-        },
-        "((?:<!-- *)?(?:#|// @|//|./\\*+|<!--|--|\\* @|{!|{{!--|{{!) *(?:FIXME|FIX|BUG|UGLY|DEBUG|HACK)(?:\\s*\\([^)]+\\))?:?)((?!\\w)(?: *-->| *\\*/| *!}| *--}}| *}}|(?= *(?:[^:]//|/\\*+|<!--|@|--|{!|{{!--|{{!))|(?: +[^\\n@]*?)(?= *(?:[^:]//|/\\*+|<!--|@|--(?!>)|{!|{{!--|{{!))|(?: +[^@\\n]+)?))": {
-            "filterFileRegex": ".*(?<!CHANGELOG.md)$",
-            "decorations": [
-                {
-                    "overviewRulerColor": "#cc0000",
-                    "backgroundColor": "#cc0000",
-                    "color": "#1f1f1f",
-                    "fontWeight": "bold"
-                },
-                {
-                    "backgroundColor": "#cc0000",
-                    "color": "#1f1f1f"
-                }
-            ]
-        },
-        "((?:<!-- *)?(?:#|// @|//|./\\*+|<!--|--|\\* @|{!|{{!--|{{!) *(?:REVIEW|OPTIMIZE|TSC)(?:\\s*\\([^)]+\\))?:?)((?!\\w)(?: *-->| *\\*/| *!}| *--}}| *}}|(?= *(?:[^:]//|/\\*+|<!--|@|--|{!|{{!--|{{!))|(?: +[^\\n@]*?)(?= *(?:[^:]//|/\\*+|<!--|@|--(?!>)|{!|{{!--|{{!))|(?: +[^@\\n]+)?))": {
-            "filterFileRegex": ".*(?<!CHANGELOG.md)$",
-            "decorations": [
-                {
-                    "overviewRulerColor": "#00ccff",
-                    "backgroundColor": "#00ccff",
-                    "color": "#1f1f1f",
-                    "fontWeight": "bold"
-                },
-                {
-                    "backgroundColor": "#00ccff",
-                    "color": "#1f1f1f"
-                }
-            ]
-        },
-        "((?:<!-- *)?(?:#|// @|//|./\\*+|<!--|--|\\* @|{!|{{!--|{{!) *(?:IDEA)(?:\\s*\\([^)]+\\))?:?)((?!\\w)(?: *-->| *\\*/| *!}| *--}}| *}}|(?= *(?:[^:]//|/\\*+|<!--|@|--|{!|{{!--|{{!))|(?: +[^\\n@]*?)(?= *(?:[^:]//|/\\*+|<!--|@|--(?!>)|{!|{{!--|{{!))|(?: +[^@\\n]+)?))": {
-            "filterFileRegex": ".*(?<!CHANGELOG.md)$",
-            "decorations": [
-                {
-                    "overviewRulerColor": "#cc00cc",
-                    "backgroundColor": "#cc00cc",
-                    "color": "#1f1f1f",
-                    "fontWeight": "bold"
-                },
-                {
-                    "backgroundColor": "#cc00cc",
-                    "color": "#1f1f1f"
+                    "scope": [
+                        "variable",
+                        "variable.other.local",
+                        "variable.other.local.c",
+                        "variable.other.member",
+                        "variable.other.member.c",
+                        "variable.other",
+                        "variable.parameter",
+                        "variable.parameter.function",
+                        "variable.other.readwrite.local",
+                        "variable.other.readwrite"
+                    ],
+                    "settings": {
+                        "foreground": "#1cc4ad"  // Couleur de votre choix
+                    }
                 }
             ]
         }
     },
+
     "files.associations": {
         "*.def": "source.def",
-        "sysmacros.h": "c",
+        "editor_struct.h": "c",
+        "texture_struct.h": "c",
+        "linked_list.h": "c",
+        "menu.h": "c",
+        "array": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "utility": "c",
+        "numbers": "c",
+        "game.h": "c",
+        "memory_resource": "c",
+        "update_event.h": "c",
+        "define_typedef.h": "c",
         "basic_define.h": "c",
-        "ft_ls.h": "c"
+        "type_traits": "c",
+        "random": "cpp"
+    },
+
+    "highlight.regexes": {
+    "(//.*)": {
+        "color": "#007f00",
+        "filterFileRegex": "\\.c$|\\.h$",
+        },
+    "(\\/\\*[\\s\\S]*?\\*\\/)": {
+        "color": "#007f00",
+        "filterFileRegex": "\\.c$|\\.h$",
+        },
+
+        "(#.*)": {
+            "color": "#d13437",
+            "filterFileRegex": "\\.def$",
+          },
+          "([0-9])": {
+            "color": "#00a0c8",
+            "filterFileRegex": "\\.def$"
+          },
+          "(name.*)": {
+            "color": "#00ffff",
+            "filterFileRegex": "\\.def$"
+          },
+   
+          "(id|width|height|max_hp|max|anim_id|total_len|frame_max|anim_step|anim_width|anim_height|img_max|step_number|monster_max|nb_dir)": {
+            "color": "#d1b337",
+            "filterFileRegex": "\\.def$"
+          },
     }
 }
