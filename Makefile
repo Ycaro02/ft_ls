@@ -60,7 +60,9 @@ clean:
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
 test_sort:
-			export LC_COLLATE=en_US.utf8 && echo Collate: ${LC_COLLATE} Real ls: && ls test/sort -la
+			echo Collate: ${LC_COLLATE} 
+			Real ls:
+			ls test/sort -la
 			echo My ls:
 			./ft_ls test/sort -laG
 
