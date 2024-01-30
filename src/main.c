@@ -86,7 +86,8 @@ int ft_ls(char **argv, int flag_nb, int* error)
     sort_lst(dir_lst, flag_nb);
     if (!dir_lst)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
-    if (flag_nb & REVERSE_OPTION)
+    // if (flag_nb & REVERSE_OPTION)
+    if (has_flag(flag_nb , REVERSE_OPTION))
     {
         if (safe_reverse_lst(&dir_lst, error, flag_nb) == MALLOC_ERR)
         {

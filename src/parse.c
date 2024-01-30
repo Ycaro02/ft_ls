@@ -6,14 +6,12 @@ static t_file *default_file_struct()
     struct stat sb;
 
     file = NULL;
-    if (lstat(".", &sb) == -1)
-    {
+    if (lstat(".", &sb) == -1) {
         perror("ft_ls lstat");
         return (NULL);
     }
     file = fill_file_struct(sb, ".", "..");
-    if (!file || !(file->name))
-    {
+    if (!file || !(file->name)) {
         perror("Malloc");
         return (NULL);
     }
@@ -25,18 +23,16 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found, i
     t_file *file;
     
     file = fill_file_struct(sb, str, str);
-    if (!file)
-    {
+    if (!file) {
         perror("Malloc");
         return (MALLOC_ERR);
     }
     if (file->type == DIRECTORY)
         ft_lstadd_back(new, ft_lstnew(file));
-    else
-    {
+    else {
         *found = 1;
-        if (flag_nb & L_OPTION)
-        {
+        // if (flag_nb & L_OPTION)
+        if (has_flag(flag_nb, L_OPTION)) {
             int array[S_HOUR + 1] = {0};
             fill_buffer_l_option(*file, array, flag_nb);
         }
@@ -55,8 +51,7 @@ static int check_args(char *str, t_list **new, int *found, int *error, int flag_
 {
     struct stat sb;
 
-    if (lstat(str, &sb) == -1)
-    {
+    if (lstat(str, &sb) == -1) {
         *found = 1;
         *error = NA_CMD_LINE_ERR;
         ft_putstr_fd("in check args perror : ft_ls error : ", 2);
@@ -73,12 +68,9 @@ t_list *get_dir_args(char **argv, int *error, int flag_nb)
     int i = 0;
     t_list *new = NULL;
     int found = 0;
-    while (argv && argv[i])
-    {
-        if (argv[i][0] != '-')
-        {
-            if (check_args(argv[i], &new, &found, error, flag_nb) == MALLOC_ERR)
-            {
+    while (argv && argv[i]) {
+        if (argv[i][0] != '-') {
+            if (check_args(argv[i], &new, &found, error, flag_nb) == MALLOC_ERR) {
                 *error = MALLOC_ERR;
                 return (NULL);
             }
@@ -100,8 +92,7 @@ static int check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *fi
     full_path = join_parent_name(file->name, my_dir->d_name);
     if (!full_path)
         return (MALLOC_ERR);
-    if (lstat(full_path, &sb) == -1)
-    {
+    if (lstat(full_path, &sb) == -1) {
         print_error(full_path, "ft_ls: cannot open directory : ", NO_ACCESS_ERR, 0);
         free(full_path);
         update_error(error);
@@ -122,13 +113,10 @@ t_list* get_all_file_struct(t_file *file, int flag_nb, int *error)
     DIR *dir = opendir(file->name);
     if (!dir)
         return (NULL);
-    do 
-    {
+    do  {
         my_dir = readdir(dir);
-        if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 0) == 1)
-        {
-            if (check_for_fill_struct(&all, my_dir, file, error) == MALLOC_ERR)
-            {
+        if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 0) == 1) {
+            if (check_for_fill_struct(&all, my_dir, file, error) == MALLOC_ERR) {
                 *error = MALLOC_ERR;
                 return (NULL);
             }
