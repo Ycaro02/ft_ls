@@ -92,5 +92,9 @@
                 }
             ]
         }
+    },
+    "files.associations": {
+        "*.def": "source.def",
+        "sysmacros.h": "c"
     }
 }

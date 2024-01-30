@@ -1,0 +1,27 @@
+total 8
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06 '!'
+drwxr-xr-x 2 nicolas nicolas 4096 Jan 30 08:06  .
+drwxr-xr-x 3 nicolas nicolas 4096 Jan 30 08:06  ..
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06 '!a'
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  ..a
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  ._a
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  .a
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  @a
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  _a
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  a
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  ..A
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  .A
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  _#_A
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  __A
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  _A
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  A
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  ..aa
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  a......#a
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  a_@#%a
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  a_a
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  ..AA
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  a_aa
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  ..b
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  .b
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06  d#fds
+-rw-r--r-- 1 nicolas nicolas    0 Jan 30 08:06 '#fds'

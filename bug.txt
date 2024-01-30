@@ -1,5 +1,6 @@
 need to check minor major padding in /dev : check on 42 computer and vm for size max len and minor + major max_len
 - DONE on kali pc 
+- DONE on home pc 
 bug: ls -l /bin link at the root of directory --> DONE
 file in futur same logic for oldest file (+ 6 month) print year
 	to change date touch -d "20250805" futur,05/08/2025 -> DONE

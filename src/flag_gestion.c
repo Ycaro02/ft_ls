@@ -1,5 +1,71 @@
 #include "../include/ft_ls.h"
 
+/**
+* 00000000 -> Our current flag value is 0
+* | 00000100 -> Do or operation with Flag3, which has a value of 4
+* = 00000100 -> The bit for Flag3 gets set to 1, flag value is now 4
+* Enable target flag
+*/
+void set_flag(int *flags, int flag_val)
+{
+    if (flags)
+        *flags |= flag_val;
+}
+
+/**
+* 00000100 -> We get Flag3 as input to unset
+* ~= 11111011 -> We flip all the bits of Flag3
+* 00010110 -> Our current value had Flag2, 3 and 5 set already
+* &  11111011 -> AND operation with the result of previous inversion
+* =  00010010 -> Our new value only has Flag2 and 5 set
+* Disable target flag
+*/
+void unset_flag(int *flags, int flag_val)
+{
+    if (flags)
+        *flags &= ~flag_val;
+}
+
+/*
+* 00010010 -> Our current value has Flag2 and Flag5 set
+* ^ 00000100 -> Perform XOR with Flag3
+* = 00010110 -> New value has Flag3 set
+-----------------------------------------------------------------------
+* 00010110 -> Our current value has Flag2, Flag3 and Flag5 set
+* ^ 00000100 -> Perform XOR with Flag3
+* = 00010010 -> New value does not have Flag3 set
+* Flip target flag if == 1 -> 0 and vice versa
+*/
+
+void flip_flag(int *flags, int flag_val)
+{
+    if (flags)
+        *flags ^= flag_val;
+}
+
+/*
+* 00010110 -> Starting value has Flag2, Flag3 and Flag5 set
+* & 00000100 -> Perform & with Flag3
+* = 00000100 -> Result is equal to Flag3
+* -----------------------------------------------------------
+* 00010010 -> Starting value has Flag2 and Flag5 set
+* & 00000100 -> Perform & with Flag3
+* = 00000000 -> Result is equal to 0
+* check if flag_val enable in flags
+*/
+int has_flag(int flags, int flag_val)
+{
+   return ((flags & flag_val) == flag_val);
+}
+
+/**
+ * check if flag_val enable in flags give flag_val with flag1 | flag2 ... 
+*/
+int has_any_flag(int flags, int flag_val)
+{
+    return (flags & flag_val) != 0;
+}
+
 static int manage_bonus_option(int nb)
 {
     if (nb & G_OPTION && !(nb & L_OPTION))
@@ -13,6 +79,10 @@ static int manage_bonus_option(int nb)
         if (nb & COLOR_OPTION)
             nb -= COLOR_OPTION;
     }
+
+    // if (has_flag(nb, G_OPTION) && !has_flag(nb, L_OPTION))
+    //     set_flag(&nb, L_OPTION);
+
     return (nb);
 }
 
@@ -23,6 +93,7 @@ int get_flag(enum e_flag *flag)
     while (flag && flag[i] != UNKNOW)
     {
         nb += flag[i];
+        // set_flag(&nb, flag[i]);
         i++;
     }
     nb = manage_bonus_option(nb);
@@ -50,7 +121,9 @@ static enum e_flag fill_used_flag(enum e_flag *tab, enum e_flag flag)
     tab[i] =  flag;
     return (flag);
 }
-
+/**
+ * Need to be rtefactor, no need to store in array just check flags value 
+*/
 int flag_already_add(char c, t_eflag *used)
 {
     int i = 0;
@@ -59,7 +132,7 @@ int flag_already_add(char c, t_eflag *used)
     {
         if (c == ALL_FLAG[i])
         {
-            option = 1 << i;
+            option = (1 << i);
             if (already_add(used, option) == 1)
                 return (1);
         }
@@ -78,7 +151,7 @@ int add_flag(char c, enum e_flag *used)
     {
         if (c == ALL_FLAG[i])
         {
-            option = 1 << i;
+            option = (1 << i);
             return (fill_used_flag(used, option) == 1);
         }
         i++;

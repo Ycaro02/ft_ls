@@ -114,6 +114,14 @@ int main (int argc, char **argv)
         return(MALLOC_ERR);
     flag_nb = get_flag(flag);
     free(flag);
+
+
+    // ft_printf_fd(2, "A flag: ");
+    // if (has_flag(flag_nb, A_OPTION))
+    //     ft_printf_fd(2, "Enable\n");
+    // else 
+    //     ft_printf_fd(2, "Disable\n");
+
     error = ft_ls(argv, flag_nb, &error);
     finish_print_buffer();
     return (error);

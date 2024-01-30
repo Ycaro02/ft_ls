@@ -107,6 +107,12 @@ typedef struct s_buff
 
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
 
+//flag_gestion
+void set_flag(int *flags, int flag_val);
+void unset_flag(int *flags, int flag_val);
+void flip_flag(int *flags, int flag_val);
+int  has_flag(int flags, int flag_val);
+int  has_any_flag(int flags, int flag_val);
 
 // main.c to move
 int quotes_required(char *str);
