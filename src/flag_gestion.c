@@ -161,7 +161,7 @@ int parse_flag(int argc, char **argv)
         ++i;
     }
     flags = manage_bonus_flag(flags);
-    display_flags(flags);
+    // display_flags(flags);
     return (flags);
 }
 

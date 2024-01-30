@@ -16,4 +16,7 @@ jobs:
     
     - name: make test
       run: make test_sort
+
+    - name: make fclean
+      run: make fclean
   
