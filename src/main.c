@@ -7,14 +7,14 @@ int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), 
     t_list *current = lst;
     int lst_len = get_lst_len(lst) - 1;
     int err = 0;
-    while (current)
-    {
+    while (current) {
         err = ls_function(current->content, flag_nb, lst_len, error);
         if (err == MALLOC_ERR)
             break ;
         current = current->next;
     }
-    if (flag_nb & D_OPTION && !(flag_nb & L_OPTION))
+    // if (flag_nb & D_OPTION && !(flag_nb & L_OPTION))
+    if (has_flag(flag_nb, D_OPTION) && !has_flag(flag_nb, L_OPTION))
         fill_buffer_char('\n');
     return (err);
 }
@@ -24,11 +24,9 @@ static int ls_only_dir(t_list *dir_lst, int flag_nb)
     t_list *current = dir_lst;
     int *space = get_all_space(dir_lst, flag_nb);
     int err = 0;
-    while (current)
-    {
+    while (current) {
         err = fill_buffer_l_option(*(t_file *)current->content, space, flag_nb);
-        if (err == MALLOC_ERR)
-        {
+        if (err == MALLOC_ERR) {
             free(space);
             return (MALLOC_ERR);
         }
@@ -43,20 +41,33 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error)
     int err;
     
     err = 0;
-    if (flag_nb & R_OPTION && !(flag_nb & D_OPTION))
+
+    if (has_flag(flag_nb, R_OPTION) && !has_flag(flag_nb, D_OPTION))
         err = search_recurcive_dir(dir_lst, flag_nb, error);
-    else if (flag_nb & L_OPTION && flag_nb & D_OPTION)
+     else if (has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION))
         err = ls_only_dir(dir_lst, flag_nb);
-    else if (flag_nb & L_OPTION)
+    else if (has_flag(flag_nb, L_OPTION))
         err = ls(dir_lst, flag_nb, ls_l_one_dir, error);
     else
         err = ls(dir_lst, flag_nb, ls_one_dir, error);
-    if (!(flag_nb & D_OPTION) || (flag_nb & L_OPTION && flag_nb & D_OPTION))
+    /* old */
+    // if (flag_nb & R_OPTION && !(flag_nb & D_OPTION))
+    //     err = search_recurcive_dir(dir_lst, flag_nb, error);
+    // else if (flag_nb & L_OPTION && flag_nb & D_OPTION)
+    //     err = ls_only_dir(dir_lst, flag_nb);
+    // else if (flag_nb & L_OPTION)
+    //     err = ls(dir_lst, flag_nb, ls_l_one_dir, error);
+    // else
+    //     err = ls(dir_lst, flag_nb, ls_one_dir, error);
+    
+    // if (!(flag_nb & D_OPTION) || (flag_nb & L_OPTION && flag_nb & D_OPTION))
+
+    if (!has_flag(flag_nb, D_OPTION) || (has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION)))
         new_lstclear(&dir_lst, free);
     else
         free_node_ptr(&dir_lst);
-    if (err == MALLOC_ERR)
-    {
+    
+    if (err == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error exit\n");
         exit(MALLOC_ERR);
     }
@@ -109,19 +120,8 @@ int main (int argc, char **argv)
     if (check_display_help(argc, argv) == 0)
         return (0);
     ft_bzero(g_buff.buffer, BUFFER_LEN - 1);
-    // enum e_flag *flag = check_for_flag(argc, argv);
-    // if (!flag)
-    //     return(MALLOC_ERR);
+
     flag_nb = parse_flag(argc, argv);
-    
-    // free(flag);
-
-
-    // ft_printf_fd(2, "A flag: ");
-    // if (has_flag(flag_nb, A_OPTION))
-    //     ft_printf_fd(2, "Enable\n");
-    // else 
-    //     ft_printf_fd(2, "Disable\n");
 
     error = ft_ls(argv, flag_nb, &error);
     finish_print_buffer();
