@@ -209,7 +209,7 @@ void    fill_color(enum e_color color);
 //      manage_column.c         //
 //-------------------------------
 int    fill_buffer_with_column(char **tab, int nb_raw, t_list **lst, int flag_nb, int quote_space);
-char   **check_manage_colum(t_list *lst, int *err, int *value, int lst_len);
+char    **check_manage_colum(t_list *lst, int *err, int *value, int lst_len, int space_quote);
 //-------------------------------
 //      list_xattr.c           //
 //-------------------------------

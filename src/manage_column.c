@@ -30,14 +30,14 @@ int ft_strcpy(char* dst, char *src, int len)
     return (len);
 }    
 
-static int get_raw_len(int *max_unit_len, int max)
+static int get_raw_len(int *max_unit_len, int max, int quote_bool)
 {
     int nb = 0;
     int i = 0;
     while (i < max)
     {
         nb += max_unit_len[i];
-        nb += 1;
+        nb += (1 + quote_bool);
         i++;
     }
     // nb += 2;
@@ -49,7 +49,7 @@ static char **alloc_tab(int nb_raw, int *max_unit_len, int max_per_raw, int lst_
     char **tab = ft_calloc(sizeof(char *), nb_raw + 2); /* 1 for type, 2 NULL*/
     if (!tab)
         return (NULL);
-    int total = get_raw_len(max_unit_len, max_per_raw);
+    int total = get_raw_len(max_unit_len, max_per_raw, 1);
     for (int i = 0; i < nb_raw; i++)
     {
         tab[i] = ft_calloc(sizeof(char), total + 2); /* +2 for two space between word */
@@ -96,7 +96,7 @@ static void insert_space_str(int max_unit_len, char *name, int *j, char *str)
     }
 }
 
-static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int nb_raw)
+static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int nb_raw, int space_quote)
 {
     int current_raw = 0, current_colum = 0, i = 0, j = 0;
     char **tab = alloc_tab(nb_raw, max_unit_len, max_per_raw, get_lst_len(lst));
@@ -106,20 +106,20 @@ static char **manage_column(t_list *lst, int *max_unit_len, int max_per_raw, int
     {
         t_file *file = lst->content;
 
-        if (fill_type_str(tab[nb_raw], j, *file) == MALLOC_ERR)
-        {
+        if (fill_type_str(tab[nb_raw], j, *file) == MALLOC_ERR) {
             ft_free_tab(tab);
             return (NULL);
         }
         i += ft_strcpy(&tab[current_raw][i], file->name, ft_strlen(file->name));
         if (current_colum != max_per_raw - 1)
-            insert_space_str(max_unit_len[current_colum] + 1, file->name, &i, tab[current_raw]);
-        current_raw++;
+            insert_space_str(max_unit_len[current_colum] + 1 + space_quote, file->name, &i, tab[current_raw]);
+        /* insert 1 space + space quote bool */
+        ++current_raw;
         if (current_raw == nb_raw) {
             current_colum++;
             current_raw = 0;
         }
-        i = get_raw_len(max_unit_len, current_colum);
+        i = get_raw_len(max_unit_len, current_colum, space_quote);
         ++j;
         lst = lst->next;
     }
@@ -261,7 +261,7 @@ static int get_nb_raw(int stdout_w, t_list *lst)
             max_per_raw = 1;
 */
 
-char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len)
+char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len, int space_quote)
 {
     char    **tab = NULL;
     int     *tab_max_unit = NULL;
@@ -284,7 +284,7 @@ char **check_manage_colum(t_list *lst, int *err, int *value, int lst_len)
             *err = MALLOC_ERR;
             return (NULL);
         }
-        tab = manage_column(lst, tab_max_unit, max_per_raw, nb_raw);
+        tab = manage_column(lst, tab_max_unit, max_per_raw, nb_raw, space_quote);
         if (!tab)
             *err = MALLOC_ERR;
         free(tab_max_unit);
@@ -333,13 +333,14 @@ int fill_buff_stop_char(char *str, char c, int quote_space)
 
     while (str && str[i]) {
         fill_buffer_char(str[i]);
-        i++;
+        ++i;
         if (str[i] == c)
             break;
     }
 
     if (quote_space == 1)
         display_quote(quote);
+
     return (i);
 }
 
@@ -364,6 +365,8 @@ int fill_buffer_color_with_space(char *str, enum e_color color, char c, int flag
         fill_buffer_char(str[i]);
         i++;
     }
+    if (quote_space == 0)
+        fill_buffer_char(' ');
     while (str[i] && str[i] == c)
         i++;
     if (str[i] == '\0')
