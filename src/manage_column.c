@@ -243,8 +243,13 @@ static int get_nb_raw(int stdout_w, t_list *lst)
         return (MALLOC_ERR);
     int test = 1; // test value for nb_raw, brute force it
     int ret = -1;
+
+    if (stdout_w <= 0)
+        stdout_w = 80;
+
     while (ret != 0)
     {
+        // ft_printf_fd(2, "width %d\n", stdout_w);
         ret = test_all(test, all_len, len, stdout_w);
         test++;
     }
