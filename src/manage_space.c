@@ -201,7 +201,6 @@ int *get_all_space(t_list *lst, int flag_nb)
         array[S_PERM] = 11;
     else if (ret == MALLOC_ERR)
         return (NULL);
-    // if (flag_nb & N_OPTION)
     if (has_flag(flag_nb, N_OPTION)) {
         array[S_USER] = get_nb_space(lst, get_user_id_len);
         array[S_GROUP] = get_nb_space(lst, get_group_id_len);

@@ -13,7 +13,6 @@ int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), 
             break ;
         current = current->next;
     }
-    // if (flag_nb & D_OPTION && !(flag_nb & L_OPTION))
     if (has_flag(flag_nb, D_OPTION) && !has_flag(flag_nb, L_OPTION))
         fill_buffer_char('\n');
     return (err);
@@ -50,17 +49,6 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error)
         err = ls(dir_lst, flag_nb, ls_l_one_dir, error);
     else
         err = ls(dir_lst, flag_nb, ls_one_dir, error);
-    /* old */
-    // if (flag_nb & R_OPTION && !(flag_nb & D_OPTION))
-    //     err = search_recurcive_dir(dir_lst, flag_nb, error);
-    // else if (flag_nb & L_OPTION && flag_nb & D_OPTION)
-    //     err = ls_only_dir(dir_lst, flag_nb);
-    // else if (flag_nb & L_OPTION)
-    //     err = ls(dir_lst, flag_nb, ls_l_one_dir, error);
-    // else
-    //     err = ls(dir_lst, flag_nb, ls_one_dir, error);
-    
-    // if (!(flag_nb & D_OPTION) || (flag_nb & L_OPTION && flag_nb & D_OPTION))
 
     if (!has_flag(flag_nb, D_OPTION) || (has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION)))
         new_lstclear(&dir_lst, free);
@@ -86,7 +74,6 @@ int ft_ls(char **argv, int flag_nb, int* error)
     sort_lst(dir_lst, flag_nb);
     if (!dir_lst)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
-    // if (flag_nb & REVERSE_OPTION)
     if (has_flag(flag_nb , REVERSE_OPTION))
     {
         if (safe_reverse_lst(&dir_lst, error, flag_nb) == MALLOC_ERR)

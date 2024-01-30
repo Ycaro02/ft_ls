@@ -360,7 +360,6 @@ int fill_buffer_with_column(char **tab, int nb_raw, t_list **lst, int flag_nb)
 {
     for (int i = 0; i < nb_raw; i++)
     {
-        // if (flag_nb & COLOR_OPTION)
         if (has_flag(flag_nb , COLOR_OPTION))
             add_color(tab[i], nb_raw, tab[nb_raw], i);
         else

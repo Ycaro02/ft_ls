@@ -59,7 +59,7 @@ clean:
 			@${RM} ${OBJ}
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
-test_sort:
+test_sort:	${NAME}
 			export LC_COLLATE=en_US.utf8 && echo Real ls: && ls test/sort -a
 			echo My ls:
 			./ft_ls test/sort -aG
