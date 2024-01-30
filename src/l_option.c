@@ -245,13 +245,11 @@ static int write_date(t_file file, int* space, int flag_nb)
         tmp = get_printable_date(file.last_status_change);
     else
         tmp = get_printable_date(file.last_change);
-    if (!tmp)
-    {
-        perror("Malloc");
+    if (!tmp) {
+        ft_printf_fd(2, "Malloc error\n");
         return (MALLOC_ERR);
     }
-    while (tmp[i])
-    {
+    while (tmp[i]) {
         insert_space(space[j] - ft_strlen(tmp[i]));
         fill_buffer(tmp[i]);
         fill_buffer_char(' ');
@@ -268,8 +266,8 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
 
     is_exec = 1;
     fill_buffer_char(file.type);
-    if (write_perm(file, &is_exec, space[S_PERM]) == MALLOC_ERR || \
-        write_nb_link(file.nb_link, space[S_LINK]) == MALLOC_ERR)
+    if (write_perm(file, &is_exec, space[S_PERM]) == MALLOC_ERR\
+        || write_nb_link(file.nb_link, space[S_LINK]) == MALLOC_ERR)
         return (MALLOC_ERR);
     if (!has_flag(flag_nb, G_OPTION))
         write_user_name(file.user_id, space[S_USER], flag_nb);

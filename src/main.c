@@ -37,9 +37,7 @@ static int ls_only_dir(t_list *dir_lst, int flag_nb)
 
 void call_ls(t_list *dir_lst, int flag_nb, int *error)
 {
-    int err;
-    
-    err = 0;
+    int err = 0;
 
     if (has_flag(flag_nb, R_OPTION) && !has_flag(flag_nb, D_OPTION))
         err = search_recurcive_dir(dir_lst, flag_nb, error);
@@ -74,10 +72,8 @@ int ft_ls(char **argv, int flag_nb, int* error)
     sort_lst(dir_lst, flag_nb);
     if (!dir_lst)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
-    if (has_flag(flag_nb , REVERSE_OPTION))
-    {
-        if (safe_reverse_lst(&dir_lst, error, flag_nb) == MALLOC_ERR)
-        {
+    if (has_flag(flag_nb , REVERSE_OPTION)) {
+        if (safe_reverse_lst(&dir_lst, error, flag_nb) == MALLOC_ERR) {
             new_lstclear(&dir_lst, free);
             return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
         }
@@ -88,10 +84,8 @@ int ft_ls(char **argv, int flag_nb, int* error)
 
 static int check_display_help(int argc, char**argv)
 {
-    if (argc >= 2)
-    {
-        if (ft_strcmp(argv[1], "--help") == 0)
-        {
+    if (argc >= 2) {
+        if (ft_strcmp(argv[1], "--help") == 0) {
             ft_printf_fd(1, HELP_STR);
             return (0);
         }

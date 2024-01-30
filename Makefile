@@ -64,6 +64,9 @@ test_sort:	${NAME}
 			./ft_ls test/sort -a > myls_out
 			diff myls_out real_ls_out
 
+vtest:		${NAME}
+			valgrind ./ft_ls / -lR
+
 fclean:		clean
 			@make -s -C libft fclean
 			@${RM} ${NAME} real_ls_out myls_out

@@ -35,8 +35,10 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
     lst = get_all_file_struct(file, flag_nb, error);
     if (!lst && *error == MALLOC_ERR) // one of case where int pointer error is mandatory
         return (MALLOC_ERR);
-    if (!lst)
+    if (!lst) {
+        fill_buffer("total 0\n");
         return (0);
+    }
     file->total_size = get_total_size(lst);
     if (display_dir_header(*file, lst_len) == MALLOC_ERR)
         return (MALLOC_ERR);
