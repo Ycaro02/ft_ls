@@ -60,8 +60,8 @@ clean:
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
 test_sort:	${NAME}
-			export LC_COLLATE=en_US.utf8 && ls test/sort -a > real_ls_out
-			./ft_ls test/sort -a > myls_out
+			export LC_COLLATE=en_US.utf8 && ls test/sort -al > real_ls_out
+			./ft_ls test/sort -al > myls_out
 			diff myls_out real_ls_out
 
 vtest:		${NAME}
