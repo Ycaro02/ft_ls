@@ -10,8 +10,7 @@ void fill_buffer_perm(char c, int *is_exec)
         r = 'r';
     if (nb & 2)
         w = 'w';
-    if (nb & 1)
-    {
+    if (nb & 1) {
         x = 'x';
         *is_exec = 0;   
     }
@@ -19,13 +18,6 @@ void fill_buffer_perm(char c, int *is_exec)
     fill_buffer_char(w);
     fill_buffer_char(x);
 }
-
-/* sdas
-dsad
-sddsa
-dsakldjsklad
-fdsfdsjfdskl
-*/
 
 void convert_ato(char* perm, int nbr, int index) // array to octal
 {
@@ -47,11 +39,9 @@ static char *remove_char(char *str, char c, int *err)
     tmp = NULL;
     while (str && str[i] && str[i] == c)
         i++;
-    if (i < 3 && i != 0)
-    {
+    if (i < 3 && i != 0) {
         tmp = ft_strdup(&str[i]);
-        if (!tmp)
-        {
+        if (!tmp) {
             *err = MALLOC_ERR;
             return (NULL);
         }

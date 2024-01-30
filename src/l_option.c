@@ -2,10 +2,8 @@
 
 void insert_space(int nb)
 {
-    if (nb > 0)
-    {
-        while (nb != 0)
-        {
+    if (nb > 0) {
+        while (nb != 0) {
             fill_buffer_char(' ');
             nb--;
         }
@@ -14,26 +12,22 @@ void insert_space(int nb)
 
 void write_user_name(long user_id, int space, int flag_nb)
 {
-    if (flag_nb & N_OPTION)
-    {
+    if (has_flag(flag_nb, N_OPTION)) {
         char *tmp = ft_ltoa(user_id);
         insert_space(space - ft_strlen(tmp));
         fill_buffer(tmp);
         free(tmp);
     }
-    else
-    {
+    else {
         struct passwd* user = getpwuid(user_id);
-        if (!user)
-        {
+        if (!user) {
             // perror("getpwuid");
             char *tmp_buff = ft_ltoa(user_id);
             fill_buffer(tmp_buff);
             insert_space(space - ft_strlen(tmp_buff));
             free(tmp_buff);
         }
-        else
-        {
+        else {
             fill_buffer(user->pw_name);
             insert_space(space - ft_strlen(user->pw_name));
         }
@@ -44,7 +38,7 @@ void write_user_name(long user_id, int space, int flag_nb)
 
 void write_group_name(long group_id, int space, int flag_nb)
 {
-    if (flag_nb & N_OPTION)
+    if (has_flag(flag_nb, N_OPTION))
     {
         char *tmp = ft_ltoa(group_id);
         insert_space(space - ft_strlen(tmp));
@@ -95,7 +89,7 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb)
     char    *tmp;
 
     fill_buffer_color(path, E_CYAN, flag_nb);
-    if (flag_nb & L_OPTION)
+    if (has_flag(flag_nb, L_OPTION))
     {
         // ft_printf_fd(2, "%sFor path: %s, parent |%s|%s\n", CYAN, path, parrent_path, RESET);
         
@@ -146,7 +140,7 @@ int write_file_name(t_file file, int is_exec, int flag_nb, int space)
     if (space != 0 && file.quote != NORMAL_CHAR)
         fill_buffer_char(c);
     
-    if (flag_nb & L_OPTION)
+    if (has_flag(flag_nb, L_OPTION))
         fill_buffer_char('\n');
     else
         fill_buffer(" ");
@@ -245,9 +239,9 @@ static int write_date(t_file file, int* space, int flag_nb)
     int i = 0;
     int j = S_MONTH;
 
-    if (flag_nb & U_OPTION)
+    if (has_flag(flag_nb, U_OPTION))
         tmp = get_printable_date(file.last_access);
-    else if (flag_nb & C_OPTION)
+    else if (has_flag(flag_nb, C_OPTION))
         tmp = get_printable_date(file.last_status_change);
     else
         tmp = get_printable_date(file.last_change);
@@ -277,14 +271,14 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
     if (write_perm(file, &is_exec, space[S_PERM]) == MALLOC_ERR || \
         write_nb_link(file.nb_link, space[S_LINK]) == MALLOC_ERR)
         return (MALLOC_ERR);
-    if (!(flag_nb & G_OPTION))
+    if (!has_flag(flag_nb, G_OPTION))
         write_user_name(file.user_id, space[S_USER], flag_nb);
     write_group_name(file.group_id, space[S_GROUP], flag_nb);
     if (write_size(file, space) == MALLOC_ERR || \
         write_date(file, space, flag_nb) == MALLOC_ERR || \
         write_file_name(file, is_exec, flag_nb, space[S_NAME_QUOTE]) == MALLOC_ERR)
             return (MALLOC_ERR);
-    if (flag_nb & Z_OPTION)
+    if (has_flag(flag_nb, Z_OPTION))
         diplay_xattr_acl(&file);
     return (0);
 }
