@@ -24,7 +24,9 @@
 # include <sys/xattr.h>  // extended attr 
 # include "../acl/acl.h" // classic <sys/acl.h> not present on 42 computer, same for -lacl
 # include "../libft/libft.h"
+
 # include "define_enum.h"
+# include "basic_define.h"
 // # include <sys/acl.h> 
 
 
@@ -114,6 +116,8 @@ void flip_flag(int *flags, int flag_val);
 int  has_flag(int flags, int flag_val);
 int  has_any_flag(int flags, int flag_val);
 
+int parse_flag(int argc, char **argv);
+
 // main.c to move
 int quotes_required(char *str);
 
@@ -139,7 +143,8 @@ void    display_file_lst(t_list *lst);
 //      flag_gestion.c          //
 //-------------------------------
 int     get_flag(enum e_flag *flag);
-t_eflag *check_for_flag(int argc, char **argv);
+/* refactor in progress */
+// t_eflag *check_for_flag(int argc, char **argv);
 //-------------------------------
 //      parse.c                //
 //-------------------------------

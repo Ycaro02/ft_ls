@@ -2,23 +2,11 @@
 # define FT_LS_DEFINE_ENUM_H
 
 
-
-
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
 //                                DEFINE                                      //
 //                                                                            //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//-------------------------------
-//      COLOR                  //
-//-------------------------------
-# define    RED "\033[1;31m"
-# define    GREEN "\033[1;32m"
-# define    YELLOW "\033[1;33m"
-# define    BLUE "\033[1;34m"
-# define    PURPLE "\033[1;35m"
-# define    CYAN "\033[1;36m"
-# define    RESET "\033[0m"
 //-------------------------------
 //      BUFFER                 //
 //-------------------------------
@@ -69,20 +57,20 @@ Exit code:"RESET"\n\
 //-------------------------------
 //      FLAG                   //
 //-------------------------------
-# define     L_FLAG_CHAR 'l'
-# define     A_FLAG_CHAR 'a'
-# define     T_FLAG_CHAR 't'
-# define     REVERSE_FLAG_CHAR 'r'
-# define     R_FLAG_CHAR 'R'
-# define     ACL_EXT_Z_FLAG 'z'
-# define     U_FLAG_CHAR 'u'
-# define     C_FLAG_CHAR 'c'
-# define     G_FLAG_CHAR 'g'
-# define     G_FLAG_CHAR 'g'
-# define     F_FLAG_CHAR 'f'
-# define     D_FLAG_CHAR 'd'
-# define     N_FLAG_CHAR 'n'
-# define     NB_FLAG 14
+# define     L_FLAG_CHAR 'l'            /* 0 */
+# define     A_FLAG_CHAR 'a'            /* 1 */ 
+# define     T_FLAG_CHAR 't'            /* 2 */
+# define     REVERSE_FLAG_CHAR 'r'      /* 3 */
+# define     R_FLAG_CHAR 'R'            /* 4 */
+# define     ACL_EXT_Z_FLAG 'z'         /* 5 */
+# define     U_FLAG_CHAR 'u'            /* 6 */
+# define     C_FLAG_CHAR 'c'            /* 7 */
+# define     G_FLAG_CHAR 'g'            /* 8 */
+# define     F_FLAG_CHAR 'f'            /* 9 */
+# define     D_FLAG_CHAR 'd'            /* 10 */
+# define     N_FLAG_CHAR 'n'            /* 11 */
+# define     G_COLOR_CHAR 'G'           /* 12 */
+# define     NB_FLAG 13
 # define     ALL_FLAG "latrRzucgfdnG"
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //

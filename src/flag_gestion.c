@@ -66,155 +66,243 @@ int has_any_flag(int flags, int flag_val)
     return (flags & flag_val) != 0;
 }
 
-static int manage_bonus_option(int nb)
+t_int8 flag_already_present(int flags, int flag_val)
 {
-    if (nb & G_OPTION && !(nb & L_OPTION))
-        nb += L_OPTION;
-    if (nb & N_OPTION && !(nb & L_OPTION))
-        nb += L_OPTION;
-    if (nb & F_OPTION)
-    {
-        if (!(nb & A_OPTION))
-            nb += A_OPTION;
-        if (nb & COLOR_OPTION)
-            nb -= COLOR_OPTION;
+    return (has_flag(flags, flag_val) ? TRUE : FALSE);
+}
+
+
+void display_flags(int flags) {
+    ft_printf_fd(2, "Flags: [%d] : ", flags);
+    if (flags & L_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "L_OPTION", RESET);
+    if (flags & A_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", YELLOW, "A_OPTION", RESET);
+    if (flags & T_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", RED, "T_OPTION", RESET);
+    if (flags & REVERSE_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", PURPLE, "REVERSE_OPTION", RESET);
+    if (flags & R_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "R_OPTION", RESET);
+    if (flags & Z_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", YELLOW, "Z_OPTION", RESET);
+    if (flags & U_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", RED, "U_OPTION", RESET);
+    if (flags & C_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", PURPLE, "C_OPTION", RESET);
+    if (flags & G_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "G_OPTION", RESET);
+    if (flags & F_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", YELLOW, "F_OPTION", RESET);
+    if (flags & D_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", RED, "D_OPTION", RESET);
+    if (flags & N_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", PURPLE, "N_OPTION", RESET);
+    if (flags & COLOR_OPTION)
+        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "COLOR_OPTION", RESET);
+    ft_printf_fd(2, "\n");
+}
+
+static int manage_bonus_flag(int nb)
+{
+    if ((has_flag(nb, G_OPTION) && !has_flag(nb, L_OPTION))
+    || (has_flag(nb, N_OPTION) && !has_flag(nb, L_OPTION)))
+        set_flag(&nb, L_OPTION);
+    if (has_flag(nb, F_OPTION)) {
+        if (!has_flag(nb, A_OPTION))
+            set_flag(&nb, A_OPTION);
+        if (has_flag(nb, COLOR_OPTION))
+            unset_flag(&nb, COLOR_OPTION);
     }
-
-    // if (has_flag(nb, G_OPTION) && !has_flag(nb, L_OPTION))
-    //     set_flag(&nb, L_OPTION);
-
     return (nb);
 }
 
-int get_flag(enum e_flag *flag)
+int get_flag_value(char c) 
 {
     int i = 0;
-    int nb = 0;
-    while (flag && flag[i] != UNKNOW)
-    {
-        nb += flag[i];
-        // set_flag(&nb, flag[i]);
-        i++;
+    int flag = -1;
+
+    while (i < NB_FLAG) {
+        if (c == ALL_FLAG[i]) {
+            flag = (1 << i);
+            break;
+        }
+        ++i;
     }
-    nb = manage_bonus_option(nb);
-    return (nb);
-}
-
-int already_add(enum e_flag *tab, enum e_flag to_check)
-{
-    int i = 0;
-    while (i < 6)
-    {
-        if (tab[i] == to_check)
-            return (1);
-        i++;
-    }
-    return (0);
-}
-
-
-static enum e_flag fill_used_flag(enum e_flag *tab, enum e_flag flag)
-{
-    int i = 0;
-    while (tab && tab[i] != UNKNOW)
-        i++;
-    tab[i] =  flag;
     return (flag);
 }
+
+
+/* PUBLIC MAIN */
+
+int parse_flag(int argc, char **argv)
+{
+    int i = 1, flags = 0, tmp_value = 0;
+
+    while (i < argc)
+    {
+        if (argv[i][0] == '-') {
+            if (argv[i][1] == '\0') /* special case ugly */
+                ft_printf_fd(2, "ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
+            else {
+                for (int j = 1; argv[i][j]; ++j) 
+                {
+                    tmp_value =  get_flag_value(argv[i][j]);
+                    if (tmp_value == -1) {
+                        ft_printf_fd(2, "ft_ls: unrecognized option %c\n", argv[i][j]);
+                        return (-1);
+                    }
+                    if (flag_already_present(flags, tmp_value) == FALSE)
+                        set_flag(&flags, tmp_value);
+                }
+            }
+                
+        }
+        ++i;
+    }
+    flags = manage_bonus_flag(flags);
+    display_flags(flags);
+    return (flags);
+}
+
+
+/*--------------------------------------OLD FLAG GESTION----------------------------------------------------*/
+// int get_flag(enum e_flag *flag)
+// {
+//     int i = 0;
+//     int flags = 0;
+//     while (flag && flag[i] != UNKNOW)
+//     {
+//         // flags += flag[i];
+//         set_flag(&flags, flag[i]);
+//         i++;
+//     }
+//     flags = manage_bonus_flag(flags);
+//     return (flags);
+// }
+
+// int already_add(enum e_flag *tab, enum e_flag to_check)
+// {
+//     int i = 0;
+//     while (i < 6)
+//     {
+//         if (tab[i] == to_check)
+//             return (1);
+//         i++;
+//     }
+//     return (0);
+// }
+
+
+// static enum e_flag fill_used_flag(enum e_flag *tab, enum e_flag flag)
+// {
+//     int i = 0;
+//     while (tab && tab[i] != UNKNOW)
+//         i++;
+//     tab[i] =  flag;
+//     return (flag);
+// }
+
+
 /**
  * Need to be rtefactor, no need to store in array just check flags value 
 */
-int flag_already_add(char c, t_eflag *used)
-{
-    int i = 0;
-    int option = 0;
-    while (i < NB_FLAG)
-    {
-        if (c == ALL_FLAG[i])
-        {
-            option = (1 << i);
-            if (already_add(used, option) == 1)
-                return (1);
-        }
-        i++;
-    }
-    return (0);
-}
+// int flag_already_add(char c, t_eflag *used)
+// {
+//     int i = 0;
+//     int option = 0;
+//     while (i < NB_FLAG)
+//     {
+//         if (c == ALL_FLAG[i])
+//         {
+//             option = (1 << i);
+//             if (already_add(used, option) == 1)
+//                 return (1);
+//         }
+//         i++;
+//     }
+//     return (0);
+// }
 
-int add_flag(char c, enum e_flag *used)
-{
-    int i = 0;
-    int option = 0;
-    if (flag_already_add(c, used) == 1)
-        return (0);
-    while (i < NB_FLAG)
-    {
-        if (c == ALL_FLAG[i])
-        {
-            option = (1 << i);
-            return (fill_used_flag(used, option) == 1);
-        }
-        i++;
-    }
-    ft_printf_fd(2, "ft_ls: unrecognized option %c\n", c);
-    return (-1);
-}
 
-static int check_for_add_flag(char *str, enum e_flag *used)
-{
-    int i;
+// int add_flag(char c, enum e_flag *used)
+// {
+//     int i = 0;
+//     int option = 0;
+//     if (flag_already_add(c, used) == 1)
+//         return (0);
+//     while (i < NB_FLAG)
+//     {
+//         if (c == ALL_FLAG[i])
+//         {
+//             option = (1 << i);
+//             return (fill_used_flag(used, option) == 1);
+//         }
+//         i++;
+//     }
+    // ft_printf_fd(2, "ft_ls: unrecognized option %c\n", c);
+    // return (-1);
+// }
 
-    i = 1;
-    while (str && str[i])
-    {
-        int check = add_flag(str[i], used);
-        if (check == -1)
-            return (1);
-        i++;
-    }  
-    return (0);
-}
+// static int check_for_add_flag(char *str, enum e_flag *used)
+// {
+//     int i;
 
-enum e_flag *parse_flag(int argc, char **argv, enum e_flag *used)
-{
-    int i = 0;
-    while (i < 6)
-    {
-        used[i] = UNKNOW;
-        i++;
-    }
-    i = 0;
-    while (i < argc)
-    {
-        if (argv[i][0] == '-')
-        {
-            if (argv[i][1] == '\0')
-                ft_printf_fd(2, "ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
-            if (check_for_add_flag(argv[i], used) == 1)
-                return (NULL);
-        }
-        i++;
-    }
-    return(used);
-}
+//     i = 1;
+//     while (str && str[i])
+//     {
+//         int check = add_flag(str[i], used);
+//         if (check == -1)
+//             return (1);
+//         i++;
+//     }  
+//     return (0);
+// }
 
-enum e_flag *check_for_flag(int argc, char **argv)
-{
-    enum e_flag *used = ft_calloc(sizeof(int), NB_FLAG);
-    if (!used)
-    {
-        perror("Malloc");
-        return (NULL);
-    }
-    void *flag_ptr = used;
-    used = parse_flag(argc, argv, used);
-    if (!used)
-    {
-        free(flag_ptr);
-        return (NULL);
-    }
-    return (used);
-}
+// enum e_flag *parse_flag(int argc, char **argv, enum e_flag *used)
+// {
+//     int i = 0;
+//     while (i < 6)
+//     {
+//         used[i] = UNKNOW;
+//         i++;
+//     }
+//     i = 0;
+//     while (i < argc)
+//     {
+//         if (argv[i][0] == '-')
+//         {
+//             if (argv[i][1] == '\0')
+//                 ft_printf_fd(2, "ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
+//             if (check_for_add_flag(argv[i], used) == 1)
+//                 return (NULL);
+//         }
+//         i++;
+//     }
+//     return(used);
+// }
+
+// enum e_flag *check_for_flag(int argc, char **argv)
+// {
+//     enum e_flag *used = ft_calloc(sizeof(int), NB_FLAG);
+//     if (!used)
+//     {
+//         perror("Malloc");
+//         return (NULL);
+//     }
+//     void *flag_ptr = used;
+//     used = parse_flag(argc, argv, used);
+//     if (!used)
+//     {
+//         free(flag_ptr);
+//         return (NULL);
+//     }
+//     return (used);
+// }
+
+
+/*--------------------------------------END----------------------------------------------------*/
+
 
 // int flag_already_add(char c, enum e_flag *used)
 // {

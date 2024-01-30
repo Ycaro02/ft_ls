@@ -109,11 +109,12 @@ int main (int argc, char **argv)
     if (check_display_help(argc, argv) == 0)
         return (0);
     ft_bzero(g_buff.buffer, BUFFER_LEN - 1);
-    enum e_flag *flag = check_for_flag(argc, argv);
-    if (!flag)
-        return(MALLOC_ERR);
-    flag_nb = get_flag(flag);
-    free(flag);
+    // enum e_flag *flag = check_for_flag(argc, argv);
+    // if (!flag)
+    //     return(MALLOC_ERR);
+    flag_nb = parse_flag(argc, argv);
+    
+    // free(flag);
 
 
     // ft_printf_fd(2, "A flag: ");

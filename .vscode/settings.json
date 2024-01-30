@@ -95,6 +95,8 @@
     },
     "files.associations": {
         "*.def": "source.def",
-        "sysmacros.h": "c"
+        "sysmacros.h": "c",
+        "basic_define.h": "c",
+        "ft_ls.h": "c"
     }
 }
