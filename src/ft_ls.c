@@ -40,7 +40,7 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
     file->total_size = get_total_size(lst);
     if (display_dir_header(*file, lst_len) == MALLOC_ERR)
         return (MALLOC_ERR);
-    if (flag_nb & REVERSE_OPTION)
+    if (has_flag(flag_nb, REVERSE_OPTION))
         if (safe_reverse_lst(&lst, error, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
     if (fill_l_buffer(lst, flag_nb) == MALLOC_ERR)
@@ -51,7 +51,7 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
 {
     t_list *lst;
-    if (flag_nb & D_OPTION)
+    if (has_flag(flag_nb, D_OPTION))
     {
         fill_buffer_color(file->name, E_BLUE, flag_nb);
         fill_buffer_char(' ');
