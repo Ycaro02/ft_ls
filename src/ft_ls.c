@@ -54,7 +54,7 @@ void display_quote(int quote)
 {
     if (quote == ADD_SIMPLE_QUOTE_CHAR)
         fill_buffer_char('\'');
-    else if (quote == ADD_SIMPLE_QUOTE_CHAR)
+    else if (quote == ADD_DOUBLE_QUOTE_CHAR)
         fill_buffer_char('\"');
     else
         fill_buffer_char(' ');

@@ -79,7 +79,6 @@ static int fill_type_str(char *str, int k, t_file file)
 }
 
 
-
 static void add_char(char *dst, char src, int *j)
 {
     dst[*j] = src;
@@ -176,17 +175,14 @@ static int brut_test(int i, int test, int tab_len, int *all_len, int *local_spac
     int ret = -1;
     int column = 0;
     // printf("in brut test i = %d test = %d ", i ,test);
-    while (i < tab_len - test)
-    {
-        if (ret == -1)
-        {
+    while (i < tab_len - test) {
+        if (ret == -1) {
             local_space[column] = get_max_len_by_index(i, test, tab_len, all_len);
             ret = local_space[column];
             ret += 2;
             column++;
         }
-        if (i + test <= tab_len)
-        {
+        if (i + test <= tab_len) {
             local_space[column] = get_max_len_by_index(i + test, test, tab_len, all_len);
             ret += local_space[column];
             ret += 2;
@@ -196,9 +192,7 @@ static int brut_test(int i, int test, int tab_len, int *all_len, int *local_spac
             break ;
         i += test;
     }
-    ret += 4; // brut pad value
-    // ret -= 2; // remove last spaces
-    // printf("ret = %d\n", ret);
+    ret += 2; // brut pad value
     return (ret);
 }
 
@@ -207,15 +201,14 @@ static int test_all(int test, int* all_len, int tab_len, int stdout_w)
     int *local_space = ft_calloc(sizeof(int), tab_len);
     int ret = -1;
     int i = 0;
-    while (i < test)
-    {
+    while (i < test) {
         ret = brut_test(i, test, tab_len, all_len, local_space);
         // printf("Ret = %d for [%d] width: %d\n", ret, test, stdout_w);
-        if (ret >= stdout_w)
+        if (ret >= stdout_w - 2)
             break ;
         i++;
     }
-    if (ret >= stdout_w)
+    if (ret >= stdout_w - 2)
         ret = -1;
     else
         ret = 0;
@@ -342,19 +335,21 @@ int fill_buff_stop_char(char *str, char c)
     return (i);
 }
 
-int fill_buffer_color_with_space(char *str, enum e_color color, char c)
+int fill_buffer_color_with_space(char *str, enum e_color color, char c, int flag_nb)
 {
     int i = 0;
     if (!str)
         return (-100000);
 
-
-
-    if (color != E_NONE)
-        fill_color(color);
+    if (has_flag(flag_nb , COLOR_OPTION))
+        if (color != E_NONE)
+            fill_color(color);
+    
     i = fill_buff_stop_char(str, c);
-    if (color != E_NONE)
-        fill_buffer(RESET);
+
+    if (has_flag(flag_nb , COLOR_OPTION))
+        if (color != E_NONE)
+            fill_buffer(RESET);
 
     /* display space */
     while (str[i] && str[i] == c) {
@@ -368,7 +363,7 @@ int fill_buffer_color_with_space(char *str, enum e_color color, char c)
     return (i);
 }
 
-static void add_color_quote(char **tab, int nb_raw, int raw)
+static void add_color_quote(char **tab, int nb_raw, int raw, int flag)
 {
     char *str = tab[raw];
     char *type = tab[nb_raw];
@@ -381,7 +376,7 @@ static void add_color_quote(char **tab, int nb_raw, int raw)
 
     while (str && str[i]) {
         color = get_color_by_index(type, raw);
-        i += fill_buffer_color_with_space(&str[i], color, ' ');
+        i += fill_buffer_color_with_space(&str[i], color, ' ', flag);
         if (i < 0)
             break;
         raw += nb_raw;
@@ -392,10 +387,10 @@ int fill_buffer_with_column(char **tab, int nb_raw, t_list **lst, int flag_nb)
 {
     for (int i = 0; i < nb_raw; i++)
     {
-        if (has_flag(flag_nb , COLOR_OPTION))
-            add_color_quote(tab, nb_raw, i);
-        else
-            fill_buffer(tab[i]);
+        // if (has_flag(flag_nb , COLOR_OPTION))
+        add_color_quote(tab, nb_raw, i, flag_nb);
+        // else
+            // fill_buffer(tab[i]);
         if (i != nb_raw - 1)
             fill_buffer_char('\n');
     }
