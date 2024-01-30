@@ -28,8 +28,7 @@ int fill_l_buffer(t_list *lst, int flag_nb)
     space = get_all_space(current, flag_nb);
     if (!space)
         return (MALLOC_ERR);
-    while (current)
-    {
+    while (current) {
         fill_buffer_l_option(*(t_file *)current->content, space, flag_nb); // change to int return for malloc check
         current = current->next;
     }
@@ -43,8 +42,7 @@ void fill_buffer(char *str)
     if (!str)
         return ;
     int i = 0;
-    while (str[i])
-    {
+    while (str[i]) {
         g_buff.buffer[g_buff.i] = str[i];
         i++;
         (g_buff.i)++;
@@ -73,8 +71,7 @@ void fill_buffer_color(char *str, enum e_color color, int flag_nb)
 {
     if (!str)
         return ;
-    if (color != E_NONE && flag_nb & COLOR_OPTION)
-    {
+    if (color != E_NONE && has_flag(flag_nb, COLOR_OPTION)) {
         fill_color(color);
         fill_buffer(str);
         fill_buffer(RESET);
@@ -104,7 +101,7 @@ static int classic_store(t_list *lst, int flag_nb)
         /* TOCHECK */
         if (write_file_name(*file, is_exec, flag_nb , 1) == MALLOC_ERR)
             return (MALLOC_ERR);
-        if (flag_nb & Z_OPTION) {
+        if (has_flag(flag_nb, Z_OPTION)) {
             fill_buffer_char('\n');
             diplay_xattr_acl(file);
             fill_buffer_char('\n');
@@ -124,16 +121,15 @@ int store_in_buffer(t_list *lst, int flag_nb)
     int     nb_raw = 0;
     char    **tab = NULL;
     
-    if (flag_nb & REVERSE_OPTION)
+    if (has_flag(flag_nb, REVERSE_OPTION))
         if (safe_reverse_lst(&lst, NULL, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
     tab = check_manage_colum(lst, &err, &nb_raw, get_lst_len(lst));
-    if (err == MALLOC_ERR)
-    {
+    if (err == MALLOC_ERR) {
         new_lstclear(&lst, free);
         return (MALLOC_ERR);
     }
-    else if (tab != NULL && !(flag_nb & Z_OPTION))
+    else if (tab != NULL && !has_flag(flag_nb, Z_OPTION))
         return (fill_buffer_with_column(tab, nb_raw, &lst, flag_nb));
     if (tab)
         ft_free_tab(tab);
