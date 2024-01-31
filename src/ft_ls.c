@@ -89,7 +89,10 @@ static void hard_display_d(t_file *file)
     free(file->name);
     free(file);
 }
-
+/*  call_flag:  0 for file display
+                1 for dir without file before
+                2 for dir with file or another dir before
+*/
 int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag, int index)
 {
     t_list *lst = NULL;
@@ -102,15 +105,22 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
 
     (void)index;
     // printf("for file: %s call %d idx %d\n", file->name, call_flag, index);
-    if (call_flag >= 1) { /* not only file display */
+    if (call_flag > 1) {
         fill_buffer_char('\n');
         fill_buffer_char('\n');
+
+        if (quote > NOEFFECT_CHAR)
+            display_quote(quote);
+        fill_buffer(file->name);
+        if (quote > NOEFFECT_CHAR)
+            display_quote(quote);
     }
 
-    if (call_flag == 0 || quote > NOEFFECT_CHAR)
+    if (call_flag == 0) {
         display_quote(quote);
-    fill_buffer(file->name);
-    if (call_flag == 0 || quote > NOEFFECT_CHAR)
+        fill_buffer(file->name);
+    }
+    if (call_flag == 0)
         display_quote(quote);
 
     if (lst_len > 1 || call_flag > 1)
