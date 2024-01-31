@@ -93,28 +93,33 @@ static void hard_display_d(t_file *file)
 int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag, int index)
 {
     t_list *lst = NULL;
+    int quote = quotes_required(file->name);
 
     if (has_flag(flag_nb, D_OPTION)) {
         hard_display_d(file);
         return (0);
     }
-        /*
-            need to detect before call and give it to args
-            if not first dir displayed print 
-            fill_buffer_char('\n');
-            need to sort, i mean need to do display file ???
-        */
-    if (call_flag != 0)
-        fill_buffer_char('\n');
-    
-    display_quote(file->quote);
-    fill_buffer(file->name);
-    display_quote(file->quote);
 
-    if (call_flag != 0)
-        fill_buffer(":\n");
-    else if (index == lst_len)
+    (void)index;
+    // printf("for file: %s call %d idx %d\n", file->name, call_flag, index);
+    if (call_flag >= 1) { /* not only file display */
         fill_buffer_char('\n');
+        fill_buffer_char('\n');
+    }
+
+    if (call_flag == 0 || quote > NOEFFECT_CHAR)
+        display_quote(quote);
+    fill_buffer(file->name);
+    if (call_flag == 0 || quote > NOEFFECT_CHAR)
+        display_quote(quote);
+
+    if (lst_len > 1 || call_flag > 1)
+        if (call_flag >= 1)
+            fill_buffer(":\n");
+    
+    
+    // if (call_flag == 0 && index == lst_len - 1)
+    //     fill_buffer("\n");
     /* maybe manage space at this call for -l option */
     lst = get_all_file_struct(file, flag_nb, error);
     if (!lst && *error == MALLOC_ERR)

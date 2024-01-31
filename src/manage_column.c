@@ -408,6 +408,6 @@ int fill_buffer_with_column(char **tab, int nb_raw, t_list **lst, int flag_nb, i
         free(tab[i]);
     free(tab);
     new_lstclear(lst, free);
-    fill_buffer("\n");
+    // fill_buffer("\n");
     return (0);
 }

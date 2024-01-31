@@ -6,11 +6,12 @@ int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*, i
 {
     t_list *current = lst;
     int idx = 0;
-    int lst_len = get_lst_len(lst) - 1;
+    int lst_len = get_lst_len(lst);
     int err = 0;
     while (current) {
         err = ls_function(current->content, flag_nb, lst_len, error, call_flag, idx);
         ++idx;
+        // ++call_flag;
         if (err == MALLOC_ERR)
             break ;
         current = current->next;
@@ -81,6 +82,7 @@ static int basic_sort_lst(t_list *lst, int flag, int *error)
 int ft_ls(char **argv, int flag_nb, int* error)
 {
     t_list *dir_lst, *simple_file = NULL;
+    int call_value = 0;
     
     dir_lst = get_dir_args(&argv[1], error, flag_nb, &simple_file);
     // if (simple_file != NULL) {
@@ -103,7 +105,8 @@ int ft_ls(char **argv, int flag_nb, int* error)
             // clear ?
             return (1);
         }
-        call_ls(simple_file, flag_nb, error, 0);
+        call_ls(simple_file, flag_nb, error, call_value);
+        ++call_value;
     }
 
     // sort_lst(dir_lst, flag_nb);
@@ -116,7 +119,7 @@ int ft_ls(char **argv, int flag_nb, int* error)
     //     }
     // }
 
-    call_ls(dir_lst, flag_nb, error, 1);
+    call_ls(dir_lst, flag_nb, error, call_value + 1);
     return (*error);
 }
 
