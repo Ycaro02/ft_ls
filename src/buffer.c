@@ -29,6 +29,7 @@ int fill_l_buffer(t_list *lst, int flag_nb)
     if (!space)
         return (MALLOC_ERR);
     while (current) {
+    printf("KOALA\n");
         fill_buffer_l_option(*(t_file *)current->content, space, flag_nb); // change to int return for malloc check
         current = current->next;
     }

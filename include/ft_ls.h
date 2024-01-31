@@ -153,12 +153,12 @@ int     get_flag(enum e_flag *flag);
 //      parse.c                //
 //-------------------------------
 t_list  *get_all_file_struct(t_file *file, int flag_nb, int* error);
-t_list  *get_dir_args(char **argv, int *error, int flag_nb);
+t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file);
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------
-int     ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int* error);
-int     ls_one_dir(t_file *file, int flag_nb, int lst_len, int* error);
+int     ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int* error, int call_flag, int index);
+int     ls_one_dir(t_file *file, int flag_nb, int lst_len, int* error, int call_flag, int index);
 void    display_quote(int quote);
 //-------------------------------
 //      recurcive.c            //

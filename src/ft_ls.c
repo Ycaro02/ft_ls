@@ -27,9 +27,12 @@ long long get_total_size(t_list *lst)
     return (total);
 }
 
-int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
+int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag, int index)
 {
     t_list *lst = NULL;
+
+    (void)call_flag;
+    (void)index;
     if (file->type != DIRECTORY)
         return (0);
     lst = get_all_file_struct(file, flag_nb, error);
@@ -60,36 +63,43 @@ void display_quote(int quote)
         fill_buffer_char(' ');
 }
 
-int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error)
+static void hard_display_d(t_file *file)
+{
+    fill_buffer(BLUE);
+    display_quote(file->quote);
+    fill_buffer(file->name);
+    display_quote(file->quote);
+    fill_buffer(RESET);
+    fill_buffer_char(' ');
+    free(file->parrent);
+    free(file->name);
+    free(file);
+}
+
+int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag, int index)
 {
     t_list *lst = NULL;
 
-    if (has_flag(flag_nb, D_OPTION))
-    {
-        fill_buffer(BLUE);
-        display_quote(file->quote);
-        fill_buffer(file->name);
-        display_quote(file->quote);
-        fill_buffer(RESET);
-
-        fill_buffer_char(' ');
-        free(file->parrent);
-        free(file->name);
-        free(file);
+    (void)call_flag;
+    if (has_flag(flag_nb, D_OPTION)) {
+        hard_display_d(file);
         return (0);
     }
-    if (lst_len > 0) {
         /*
             need to detect before call and give it to args
             if not first dir displayed print 
             fill_buffer_char('\n');
+            need to sort, i mean need to do display file ???
         */
+    if (call_flag != 0)
         fill_buffer_char('\n');
-        display_quote(file->quote);
-        fill_buffer(file->name);
-        display_quote(file->quote);
+    display_quote(file->quote);
+    fill_buffer(file->name);
+    display_quote(file->quote);
+    if (call_flag != 0)
         fill_buffer(":\n");
-    }
+    else if (index == lst_len)
+        fill_buffer_char('\n');
     /* maybe manage space at this call for -l option */
     lst = get_all_file_struct(file, flag_nb, error);
     if (!lst && *error == MALLOC_ERR)

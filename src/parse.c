@@ -18,7 +18,8 @@ static t_file *default_file_struct(int flag)
     return (file);
 }
 
-static int build_file_lst(struct stat sb, char *str, t_list **new, int *found, int flag_nb, int symlink)
+static int build_file_lst
+(struct stat sb, char *str, t_list **new, int *found, int flag_nb, int symlink, t_list **simple_file)
 {
     t_file *file = NULL;
     
@@ -30,31 +31,34 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found, i
     // if (file->type == DIRECTORY)
     if (get_type(sb) == DIRECTORY)
         ft_lstadd_back(new, ft_lstnew(file));
-    else {
+    else 
+    {
         *found = 1;
         if (has_flag(flag_nb, L_OPTION)) {
-            int array[S_MAX] = {0}; /* Todo malloc here */
-            fill_buffer_l_option(*file, array, flag_nb);
+            // int array[S_MAX] = {0}; /* Todo malloc here */
+            ft_lstadd_back(simple_file, ft_lstnew(file));
+            // fill_buffer_l_option(*file, array, flag_nb);
         }
         else {
-            int is_exec = 1;
-            char *perm = get_perm(file->perm);
-            if (perm) {
-                for (int i = 0; perm && perm[i]; ++i)
-                    fill_buffer_perm(perm[i], &is_exec, 0);
-                write_file_name(*file, 0, flag_nb, is_exec);
-                free(perm);
+            /* need to build file lst  to sort and display it before directory */
+            ft_lstadd_back(simple_file, ft_lstnew(file));
+            // int is_exec = 1;
+            // char *perm = get_perm(file->perm);
+            // if (perm) {
+            //     for (int i = 0; perm && perm[i]; ++i)
+            //         fill_buffer_perm(perm[i], &is_exec, 0);
+            //     write_file_name(*file, 0, flag_nb, is_exec);
+            //     free(perm);
             }
-        }
-        if (file->parrent)
-            free(file->parrent);
-        free(file->name);
-        free(file);
     }
+    // if (file->parrent)
+    //     free(file->parrent);
+    // free(file->name);
+    // free(file);
     return (0);
 }
 
-static int check_args(char *str, t_list **new, int *found, int *error, int flag_nb)
+static int check_args(char *str, t_list **new, t_list **simple_file, int *found, int *error, int flag_nb)
 {
     int symlink = 0;
     struct stat *sb = check_for_stat(str, flag_nb, &symlink);
@@ -67,7 +71,7 @@ static int check_args(char *str, t_list **new, int *found, int *error, int flag_
         return (0);
     }
 
-    if (build_file_lst(*sb, str, new, found, flag_nb, symlink) == MALLOC_ERR) {
+    if (build_file_lst(*sb, str, new, found, flag_nb, symlink, simple_file) == MALLOC_ERR) {
         free(sb);
         return (MALLOC_ERR);
     }
@@ -76,14 +80,15 @@ static int check_args(char *str, t_list **new, int *found, int *error, int flag_
     return (0);
 }
 
-t_list *get_dir_args(char **argv, int *error, int flag_nb)
+t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file)
 {
     int i = 0;
     t_list *new = NULL;
+
     int found = 0;
     while (argv && argv[i]) {
         if (argv[i][0] != '-') {
-            if (check_args(argv[i], &new, &found, error, flag_nb) == MALLOC_ERR) {
+            if (check_args(argv[i], &new,  simple_file, &found, error, flag_nb) == MALLOC_ERR) {
                 *error = MALLOC_ERR;
                 return (NULL);
             }
@@ -92,6 +97,7 @@ t_list *get_dir_args(char **argv, int *error, int flag_nb)
     }
     if (!new && found == 0)
         ft_lstadd_back(&new, ft_lstnew(default_file_struct(flag_nb)));
+
     return (new);
 }
 

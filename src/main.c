@@ -2,13 +2,15 @@
 
 t_buff g_buff;
 
-int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*), int* error)
+int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*, int, int), int* error, int call_flag)
 {
     t_list *current = lst;
+    int idx = 0;
     int lst_len = get_lst_len(lst) - 1;
     int err = 0;
     while (current) {
-        err = ls_function(current->content, flag_nb, lst_len, error);
+        err = ls_function(current->content, flag_nb, lst_len, error, call_flag, idx);
+        ++idx;
         if (err == MALLOC_ERR)
             break ;
         current = current->next;
@@ -35,18 +37,19 @@ static int ls_only_dir(t_list *dir_lst, int flag_nb)
     return (0);
 }
 
-void call_ls(t_list *dir_lst, int flag_nb, int *error)
+
+void call_ls(t_list *dir_lst, int flag_nb, int *error, int call_flag)
 {
     int err = 0;
 
-    if (has_flag(flag_nb, R_OPTION) && !has_flag(flag_nb, D_OPTION))
+    if (call_flag != 0 && has_flag(flag_nb, R_OPTION) && !has_flag(flag_nb, D_OPTION))
         err = search_recurcive_dir(dir_lst, flag_nb, error);
-    else if (has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION))
+    else if (call_flag != 0 && has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION))
         err = ls_only_dir(dir_lst, flag_nb);
     else if (has_flag(flag_nb, L_OPTION))
-        err = ls(dir_lst, flag_nb, ls_l_one_dir, error);
+        err = ls(dir_lst, flag_nb, ls_l_one_dir, error, call_flag);
     else
-        err = ls(dir_lst, flag_nb, ls_one_dir, error);
+        err = ls(dir_lst, flag_nb, ls_one_dir, error, call_flag);
 
     if (!has_flag(flag_nb, D_OPTION) || (has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION)))
         new_lstclear(&dir_lst, free);
@@ -60,25 +63,58 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error)
     // finish_print_buffer();
 }
 
+static int basic_sort_lst(t_list *lst, int flag, int *error)
+{
+    sort_lst(lst, flag);
+    if (!lst)
+        return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
+    if (has_flag(flag , REVERSE_OPTION)) {
+        if (safe_reverse_lst(&lst, error, flag) == MALLOC_ERR) {
+            new_lstclear(&lst, free);
+            return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
+        }
+    }
+    return (0);
+}
+
 int ft_ls(char **argv, int flag_nb, int* error)
 {
-    t_list *dir_lst;
+    t_list *dir_lst, *simple_file = NULL;
     
-    dir_lst = get_dir_args(&argv[1], error, flag_nb);
+    dir_lst = get_dir_args(&argv[1], error, flag_nb, &simple_file);
+    // if (simple_file != NULL) {
+    //     printf("simple file not null\n");
+    // }
+    // else
+    //     printf("simple file NULL\n");
+        
+    /* Error management */
     if (!dir_lst && *error == MALLOC_ERR)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
     else if (!dir_lst)
         return (*error);
-    sort_lst(dir_lst, flag_nb);
-    if (!dir_lst)
-        return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
-    if (has_flag(flag_nb , REVERSE_OPTION)) {
-        if (safe_reverse_lst(&dir_lst, error, flag_nb) == MALLOC_ERR) {
-            new_lstclear(&dir_lst, free);
-            return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
-        }
+
+    /* sort */
+    if (basic_sort_lst(dir_lst, flag_nb, error) == 1)
+        return (1);
+    if (simple_file){
+        if (basic_sort_lst(dir_lst, flag_nb, error) == 1)
+            return (1);
+        call_ls(simple_file, flag_nb, error, 0);
+        // new_lstclear(&simple_file, free);
     }
-    call_ls(dir_lst, flag_nb, error);
+
+    // sort_lst(dir_lst, flag_nb);
+    // if (!dir_lst)
+    //     return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
+    // if (has_flag(flag_nb , REVERSE_OPTION)) {
+    //     if (safe_reverse_lst(&dir_lst, error, flag_nb) == MALLOC_ERR) {
+    //         new_lstclear(&dir_lst, free);
+    //         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
+    //     }
+    // }
+
+    call_ls(dir_lst, flag_nb, error, 1);
     return (*error);
 }
 
