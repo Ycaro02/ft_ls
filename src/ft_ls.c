@@ -3,11 +3,14 @@
 static int display_dir_header(t_file file, int lst_len, int call, int index)
 {
     (void)lst_len;
-    if (call > 1 || index != 0)
+    printf("%sCall: %d idx: %d for %s%s\n", CYAN, call, index, file.name, RESET);
+    if ((call > 1 || index != 0) || (call >= 1 && lst_len > 1))
     {
+        if (index == 0 && call > 1)
+            fill_buffer_char('\n');
         if (index != 0)
-            fill_buffer("\n");        
-        multiple_fill_buff("\n", file.name, ":\n", NULL);
+            fill_buffer("\n\n");        
+        multiple_fill_buff(file.name, ":\n", NULL, NULL);
     }
     char *total_str = ft_ltoa(file.total_size);
     if (!total_str)
