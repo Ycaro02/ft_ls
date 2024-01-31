@@ -149,7 +149,7 @@ int parse_flag(int argc, char **argv)
                 {
                     tmp_value =  get_flag_value(argv[i][j]);
                     if (tmp_value == -1) {
-                        ft_printf_fd(2, "ft_ls: unrecognized option %c\n", argv[i][j]);
+                        ft_printf_fd(2, "ft_ls: invalid option -- '%c'\nTry './ft_ls --help' for more information.\n", argv[i][j]);
                         return (-1);
                     }
                     if (flag_already_present(flags, tmp_value) == FALSE)

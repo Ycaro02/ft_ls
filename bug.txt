@@ -13,8 +13,14 @@ need to fix this regulat file mixed with dir with d OPTION ... {
  .   ..   acl  '"ahah"'   libft   libft/ft_atoi.c   out
 
 
-// NEED TO remove last space on last dir display
-./ft_ls count.sh -G /proc/self
+// Need to fix display nothing when no directory
+./ft_ls count.sh -G /proc/self . -> print all good
+./ft_ls count.sh -G /proc/self -> don't print
+
+// Display classic file when unrecognized option
+./ft_ls count.sh -G /proc/self -l . -h
+
+
 
 //BUGUED need double quote
  ./test/tes_spe :
