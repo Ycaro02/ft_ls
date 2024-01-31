@@ -32,7 +32,7 @@ int fill_l_buffer(t_list *lst, int flag_nb, int call_flag)
         return (MALLOC_ERR);
     // printf("Yo call: %d\n", call_flag);
     while (current) {
-        fill_buffer_l_option(*(t_file *)current->content, space, flag_nb); // change to int return for malloc check
+        fill_buffer_l_option(*((t_file *)current->content), space, flag_nb); // change to int return for malloc check
         ++i;
         if (i != lst_len)
             fill_buffer("\n");

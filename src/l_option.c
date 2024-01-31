@@ -116,6 +116,7 @@ int write_file_name(t_file file, int is_exec, int flag_nb, int space)
     char c = ' ';
 
     if (space != 0) {
+        // printf("for %s quote = %d\n", file.name, file.quote);
         if (file.quote != NORMAL_CHAR)
             c = file.quote == ADD_SIMPLE_QUOTE_CHAR ? '\'' : '\"';
         fill_buffer_char(c);

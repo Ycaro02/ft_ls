@@ -70,8 +70,8 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
     file->group_id = sb->st_gid;
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
-    file->quote = check_for_quote(file->name);
     if (fill_name_and_parent(file, path, parent) == MALLOC_ERR)
         return (NULL);
+    file->quote = check_for_quote(file->name);
     return (file);
 }
