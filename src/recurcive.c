@@ -87,15 +87,15 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
     return (new);
 }
 
-static int recurcive_ls(t_list *dir_lst, int flag_nb ,int* error, int lst_len)
+static int recurcive_ls(t_list *dir_lst, int flag_nb ,int* error, int lst_len, int idx)
 {
     int err;
     
     err = 0;
     if (has_flag(flag_nb, L_OPTION))
-        err = ls_l_one_dir(dir_lst->content, flag_nb, lst_len, error);
+        err = ls_l_one_dir(dir_lst->content, flag_nb, lst_len, error, 1, idx);
     else
-        err = ls_one_dir(dir_lst->content, flag_nb, lst_len, error);
+        err = ls_one_dir(dir_lst->content, flag_nb, lst_len, error, 1, idx);
     if (err == MALLOC_ERR)
         return (err);
     return (err);
@@ -118,13 +118,14 @@ int search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error)
     t_list *local_list;
     int err;
     int lst_len; 
+    int index = 0;
 
     lst_len = get_lst_len(dir_lst);
     err = 0;
     local_list = NULL;
     while(dir_lst)
     {
-        err = recurcive_ls(dir_lst, flag_nb, error, lst_len);
+        err = recurcive_ls(dir_lst, flag_nb, error, lst_len, index);
         if (err == MALLOC_ERR)
             break ;
         local_list = get_recurcive_dir(dir_lst->content, flag_nb, error);
@@ -132,6 +133,7 @@ int search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error)
         if (*error == MALLOC_ERR || err == MALLOC_ERR)
             break ;
         new_lstclear(&local_list, free);
+        ++index;
         dir_lst = dir_lst->next;
     }
     new_lstclear(&local_list, free);

@@ -27,13 +27,24 @@ long long get_total_size(t_list *lst)
     return (total);
 }
 
+
+int ls_only_file_L(t_list *lst, int flag_nb)
+{
+    if (fill_l_buffer(lst, flag_nb, 0) == MALLOC_ERR)
+        return (MALLOC_ERR);
+    if (!has_flag(flag_nb, R_OPTION))
+        fill_buffer_char('\n');
+    return (0);
+}
+
+
 int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag, int index)
 {
     t_list *lst = NULL;
 
     (void)call_flag;
     (void)index;
-    if (file->type != DIRECTORY)
+    if (call_flag != 0 && file->type != DIRECTORY)
         return (0);
     lst = get_all_file_struct(file, flag_nb, error);
     if (!lst && *error == MALLOC_ERR) // one of case where int pointer error is mandatory
@@ -43,12 +54,15 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_fl
         return (0);
     }
     file->total_size = get_total_size(lst);
+
     if (display_dir_header(*file, lst_len) == MALLOC_ERR)
         return (MALLOC_ERR);
+    
+    
     if (has_flag(flag_nb, REVERSE_OPTION))
         if (safe_reverse_lst(&lst, error, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
-    if (fill_l_buffer(lst, flag_nb) == MALLOC_ERR)
+    if (fill_l_buffer(lst, flag_nb, call_flag) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);
 }
@@ -80,7 +94,6 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
 {
     t_list *lst = NULL;
 
-    (void)call_flag;
     if (has_flag(flag_nb, D_OPTION)) {
         hard_display_d(file);
         return (0);
@@ -93,9 +106,11 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
         */
     if (call_flag != 0)
         fill_buffer_char('\n');
+    
     display_quote(file->quote);
     fill_buffer(file->name);
     display_quote(file->quote);
+
     if (call_flag != 0)
         fill_buffer(":\n");
     else if (index == lst_len)

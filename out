@@ -1,5 +1,0 @@
- acl       count.sh            lsout             our           tuto_tmp  
-'"ahah"'   export_lc_collate   Makefile          out          
-"'as'"     ft_ls               mon_fichier.txt   real_ls_out  
- attr      include             myls_out          src          
- bug.txt   libft               myout             test         

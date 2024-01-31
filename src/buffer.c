@@ -19,7 +19,7 @@ void    print_and_clear()
     g_buff.i = 0;
 }
 
-int fill_l_buffer(t_list *lst, int flag_nb)
+int fill_l_buffer(t_list *lst, int flag_nb, int call_flag)
 {
     t_list *current = lst;
     int *space;
@@ -28,13 +28,14 @@ int fill_l_buffer(t_list *lst, int flag_nb)
     space = get_all_space(current, flag_nb);
     if (!space)
         return (MALLOC_ERR);
+    // printf("Yo call: %d\n", call_flag);
     while (current) {
-    printf("KOALA\n");
         fill_buffer_l_option(*(t_file *)current->content, space, flag_nb); // change to int return for malloc check
         current = current->next;
     }
     free(space);
-    new_lstclear(&lst, free);
+    if (call_flag != 0)
+        new_lstclear(&lst, free);
     return (0);
 }
 

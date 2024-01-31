@@ -157,6 +157,7 @@ t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file)
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------
+int     ls_only_file_L(t_list *lst, int flag_nb);
 int     ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int* error, int call_flag, int index);
 int     ls_one_dir(t_file *file, int flag_nb, int lst_len, int* error, int call_flag, int index);
 void    display_quote(int quote);
@@ -199,7 +200,7 @@ int     is_special_char(char c);
 //      buffer.c                //
 //-------------------------------
 void    fill_buffer(char *str);
-int     fill_l_buffer(t_list *lst, int flag_nb);
+int     fill_l_buffer(t_list *lst, int flag_nb, int call_flag);
 void    fill_buffer_char(char c);
 void    fill_buffer_color(char *str, enum e_color color, int flag_nb);
 int     store_in_buffer(t_list *lst, int flag_nb);

@@ -128,11 +128,14 @@ void	new_lstclear(t_list **lst, void (*del)(void*))
 	tmp = current;
 	while (tmp != NULL) {
 		tmp = current->next;
-        file = current->content;
-        del(file->name);
-        if (file->parrent)
-            del(file->parrent);
-        del(current->content);
+        if (current->content) {
+            file = current->content;
+            del(file->name);
+            if (file->parrent)
+                del(file->parrent);
+            del(current->content);
+        }
+        // if (current->content)
 		free(current);
 		current = tmp;
 	}

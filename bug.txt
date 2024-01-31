@@ -19,3 +19,9 @@ need to fix this regulat file mixed with dir with d OPTION ... {
 
 ➜ ./ft_ls count.sh -G /proc/self -> bugued one file + one dir on cmd line
 }
+
+
+
+//BUGUED
+ ./test/tes_spe :
+ '   '-'   _a   a   a__   a__((((a   a__(a   a__a   b__(b   z__(z

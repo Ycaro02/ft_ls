@@ -28,13 +28,12 @@ static int ls_only_dir(t_list *dir_lst, int flag_nb)
     while (current) {
         err = fill_buffer_l_option(*(t_file *)current->content, space, flag_nb);
         if (err == MALLOC_ERR) {
-            free(space);
-            return (MALLOC_ERR);
+            break ;
         }
         current = current->next;
     }
     free(space);
-    return (0);
+    return (err);
 }
 
 
@@ -46,8 +45,10 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error, int call_flag)
         err = search_recurcive_dir(dir_lst, flag_nb, error);
     else if (call_flag != 0 && has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION))
         err = ls_only_dir(dir_lst, flag_nb);
-    else if (has_flag(flag_nb, L_OPTION))
+    else if (has_flag(flag_nb, L_OPTION) && call_flag != 0)
         err = ls(dir_lst, flag_nb, ls_l_one_dir, error, call_flag);
+    else if (has_flag(flag_nb, L_OPTION) && call_flag == 0)
+        err = ls_only_file_L(dir_lst, flag_nb);
     else
         err = ls(dir_lst, flag_nb, ls_one_dir, error, call_flag);
 
@@ -98,10 +99,11 @@ int ft_ls(char **argv, int flag_nb, int* error)
     if (basic_sort_lst(dir_lst, flag_nb, error) == 1)
         return (1);
     if (simple_file){
-        if (basic_sort_lst(dir_lst, flag_nb, error) == 1)
+        if (basic_sort_lst(simple_file, flag_nb, error) == 1) {
+            // clear ?
             return (1);
+        }
         call_ls(simple_file, flag_nb, error, 0);
-        // new_lstclear(&simple_file, free);
     }
 
     // sort_lst(dir_lst, flag_nb);
