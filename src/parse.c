@@ -20,7 +20,7 @@ static t_file *default_file_struct()
 
 static int build_file_lst(struct stat sb, char *str, t_list **new, int *found, int flag_nb)
 {
-    t_file *file;
+    t_file *file = NULL;
     
     file = fill_file_struct(sb, str, str);
     if (!file) {
@@ -32,7 +32,7 @@ static int build_file_lst(struct stat sb, char *str, t_list **new, int *found, i
     else {
         *found = 1;
         if (has_flag(flag_nb, L_OPTION)) {
-            int array[S_HOUR + 1] = {0};
+            int array[S_MAX] = {0}; /* Todo malloc here */
             fill_buffer_l_option(*file, array, flag_nb);
         }
         else

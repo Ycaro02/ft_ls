@@ -41,7 +41,7 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
 {
     t_file *file;
 
-    file = malloc(sizeof(t_file));
+    file = ft_calloc(sizeof(t_file), 1);
     if (!file)
         return (NULL);
     file->total_size = -1;
