@@ -1,5 +1,10 @@
 #include "../include/ft_ls.h"
 
+void display_error_phrase(char *str)
+{
+    ft_printf_fd(2, "ft_ls cannot access '%s", str);
+}
+
 int ft_strlen_word(char *s)
 {
 	int i =0;

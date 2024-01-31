@@ -131,6 +131,7 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink_
 //-------------------------------
 //      utils.c                 //
 //-------------------------------
+void display_error_phrase(char *str);
 int     ft_strlen_word(char *s);
 int     check_file_perm(int perm, int to_check);
 int     get_stdout_width();
@@ -175,7 +176,7 @@ void    write_group_name(long group_id, int space, int flag_nb);
 //      l_option_utils.c       //
 //-------------------------------
 char    *get_perm(int nbr);
-void    fill_buffer_perm(char c, int *is_exec);
+void    fill_buffer_perm(char c, int *is_exec, int display_flag);
 char    get_type(struct stat sb);
 //-------------------------------
 //      manage_space.c          //

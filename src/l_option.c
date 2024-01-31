@@ -160,9 +160,8 @@ static int write_perm(t_file file, int *is_exec, int space)
         fill_buffer("------");
     else if (len == 2)
         fill_buffer("---");
-    while (tmp && tmp[i])
-    {
-        fill_buffer_perm(tmp[i], is_exec);
+    while (tmp && tmp[i]) {
+        fill_buffer_perm(tmp[i], is_exec, 1);
         i++;
     }
     free(tmp);

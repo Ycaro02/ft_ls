@@ -13,6 +13,9 @@ ft_ls git:(main) ✗ ls -l /run/user
 total 0 ➜ DONE
 
 
-need to fix this regulat file mixed with dir with d OPTION ...
+need to fix this regulat file mixed with dir with d OPTION ... {
 ➜  ft_ls git:(main) ✗ ls '"ahah"' . .. acl libft out -d libft/ft_atoi.c 
  .   ..   acl  '"ahah"'   libft   libft/ft_atoi.c   out
+
+➜ ./ft_ls count.sh -G /proc/self -> bugued one file + one dir on cmd line
+}

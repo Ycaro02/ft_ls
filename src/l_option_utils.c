@@ -1,6 +1,9 @@
 #include "../include/ft_ls.h"
 
-void fill_buffer_perm(char c, int *is_exec)
+/*
+ * fill buffer with permision take flag for no display
+*/
+void fill_buffer_perm(char c, int *is_exec, int display_flag)
 {
     int nb = c - 48;
     char r = '-';
@@ -14,9 +17,11 @@ void fill_buffer_perm(char c, int *is_exec)
         x = 'x';
         *is_exec = 0;   
     }
-    fill_buffer_char(r);
-    fill_buffer_char(w);
-    fill_buffer_char(x);
+    if (display_flag == 1) {
+        fill_buffer_char(r);
+        fill_buffer_char(w);
+        fill_buffer_char(x);
+    }
 }
 
 void convert_ato(char* perm, int nbr, int index) // array to octal

@@ -203,7 +203,7 @@ static int test_all(int test, int* all_len, int tab_len, int stdout_w)
     int i = 0;
     while (i < test) {
         ret = brut_test(i, test, tab_len, all_len, local_space);
-        printf("Ret = %d for [%d] width: %d\n", ret, test, stdout_w);
+        // printf("Ret = %d for [%d] width: %d\n", ret, test, stdout_w);
         if (ret >= stdout_w - 2)
             break ;
         i++;

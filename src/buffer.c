@@ -141,6 +141,9 @@ int store_in_buffer(t_list *lst, int flag_nb)
 
 void finish_print_buffer()
 {
-    if (g_buff.i != 0)
+    if (g_buff.i != 0) {
         write(1, g_buff.buffer, g_buff.i);
+        if (g_buff.buffer[g_buff.i] != '\n')
+            write(1, "\n", 1);
+    }
 }

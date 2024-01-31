@@ -49,7 +49,8 @@
         "basic_define.h": "c",
         "type_traits": "c",
         "random": "cpp",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "ft_ls.h": "c"
     },
 
     "highlight.regexes": {
