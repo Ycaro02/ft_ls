@@ -24,6 +24,8 @@ int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*, i
 static int ls_only_dir(t_list *dir_lst, int flag_nb)
 {
     t_list *current = dir_lst;
+    int lst_len = ft_lstsize(dir_lst), i = 0;
+
     int *space = get_all_space(dir_lst, flag_nb);
     int err = 0;
     while (current) {
@@ -31,6 +33,9 @@ static int ls_only_dir(t_list *dir_lst, int flag_nb)
         if (err == MALLOC_ERR) {
             break ;
         }
+        ++i;
+        if (i != lst_len)
+            fill_buffer("\n");
         current = current->next;
     }
     free(space);

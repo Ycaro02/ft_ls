@@ -23,6 +23,8 @@ int fill_l_buffer(t_list *lst, int flag_nb, int call_flag)
 {
     t_list *current = lst;
     int *space;
+    int lst_len = ft_lstsize(lst), i = 0;
+    
 
     current = lst;
     space = get_all_space(current, flag_nb);
@@ -31,6 +33,9 @@ int fill_l_buffer(t_list *lst, int flag_nb, int call_flag)
     // printf("Yo call: %d\n", call_flag);
     while (current) {
         fill_buffer_l_option(*(t_file *)current->content, space, flag_nb); // change to int return for malloc check
+        ++i;
+        if (i != lst_len)
+            fill_buffer("\n");
         current = current->next;
     }
     free(space);

@@ -1,9 +1,14 @@
 #include "../include/ft_ls.h"
 
-static int display_dir_header(t_file file, int lst_len)
+static int display_dir_header(t_file file, int lst_len, int call, int index)
 {
-    if (lst_len > 0)
+    (void)lst_len;
+    if (call > 1 || index != 0)
+    {
+        if (index != 0)
+            fill_buffer("\n");        
         multiple_fill_buff("\n", file.name, ":\n", NULL);
+    }
     char *total_str = ft_ltoa(file.total_size);
     if (!total_str)
         return (MALLOC_ERR);
@@ -42,8 +47,6 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_fl
 {
     t_list *lst = NULL;
 
-    (void)call_flag;
-    (void)index;
     if (call_flag != 0 && file->type != DIRECTORY)
         return (0);
     lst = get_all_file_struct(file, flag_nb, error);
@@ -55,7 +58,8 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_fl
     }
     file->total_size = get_total_size(lst);
 
-    if (display_dir_header(*file, lst_len) == MALLOC_ERR)
+    // printf("forL file: %s call %d idx %d\n", file->name, call_flag, index);
+    if (display_dir_header(*file, lst_len, call_flag, index) == MALLOC_ERR)
         return (MALLOC_ERR);
     
     
