@@ -59,6 +59,7 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_fl
     file->total_size = get_total_size(lst);
 
     // printf("forL file: %s call %d idx %d\n", file->name, call_flag, index);
+    
     if (display_dir_header(*file, lst_len, call_flag, index) == MALLOC_ERR)
         return (MALLOC_ERR);
     
@@ -107,11 +108,13 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
         return (0);
     }
 
-    (void)index;
+    (void)lst_len;
     // printf("for file: %s call %d idx %d\n", file->name, call_flag, index);
-    if (call_flag > 1) {
-        fill_buffer_char('\n');
-        fill_buffer_char('\n');
+    if (call_flag >= 1 || index != 0) {
+        if (index != 0 || call_flag > 1){
+            fill_buffer_char('\n');
+            fill_buffer_char('\n');
+        }
 
         if (quote > NOEFFECT_CHAR)
             display_quote(quote);
@@ -127,10 +130,9 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
     if (call_flag == 0)
         display_quote(quote);
 
-    if (lst_len > 1 || call_flag > 1)
-        if (call_flag >= 1)
+    if (call_flag >= 1 || index != 0)
             fill_buffer(":\n");
-    
+        // if (call_flag >= 1)
     
     // if (call_flag == 0 && index == lst_len - 1)
     //     fill_buffer("\n");
