@@ -1,24 +1,40 @@
 #include "../include/ft_ls.h"
 
-static int display_dir_header(t_file file, int lst_len, int call, int index)
+/** Display dir header
+ * args: file, lst_len, call, index, l_flag
+ *      file: t_file obj to display
+ *      lst_len: file's lst_len
+ *      call: call deep, 0 for only file, 1 for first call, 2 for next
+ *      index: index of file in lst
+ *      l_flag: bool flag for l option (just display total) 
+*/
+static int display_dir_header(t_file file, int lst_len, int call, int index, int l_flag)
 {
-    (void)lst_len;
-    printf("%sCall: %d idx: %d for %s%s\n", CYAN, call, index, file.name, RESET);
+    int quote = quotes_required(file.name);
+
+    // printf("%sCall: %d idx: %d for %s%s\n", CYAN, call, index, file.name, RESET);
     if ((call > 1 || index != 0) || (call >= 1 && lst_len > 1))
     {
         if (index == 0 && call > 1)
             fill_buffer_char('\n');
         if (index != 0)
-            fill_buffer("\n\n");        
-        multiple_fill_buff(file.name, ":\n", NULL, NULL);
+            fill_buffer("\n\n");
+        if (quote > NOEFFECT_CHAR)
+            display_quote(quote);
+        fill_buffer(file.name);
+        if (quote > NOEFFECT_CHAR)
+            display_quote(quote);
+        fill_buffer(":\n");
     }
-    char *total_str = ft_ltoa(file.total_size);
-    if (!total_str)
-        return (MALLOC_ERR);
-    fill_buffer("total ");
-    fill_buffer(total_str);
-    fill_buffer("\n");
-    free(total_str);
+    if (l_flag == 1) {
+        char *total_str = ft_ltoa(file.total_size);
+        if (!total_str)
+            return (MALLOC_ERR);
+        fill_buffer("total ");
+        fill_buffer(total_str);
+        fill_buffer("\n");
+        free(total_str);
+    }
     return (0);
 }
 
@@ -63,7 +79,7 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_fl
 
     // printf("forL file: %s call %d idx %d\n", file->name, call_flag, index);
     
-    if (display_dir_header(*file, lst_len, call_flag, index) == MALLOC_ERR)
+    if (display_dir_header(*file, lst_len, call_flag, index, 1) == MALLOC_ERR)
         return (MALLOC_ERR);
     
     
@@ -104,7 +120,6 @@ static void hard_display_d(t_file *file)
 int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag, int index)
 {
     t_list *lst = NULL;
-    int quote = quotes_required(file->name);
 
     if (has_flag(flag_nb, D_OPTION)) {
         hard_display_d(file);
@@ -113,33 +128,22 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
 
     (void)lst_len;
     // printf("for file: %s call %d idx %d\n", file->name, call_flag, index);
-    if (call_flag >= 1 || index != 0) {
-        if (index != 0 || call_flag > 1){
-            fill_buffer_char('\n');
-            fill_buffer_char('\n');
-        }
+    printf("%sCallC: %d idx: %d for %s%s\n", CYAN, call_flag, index, file->name, RESET);
 
-        if (quote > NOEFFECT_CHAR)
-            display_quote(quote);
-        fill_buffer(file->name);
-        if (quote > NOEFFECT_CHAR)
-            display_quote(quote);
-    }
-
+    /* really ugly need to apply mange column here but still working */
     if (call_flag == 0) {
+        int quote = quotes_required(file->name);
         display_quote(quote);
         fill_buffer(file->name);
-    }
-    if (call_flag == 0)
         display_quote(quote);
+        if (index == lst_len - 1)
+            fill_buffer_char('\n');
+        return (0);
+    }
 
-    if (call_flag >= 1 || index != 0)
-            fill_buffer(":\n");
-        // if (call_flag >= 1)
-    
-    // if (call_flag == 0 && index == lst_len - 1)
-    //     fill_buffer("\n");
-    /* maybe manage space at this call for -l option */
+    if (display_dir_header(*file, lst_len, call_flag, index, 0) == MALLOC_ERR)
+        return (MALLOC_ERR);
+
     lst = get_all_file_struct(file, flag_nb, error);
     if (!lst && *error == MALLOC_ERR)
         return (MALLOC_ERR);
