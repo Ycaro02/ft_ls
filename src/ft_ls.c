@@ -19,6 +19,9 @@ static int display_dir_header(t_file file, int lst_len, int call, int index, int
             fill_buffer_char('\n');
         if (index != 0)
             fill_buffer("\n\n");
+        //     fill_buffer_char('\n');
+        // if (index != 0 && l_flag == 1)
+        //     fill_buffer_char('\n');
         if (quote > NOEFFECT_CHAR)
             display_quote(quote);
         fill_buffer(file.name);
@@ -101,13 +104,15 @@ void display_quote(int quote)
         fill_buffer_char(' ');
 }
 
-static void hard_display_d(t_file *file)
+static void hard_display_d(t_file *file, int call_flag)
 {
-    fill_buffer(BLUE);
+    if (call_flag != 1)
+        fill_buffer(BLUE);
     display_quote(file->quote);
     fill_buffer(file->name);
     display_quote(file->quote);
-    fill_buffer(RESET);
+    if (call_flag != 1)
+        fill_buffer(RESET);
     fill_buffer_char(' ');
     free(file->parrent);
     free(file->name);
@@ -122,7 +127,7 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
     t_list *lst = NULL;
 
     if (has_flag(flag_nb, D_OPTION)) {
-        hard_display_d(file);
+        hard_display_d(file, call_flag);
         return (0);
     }
 

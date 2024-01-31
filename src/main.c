@@ -16,8 +16,8 @@ int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*, i
             break ;
         current = current->next;
     }
-    if (has_flag(flag_nb, D_OPTION) && !has_flag(flag_nb, L_OPTION))
-        fill_buffer_char('\n');
+    // if (has_flag(flag_nb, D_OPTION) && !has_flag(flag_nb, L_OPTION))
+        // fill_buffer_char('\n');
     return (err);
 }
 

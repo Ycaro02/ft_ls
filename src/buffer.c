@@ -117,7 +117,6 @@ static int classic_store(t_list *lst, int flag_nb)
             fill_buffer(" ");
         current = current->next;
     }
-    fill_buffer("\n");
     new_lstclear(&lst, free);
     return (0);
 }
