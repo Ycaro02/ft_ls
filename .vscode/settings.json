@@ -48,7 +48,8 @@
         "define_typedef.h": "c",
         "basic_define.h": "c",
         "type_traits": "c",
-        "random": "cpp"
+        "random": "cpp",
+        "typeinfo": "c"
     },
 
     "highlight.regexes": {

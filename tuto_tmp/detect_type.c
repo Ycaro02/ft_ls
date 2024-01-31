@@ -92,8 +92,7 @@ int main(int argc, char**argv)
     t_list *list = NULL;
     while (j < argc)   
     {
-        if (lstat(argv[j], &sb) == -1)
-        {
+        if (lstat(argv[j], &sb) == -1) {
             perror("lstat faillure");
             return (1);
         }

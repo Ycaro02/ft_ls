@@ -130,3 +130,28 @@ int quotes_required(char *str)
     }
     return (ret);
 }
+
+struct stat *check_for_stat(char* name, int flag, int *save_symlink)
+{
+    struct stat *sb = ft_calloc(sizeof(struct stat), 1);
+
+    if (!sb)
+        return (NULL);
+    if (lstat(name, sb) == -1) {
+            printf("parrent path: %s\n", name);
+            perror("lstat");
+            return (NULL);
+    }
+    
+    *save_symlink = get_type(*sb) == SYMLINK;
+
+    if (!has_flag(flag, L_OPTION)) {
+        if (stat(name, sb) == -1) {
+            printf("path: %s\n", name);
+            perror("stat error");
+            return (NULL);
+        }
+    }
+
+    return (sb);
+}

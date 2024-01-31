@@ -1,10 +1,10 @@
 #include "../include/ft_ls.h"
 
-static int create_new_file(struct stat sb, t_list **new, char *str)
+static int create_new_file(struct stat sb, t_list **new, char *str, int symlink)
 {
     t_file *new_file;
     
-    new_file = fill_file_struct(sb, str, NULL);
+    new_file = fill_file_struct(&sb, str, NULL, symlink);
     if (!new_file || !new_file->name) {
         ft_printf_fd(2, "Malloc error\n");
         free(new_file->name);
@@ -20,23 +20,23 @@ static int create_new_file(struct stat sb, t_list **new, char *str)
     return (0);
 }
 
-static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new)
+static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new, int flag)
 {
     char *str;
-    struct stat sb;
+    struct stat *sb;
+    int symlink = 0;
 
     str = join_parent_name(file->name, my_dir->d_name);
     if (!str)
         return (print_error("Malloc error\n", NULL, 1, 1));
-    if (lstat(str, &sb) == -1) {
-        print_error(str, "ft_ls: cannot access directory : ", 1, 0);
-        free(str);
-        return (1);
-    }
-    if (create_new_file(sb, new, str) == MALLOC_ERR) {
+    sb = check_for_stat(str, flag, &symlink);
+    if (!sb)
+        return (0);
+    if (create_new_file(*sb, new, str, symlink) == MALLOC_ERR) {
         free(str);
         return (MALLOC_ERR);
     }
+    free(sb);
     free(str);
     return (0);
 }
@@ -54,7 +54,7 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
     do  {
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 1) == 1) {
-            ret = parse_directory(file, my_dir, new);
+            ret = parse_directory(file, my_dir, new, flag_nb);
             if (ret != 0)
                 break;
         }

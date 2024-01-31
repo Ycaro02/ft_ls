@@ -7,8 +7,10 @@ static int fill_name_and_parent(t_file *file, char *path, char *parent)
         return (MALLOC_ERR);
     if (parent) {
         file->parrent = ft_strdup(parent);
-        if (!file->parrent)
+        if (!file->parrent) {
+            free(file->name);
             return (MALLOC_ERR);
+        }
     }
     else
         file->parrent = NULL;
@@ -37,7 +39,15 @@ int check_for_quote(char *str)
     //     }
     // }
 
-t_file *fill_file_struct(struct stat sb, char *path, char *parent)
+
+
+
+
+/*  Need to refact, call stat here, check file type, if link call lstat instead 
+    Need to store space here to, each field will check for him
+    Give space array here to check and store*/
+
+t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
 {
     t_file *file;
 
@@ -45,19 +55,23 @@ t_file *fill_file_struct(struct stat sb, char *path, char *parent)
     if (!file)
         return (NULL);
     file->total_size = -1;
-    file->type = get_type(sb);
-    file->perm = sb.st_mode & 0777;
-    file->size = sb.st_size;
-    file->nb_link = sb.st_nlink;
-    file->last_status_change = sb.st_ctim;
-    file->last_access = sb.st_atim;
-    file->last_change = sb.st_mtim;
-    file->user_id = sb.st_uid;
-    file->group_id = sb.st_gid;
-    file->nb_block = sb.st_blocks;
-    file->rdev = sb.st_rdev;
+    if (symlink == 0)
+        file->type = get_type(*sb);
+    else
+        file->type = SYMLINK;
+    
+    file->perm = sb->st_mode & 0777;
+    file->size = sb->st_size;
+    file->nb_link = sb->st_nlink;
+    file->last_status_change = sb->st_ctim;
+    file->last_access = sb->st_atim;
+    file->last_change = sb->st_mtim;
+    file->user_id = sb->st_uid;
+    file->group_id = sb->st_gid;
+    file->nb_block = sb->st_blocks;
+    file->rdev = sb->st_rdev;
+    file->quote = check_for_quote(file->name);
     if (fill_name_and_parent(file, path, parent) == MALLOC_ERR)
         return (NULL);
-    file->quote = check_for_quote(file->name);
     return (file);
 }

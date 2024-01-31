@@ -110,6 +110,7 @@ typedef struct s_buff
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
 
 int check_for_quote(char *str);
+struct stat *check_for_stat(char* name, int flag, int *save);
 
 //flag_gestion
 void set_flag(int *flags, int flag_val);
@@ -126,7 +127,7 @@ int quotes_required(char *str);
 //-------------------------------
 //      t_file.c               //
 //-------------------------------
-t_file *fill_file_struct(struct stat sb, char *path, char *parent);
+t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink_bool);
 //-------------------------------
 //      utils.c                 //
 //-------------------------------
