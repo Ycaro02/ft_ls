@@ -52,7 +52,11 @@
         "typeinfo": "c",
         "ft_ls.h": "c",
         "stat.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "define_enum.h": "c",
+        "ioctl.h": "c",
+        "sysmacros.h": "c",
+        "xattr.h": "c"
     },
 
     "highlight.regexes": {

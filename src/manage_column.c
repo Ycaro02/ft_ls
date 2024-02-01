@@ -22,7 +22,7 @@ static int **alloc_array(int nb_line, int max_per_line)
 }
 
 /** Create_column_array
- * Create double int array with id of each file, with the brut force column information
+ * Create double int array with id of each file, with the brut force column/line information
  * Args:    lst : ptr on list to display
  *          nb_column_max : max name per line (nb max column)
  *          nb_line: nb of line

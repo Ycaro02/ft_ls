@@ -100,24 +100,28 @@ static int get_max_len_by_index(int start, int test ,int max, int* tab)
  *          all_len: array of all file's name len, store in list order
  *          nb_file: all_len size, number of file in lst
  *          local_space: array of maximum space for this 'test' configuration
+ *          bool_quote: quote present in lst dir 0 for no 1 for yes
  * Ret: Computed len for target line
 */
-static int brut_test(int i, int test, int *all_len, int nb_file, int *local_space)
+static int brut_test(int i, int test, int *all_len, int nb_file, int *local_space, int bool_quote)
 {
     int ret = -1;
     int column = 0;
+    /* basic space is 2, 4 for bool quote*/
+    int space = 2 + (bool_quote + bool_quote);
+
     // printf("in brut test i = %d test = %d ", i ,test);
     while (i < nb_file - test) {
         if (ret == -1) {
             local_space[column] = get_max_len_by_index(i, test, nb_file, all_len);
             ret = local_space[column];
-            ret += 2;
+            ret += space;
             ++column;
         }
         if (i + test <= nb_file) {
             local_space[column] = get_max_len_by_index(i + test, test, nb_file, all_len);
             ret += local_space[column];
-            ret += 2;
+            ret += space;
             ++column;
         }
         else
@@ -135,15 +139,16 @@ static int brut_test(int i, int test, int *all_len, int nb_file, int *local_spac
  *          all_len: array of all file's name len, store in list order
  *          nb_file: all_len size, number of file in lst
  *          stdout_w: width of stdout
+ *          bool_quote: quote present in lst dir 0 for no 1 for yes
  * Ret: -1 for impossible 0 for ok
 */
-static int test_all(int test, int* all_len, int nb_file, int stdout_w)
+static int test_all(int test, int* all_len, int nb_file, int stdout_w, int bool_quote)
 {
     int *local_space = ft_calloc(sizeof(int), nb_file);
     int ret = -1;
     int i = 0;
     while (i < test) {
-        ret = brut_test(i, test, all_len, nb_file, local_space);
+        ret = brut_test(i, test, all_len, nb_file, local_space, bool_quote);
         // printf("%sRet = %d for [%d] width: %d%s\n",RED, ret, test, stdout_w, RESET);
         if (ret > stdout_w)
             break ;
@@ -161,9 +166,10 @@ static int test_all(int test, int* all_len, int nb_file, int stdout_w)
  * Start brut force with test value, test if we can display all one 2 line if not increment test
  * args:    stdout_w: width of stdout, 
  *          lst: ptr on linked list to display 
+ *          bool_quote: quote present in lst dir 0 for no 1 for yes
  * ret: right tested value, number of line
 */
-static int get_nb_line(int stdout_w, int *all_len, int len)
+static int get_nb_line(int stdout_w, int *all_len, int len, int bool_quote)
 {
     if (!all_len)
         return (MALLOC_ERR);
@@ -175,7 +181,7 @@ static int get_nb_line(int stdout_w, int *all_len, int len)
 
     while (ret != 0) {
         // ft_printf_fd(2, "width %d\n", stdout_w);
-        ret = test_all(test, all_len, len, stdout_w);
+        ret = test_all(test, all_len, len, stdout_w, bool_quote);
         if (ret != 0)
             ++test;
     }
@@ -217,6 +223,7 @@ int *get_max_by_column(t_list *lst, int nb_column, int nb_line)
 
 /**
  * Display coloumn call write_file_name
+ *          space_quote: quote present in lst dir 0 for no 1 for yes
 */
 static void display_column(t_list *lst, int** array, int* max_per_column, int flag, int space_quote)
 {
@@ -237,8 +244,9 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
                 write_file_name(*file, check_file_perm(file->perm, 1), flag, space_quote);
                 /* if is not the last name of line*/
                 if (array[i][j + 1] != -1) { 
-                    if (space_quote == 0)
+                    if (space_quote == 1)
                         fill_buffer_char(' ');
+                    fill_buffer_char(' ');
                     for (int k = 0; k < nb_space; ++k)
                         fill_buffer_char(' ');
                 }
@@ -262,21 +270,20 @@ int manage_basic_column(t_list *lst, int *value, int space_quote, int flag)
         ft_printf_fd(2, "Error alloc all_len manage column\n");
         return (MALLOC_ERR);
     }
-    nb_line = get_nb_line(stdout_width, all_len, lst_len);
+    /* brut force here */
+    nb_line = get_nb_line(stdout_width, all_len, lst_len, space_quote);
     if (nb_line == MALLOC_ERR)
         return (MALLOC_ERR);
 
     *value = nb_line; // second return need to kept nb_line
     max_per_line  = (int)(lst_len / nb_line) + (lst_len % nb_line != 0); // add 1 if (lst_len % nb_line != 0)
     
-    // if (get_total_len(lst) > (long long)stdout_width) { /* not necesary ? always call ? */
     tab_max_unit = get_max_by_column(lst, max_per_line, nb_line);
     if (!tab_max_unit) {
         free(all_len);
         new_lstclear(&lst, free);
         return (MALLOC_ERR);
     }
-    /* new call for int ** here */
     array = create_column_array(lst, max_per_line, nb_line);
     if (array) 
         display_column(lst, array, tab_max_unit, flag, space_quote);
