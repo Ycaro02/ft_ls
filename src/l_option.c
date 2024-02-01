@@ -133,12 +133,6 @@ int write_file_name(t_file file, int flag_nb, int space)
 {
     char c = ' ';
     int perm_color = E_NONE;
-    
-    if (file.perm & S_IXOTH || file.perm & S_IXGRP || file.perm & S_IXUSR)
-        perm_color = E_GREEN;
-
-    if (is_full_perm(file.perm))
-        perm_color = E_FILL_GREEN;
 
     if (space != 0) {
         // printf("for %s quote = %d\n", file.name, file.quote);
@@ -147,6 +141,21 @@ int write_file_name(t_file file, int flag_nb, int space)
         fill_buffer_char(c);
     }
 
+
+    if (file.perm & S_IXOTH || file.perm & S_IXGRP || file.perm & S_IXUSR)
+        perm_color = E_GREEN;
+
+    if (is_full_perm(file.perm))
+        perm_color = E_FILL_GREEN;
+
+    if (file.type == FIFO)
+        perm_color = E_YELLOW_BLACK;
+    
+    if (file.perm & S_ISUID)
+        perm_color = E_FILL_RED;
+    else if (file.perm & S_ISGID)
+        perm_color = E_FILL_YELLOW;
+    
     if(file.type == SYMLINK && space != -1) {
         if (write_symlink(file.name, file.parrent, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);

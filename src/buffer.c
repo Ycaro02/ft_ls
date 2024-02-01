@@ -74,6 +74,12 @@ void fill_color(enum e_color color)
         fill_buffer(CYAN);
     if (color == E_FILL_GREEN)
         fill_buffer(FILL_GREEN);
+    if (color == E_FILL_YELLOW)
+        fill_buffer(FILL_YELLOW);
+    if (color == E_FILL_RED)
+        fill_buffer(FILL_RED);
+    if (color == E_YELLOW_BLACK)
+        fill_buffer(FILL_YELBLACK);
 }
 
 void fill_buffer_color(char *str, enum e_color color, int flag_nb)

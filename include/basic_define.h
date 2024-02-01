@@ -35,6 +35,10 @@ typedef unsigned long 			t_uint64;
 # define    RESET "\033[0m"
 
 # define    FILL_GREEN "\033[7;32m"
+# define    FILL_YELLOW "\033[7;33m"
+# define    FILL_RED "\033[7;31m"
+
+# define    FILL_YELBLACK "\033[40;33m"
 
 
  # endif /* BASIC_DEF_TYPE_HEADER */
