@@ -215,19 +215,21 @@ int *get_max_by_column(t_list *lst, int nb_column, int nb_line)
     return (tab);
 }
 
-
+/**
+ * Display coloumn call write_file_name
+*/
 static void display_column(t_list *lst, int** array, int* max_per_column, int flag, int space_quote)
 {
     t_file *file = NULL;
 
-    for (int i = 0; array[i]; ++i) /* i == line */
-    {
-        for (int j = 0; array[i][j] != -1; ++j) /* j == column */
-        {
+    /* i == line */
+    for (int i = 0; array[i]; ++i) {
+        /* j == column */
+        for (int j = 0; array[i][j] != -1; ++j)  {
             if ((i != 0 || j != 0) && array[i][j] == 0)
                 break ;
             file = get_lst_index_content(lst, array[i][j]);
-            if (file){
+            if (file) {
                 int column_max = max_per_column[j];
                 int nb_space = column_max - ft_strlen(file->name);
 

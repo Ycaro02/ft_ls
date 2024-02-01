@@ -50,7 +50,9 @@
         "type_traits": "c",
         "random": "cpp",
         "typeinfo": "c",
-        "ft_ls.h": "c"
+        "ft_ls.h": "c",
+        "stat.h": "c",
+        "types.h": "c"
     },
 
     "highlight.regexes": {
