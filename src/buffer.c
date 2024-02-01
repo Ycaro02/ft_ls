@@ -99,7 +99,7 @@ void fill_buffer_char(char c)
 int store_in_buffer(t_list *lst, int flag_nb)
 {
     int     err = 0;
-    int     nb_raw = 0;
+    // int     nb_raw = 0;
     
     if (has_flag(flag_nb, REVERSE_OPTION))
         if (safe_reverse_lst(&lst, NULL, flag_nb) == MALLOC_ERR)
@@ -107,7 +107,7 @@ int store_in_buffer(t_list *lst, int flag_nb)
 
     /* check for quote in lst and give bool */
     int quote_space = get_nb_space(lst, get_len_name_quote); 
-    err = manage_basic_column(lst, &nb_raw, quote_space, flag_nb);
+    err = manage_basic_column(lst, quote_space, flag_nb);
     if (err == MALLOC_ERR) {
         new_lstclear(&lst, free);
         return (MALLOC_ERR);

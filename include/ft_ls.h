@@ -211,7 +211,7 @@ void    fill_color(enum e_color color);
 //-------------------------------
 //      build_coloumn.c         //
 //-------------------------------
-int manage_basic_column(t_list *lst, int *value, int space_quote, int flag);
+int manage_basic_column(t_list *lst, int space_quote, int flag);
 //-------------------------------
 //      manage_column.c         //
 //-------------------------------

@@ -245,7 +245,7 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
 /**
  * Entry point, compute and return double char ** (bad just need to return index tab/lst -> int**)
 */
-int manage_basic_column(t_list *lst, int *value, int space_quote, int flag)
+int manage_basic_column(t_list *lst, int space_quote, int flag)
 {
     int     **array = NULL; 
     int     stdout_width = get_stdout_width(), nb_line = 0, max_per_line = 1, lst_len = get_lst_len(lst);
@@ -260,7 +260,7 @@ int manage_basic_column(t_list *lst, int *value, int space_quote, int flag)
     if (nb_line == MALLOC_ERR)
         return (MALLOC_ERR);
 
-    *value = nb_line; // second return need to kept nb_line
+    // *value = nb_line; // second return need to kept nb_line
     max_per_line  = (int)(lst_len / nb_line) + (lst_len % nb_line != 0); // add 1 if (lst_len % nb_line != 0)
     
     tab_max_unit = get_max_by_column(lst, max_per_line, nb_line);
@@ -274,7 +274,6 @@ int manage_basic_column(t_list *lst, int *value, int space_quote, int flag)
         display_column(lst, array, tab_max_unit, flag, space_quote);
     free_incomplete_array((void **)array, nb_line);
     free(tab_max_unit);
-    // }
     new_lstclear(&lst, free);
     free(all_len);
     return (0);
