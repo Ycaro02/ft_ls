@@ -211,13 +211,15 @@ void    fill_color(enum e_color color);
 //-------------------------------
 //      build_coloumn.c         //
 //-------------------------------
-char    **check_manage_colum(t_list *lst, int *err, int *value, int space_quote);
+int manage_basic_column(t_list *lst, int *value, int space_quote, int flag);
 //-------------------------------
 //      manage_column.c         //
 //-------------------------------
 int    fill_buffer_with_column(char **tab, int nb_line, t_list **lst, int flag_nb, int quote_space);
 char **manage_column(t_list *lst, int *max_unit_len, int max_per_line, int nb_line, int space_quote);
 int *get_max_by_column(t_list *lst, int nb_column, int nb_line);
+
+int **create_column_array (t_list *lst, int nb_column_max, int nb_line);
 //-------------------------------
 //      list_xattr.c           //
 //-------------------------------

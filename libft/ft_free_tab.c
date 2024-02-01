@@ -13,6 +13,8 @@ void ft_free_tab(char **tab)
     free(tab);
 }
 
+#include <stdio.h>
+
 void free_incomplete_array(void **array, int max)
 {
     if (!array || !(*array) || max < 0)

@@ -135,10 +135,11 @@ int write_file_name(t_file file, int is_exec, int flag_nb, int space)
     else
         fill_buffer(file.name);
 
-    if (space != 0 && file.quote != NORMAL_CHAR)
+    // if (space != 0 && file.quote != NORMAL_CHAR)
+    if (space != 0)
         fill_buffer_char(c);
     
-    if (!has_flag(flag_nb, L_OPTION))
+    if (!has_flag(flag_nb, L_OPTION) && space == 0)
         fill_buffer(" ");
     //     fill_buffer_char('\n');
     // else

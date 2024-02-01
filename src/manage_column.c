@@ -34,29 +34,6 @@ static char **alloc_tab(int nb_line, int *max_unit_len, int max_per_line, int ls
     return (tab);
 }
 
-/** Alloc array
- * Alloc int ** array to contain orderer file id to display 
- * ret: ptr on allocated double array
-*/
-int **alloc_array(int nb_line, int max_per_line)
-{
-    int **array = ft_calloc(sizeof(int *), nb_line + 1); /* +1 for NULL*/
-    if (!array)
-        return (NULL);
-    for (int i = 0; i < nb_line; i++)
-    {
-        array[i] = ft_calloc(sizeof(int), max_per_line + 1);
-        if (!array[i]){
-            free_incomplete_array((void **)array, i);
-            return (NULL);
-        }
-        array[i][max_per_line] = -1; /* Borne value */
-    }
-    return (array);
-}
-
-
-
 static int fill_type_str(char *str, int k, t_file file)
 {
     int ret = -1;
@@ -118,24 +95,43 @@ char **manage_column
     return (tab);
 }
 
-/** create_column_array
+
+/** Alloc array
+ * Alloc int ** array to contain orderer file id to display 
+ * Ret: ptr on allocated double array
+*/
+int **alloc_array(int nb_line, int max_per_line)
+{
+    int **array = ft_calloc(sizeof(int *), nb_line + 1); /* +1 for NULL*/
+    if (!array)
+        return (NULL);
+    for (int i = 0; i < nb_line; i++)
+    {
+        array[i] = ft_calloc(sizeof(int), max_per_line + 1);
+        if (!array[i]){
+            free_incomplete_array((void **)array, i);
+            return (NULL);
+        }
+        array[i][max_per_line] = -1; /* Borne value */
+    }
+    return (array);
+}
+
+
+/** Create_column_array
  * Create double int array with id of each file, with the brut force column information
  * Args:    lst : ptr on list to display
  *          nb_column_max : max name per line (nb max column)
  *          nb_line: nb of line
- * ret: ptr on allocated double int array
+ * Ret: ptr on allocated double int array
 */
-int **create_column_array
-(t_list *lst, int nb_column_max, int nb_line)
+int **create_column_array (t_list *lst, int nb_column_max, int nb_line)
 {
-    /* need to alloc array */
     int file_idx = 0, current_line = 0, current_column = 0;
     int **array = alloc_array(nb_line, nb_column_max);
     if (!array)
         return (NULL);
     while (lst) {
-        // t_file *file = lst->content;
-        
         array[current_line][current_column] = file_idx;
         ++current_line;
         if (current_line == nb_line) {
@@ -148,130 +144,126 @@ int **create_column_array
     return (array);
 }
 
-
-
-
-
-/* DISPLAY */
+/* OLD DISPLAY */
 /* -------------------------------------------------------------------------------------------------------------*/
-static enum e_color get_color_by_index(char *type, int index)
-{
-    char c = '-';
-    if (index < (int)ft_strlen(type))
-        c = type[index];
-    if (c == DIRECTORY)
-        return (E_BLUE);
-    if (c == SYMLINK)
-        return (E_CYAN);
-    if (c == EXEC)
-        return (E_GREEN);
-    if (c == CHARACTER)
-        return (E_YELLOW);
-    return(E_NONE);
-}
+// static enum e_color get_color_by_index(char *type, int index)
+// {
+//     char c = '-';
+//     if (index < (int)ft_strlen(type))
+//         c = type[index];
+//     if (c == DIRECTORY)
+//         return (E_BLUE);
+//     if (c == SYMLINK)
+//         return (E_CYAN);
+//     if (c == EXEC)
+//         return (E_GREEN);
+//     if (c == CHARACTER)
+//         return (E_YELLOW);
+//     return(E_NONE);
+// }
 
-int fill_buff_stop_char(char *str, char c, int quote_space)
-{
-    int i = 0;
-    int quote = 0;
+// int fill_buff_stop_char(char *str, char c, int quote_space)
+// {
+//     int i = 0;
+//     int quote = 0;
 
-    if (quote_space == 1) {
-        int count = 0;
-        while (str && str[count]) {
-            ++count;
-        if (str[count] == c)
-            break;
-        }
-        str[count] = '\0';
+//     if (quote_space == 1) {
+//         int count = 0;
+//         while (str && str[count]) {
+//             ++count;
+//         if (str[count] == c)
+//             break;
+//         }
+//         str[count] = '\0';
 
-        quote = check_for_quote(str);
-        str[count] = ' ';
-        display_quote(quote);
+//         quote = check_for_quote(str);
+//         str[count] = ' ';
+//         display_quote(quote);
 
-    }
+//     }
     
-    /* Display name with coolor */
-    // test quote here
+//     /* Display name with coolor */
+//     // test quote here
 
-    while (str && str[i]) {
-        fill_buffer_char(str[i]);
-        ++i;
-        if (str[i] == c)
-            break;
-    }
+//     while (str && str[i]) {
+//         fill_buffer_char(str[i]);
+//         ++i;
+//         if (str[i] == c)
+//             break;
+//     }
 
-    if (quote_space == 1)
-        display_quote(quote);
+//     if (quote_space == 1)
+//         display_quote(quote);
 
-    return (i);
-}
+//     return (i);
+// }
 
-int fill_buffer_color_with_space(char *str, enum e_color color, char c, int flag_nb, int quote_space)
-{
-    int i = 0;
-    if (!str)
-        return (-100000);
+// int fill_buffer_color_with_space(char *str, enum e_color color, char c, int flag_nb, int quote_space)
+// {
+//     int i = 0;
+//     if (!str)
+//         return (-100000);
 
-    if (has_flag(flag_nb , COLOR_OPTION))
-        if (color != E_NONE)
-            fill_color(color);
+//     if (has_flag(flag_nb , COLOR_OPTION))
+//         if (color != E_NONE)
+//             fill_color(color);
     
-    i = fill_buff_stop_char(str, c, quote_space);
+//     i = fill_buff_stop_char(str, c, quote_space);
 
-    if (has_flag(flag_nb , COLOR_OPTION))
-        if (color != E_NONE)
-            fill_buffer(RESET);
+//     if (has_flag(flag_nb , COLOR_OPTION))
+//         if (color != E_NONE)
+//             fill_buffer(RESET);
 
-    /* display space */
-    while (str[i] && str[i] == c) {
-        fill_buffer_char(str[i]);
-        i++;
-    }
-    if (quote_space == 0)
-        fill_buffer_char(' ');
-    while (str[i] && str[i] == c)
-        i++;
-    if (str[i] == '\0')
-        return (-100000);
-    return (i);
-}
+//     /* display space */
+//     while (str[i] && str[i] == c) {
+//         fill_buffer_char(str[i]);
+//         i++;
+//     }
+//     if (quote_space == 0)
+//         fill_buffer_char(' ');
+//     while (str[i] && str[i] == c)
+//         i++;
+//     if (str[i] == '\0')
+//         return (-100000);
+//     return (i);
+// }
 
-static void add_color_quote(char **tab, int nb_line, int line, int flag, int quote_space)
-{
-    char *str = tab[line];
-    char *type = tab[nb_line];
-    // char *quote = tab[nb_line + 1];
-    (void)nb_line;
+// static void add_color_quote(char **tab, int nb_line, int line, int flag, int quote_space)
+// {
+//     char *str = tab[line];
+//     char *type = tab[nb_line];
+//     // char *quote = tab[nb_line + 1];
+//     (void)nb_line;
 
-    int i = 0;
-    int color = E_NONE;
-    // int quote_val = 0;
+//     int i = 0;
+//     int color = E_NONE;
+//     // int quote_val = 0;
 
-    while (str && str[i]) {
-        color = get_color_by_index(type, line);
-        i += fill_buffer_color_with_space(&str[i], color, ' ', flag, quote_space);
-        if (i < 0)
-            break;
-        line += nb_line;
-    }
-}
+//     while (str && str[i]) {
+//         color = get_color_by_index(type, line);
+//         i += fill_buffer_color_with_space(&str[i], color, ' ', flag, quote_space);
+//         if (i < 0)
+//             break;
+//         line += nb_line;
+//     }
+// }
 
-int fill_buffer_with_column(char **tab, int nb_line, t_list **lst, int flag_nb, int quote_space)
-{
-    for (int i = 0; i < nb_line; i++)
-    {
-        // if (has_flag(flag_nb , COLOR_OPTION))
-        add_color_quote(tab, nb_line, i, flag_nb, quote_space);
-        // else
-            // fill_buffer(tab[i]);
-        if (i != nb_line - 1)
-            fill_buffer_char('\n');
-    }
-    for (int i = 0; i < nb_line + 1; i++)
-        free(tab[i]);
-    free(tab);
-    new_lstclear(lst, free);
-    // fill_buffer("\n");
-    return (0);
-}
+// int fill_buffer_with_column(char **tab, int nb_line, t_list **lst, int flag_nb, int quote_space)
+// {
+//     for (int i = 0; i < nb_line; i++)
+//     {
+//         // if (has_flag(flag_nb , COLOR_OPTION))
+//         add_color_quote(tab, nb_line, i, flag_nb, quote_space);
+//         // else
+//             // fill_buffer(tab[i]);
+//         if (i != nb_line - 1)
+//             fill_buffer_char('\n');
+//     }
+//     for (int i = 0; i < nb_line + 1; i++)
+//         free(tab[i]);
+//     free(tab);
+//     new_lstclear(lst, free);
+//     // fill_buffer("\n");
+//     return (0);
+// }
 /* -------------------------------------------------------------------------------------------------------------*/

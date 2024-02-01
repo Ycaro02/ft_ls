@@ -95,37 +95,11 @@ void fill_buffer_char(char c)
         print_and_clear();
 }
 
-static int classic_store(t_list *lst, int flag_nb)
-{
-    int is_exec = 0;
-    t_list *current = lst;
-    while (current)
-    {
-        t_file *file = current->content;
-        is_exec = check_file_perm(file->perm, 1);
-        if (is_exec == MALLOC_ERR)
-            return (MALLOC_ERR);
-        /* TOCHECK */
-        if (write_file_name(*file, is_exec, flag_nb , 1) == MALLOC_ERR)
-            return (MALLOC_ERR);
-        if (has_flag(flag_nb, Z_OPTION)) {
-            fill_buffer_char('\n');
-            diplay_xattr_acl(file);
-            fill_buffer_char('\n');
-        }
-        else if (current->next)
-            fill_buffer(" ");
-        current = current->next;
-    }
-    new_lstclear(&lst, free);
-    return (0);
-}
 
 int store_in_buffer(t_list *lst, int flag_nb)
 {
     int     err = 0;
     int     nb_raw = 0;
-    char    **tab = NULL;
     
     if (has_flag(flag_nb, REVERSE_OPTION))
         if (safe_reverse_lst(&lst, NULL, flag_nb) == MALLOC_ERR)
@@ -133,16 +107,12 @@ int store_in_buffer(t_list *lst, int flag_nb)
 
     /* check for quote in lst and give bool */
     int quote_space = get_nb_space(lst, get_len_name_quote); 
-    tab = check_manage_colum(lst, &err, &nb_raw, quote_space);
+    err = manage_basic_column(lst, &nb_raw, quote_space, flag_nb);
     if (err == MALLOC_ERR) {
         new_lstclear(&lst, free);
         return (MALLOC_ERR);
     }
-    else if (tab != NULL && !has_flag(flag_nb, Z_OPTION))
-        return (fill_buffer_with_column(tab, nb_raw, &lst, flag_nb, quote_space));
-    if (tab)
-        ft_free_tab(tab);
-    return (classic_store(lst, flag_nb));
+    return (err);
 }
 
 void finish_print_buffer()
@@ -153,3 +123,31 @@ void finish_print_buffer()
             write(1, "\n", 1);
     }
 }
+
+/*  CARE display attr is here ---> */
+
+// static int classic_store(t_list *lst, int flag_nb)
+// {
+//     int is_exec = 0;
+//     t_list *current = lst;
+//     while (current)
+//     {
+//         t_file *file = current->content;
+//         is_exec = check_file_perm(file->perm, 1);
+//         if (is_exec == MALLOC_ERR)
+//             return (MALLOC_ERR);
+//         /* TOCHECK */
+//         if (write_file_name(*file, is_exec, flag_nb , 1) == MALLOC_ERR)
+//             return (MALLOC_ERR);
+//         if (has_flag(flag_nb, Z_OPTION)) {
+//             fill_buffer_char('\n');
+//             diplay_xattr_acl(file);
+//             fill_buffer_char('\n');
+//         }
+//         else if (current->next)
+//             fill_buffer(" ");
+//         current = current->next;
+//     }
+//     new_lstclear(&lst, free);
+//     return (0);
+// }
