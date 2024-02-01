@@ -132,9 +132,7 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
         return (0);
     }
 
-    (void)lst_len;
     // printf("%sCallC: %d idx: %d for %s%s\n", CYAN, call_flag, index, file->name, RESET);
-
     /* really ugly need to apply mange column here but still working */
     if (call_flag == 0) {
         int quote = quotes_required(file->name);

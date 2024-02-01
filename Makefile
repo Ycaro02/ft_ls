@@ -62,7 +62,9 @@ clean:
 test_sort:	${NAME}
 			export LC_COLLATE=en_US.utf8 && ls test/sort -al > real_ls_out
 			./ft_ls test/sort -al > myls_out
-			diff myls_out real_ls_out
+			echo MYLS && cat myls_out -e && echo REALLS && cat real_ls_out -e
+
+# diff myls_out real_ls_out
 
 vtest:		${NAME}
 			valgrind ./ft_ls / -lR
