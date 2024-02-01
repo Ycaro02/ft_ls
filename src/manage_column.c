@@ -34,6 +34,29 @@ static char **alloc_tab(int nb_line, int *max_unit_len, int max_per_line, int ls
     return (tab);
 }
 
+/** Alloc array
+ * Alloc int ** array to contain orderer file id to display 
+ * ret: ptr on allocated double array
+*/
+int **alloc_array(int nb_line, int max_per_line)
+{
+    int **array = ft_calloc(sizeof(int *), nb_line + 1); /* +1 for NULL*/
+    if (!array)
+        return (NULL);
+    for (int i = 0; i < nb_line; i++)
+    {
+        array[i] = ft_calloc(sizeof(int), max_per_line + 1);
+        if (!array[i]){
+            free_incomplete_array((void **)array, i);
+            return (NULL);
+        }
+        array[i][max_per_line] = -1; /* Borne value */
+    }
+    return (array);
+}
+
+
+
 static int fill_type_str(char *str, int k, t_file file)
 {
     int ret = -1;
@@ -46,7 +69,6 @@ static int fill_type_str(char *str, int k, t_file file)
         str[k] = EXEC;
     return (0);
 }
-
 
 static void add_char(char *dst, char src, int *j)
 {
@@ -65,7 +87,8 @@ static void insert_space_str(int max_unit_len, char *name, int *j, char *str)
     }
 }
 
-char **manage_column(t_list *lst, int *max_unit_len, int max_per_line, int nb_line, int space_quote)
+char **manage_column
+(t_list *lst, int *max_unit_len, int max_per_line, int nb_line, int space_quote)
 {
     int current_line = 0, current_colum = 0, i = 0, j = 0;
     char **tab = alloc_tab(nb_line, max_unit_len, max_per_line, get_lst_len(lst));
@@ -95,7 +118,35 @@ char **manage_column(t_list *lst, int *max_unit_len, int max_per_line, int nb_li
     return (tab);
 }
 
-
+/** create_column_array
+ * Create double int array with id of each file, with the brut force column information
+ * Args:    lst : ptr on list to display
+ *          nb_column_max : max name per line (nb max column)
+ *          nb_line: nb of line
+ * ret: ptr on allocated double int array
+*/
+int **create_column_array
+(t_list *lst, int nb_column_max, int nb_line)
+{
+    /* need to alloc array */
+    int file_idx = 0, current_line = 0, current_column = 0;
+    int **array = alloc_array(nb_line, nb_column_max);
+    if (!array)
+        return (NULL);
+    while (lst) {
+        // t_file *file = lst->content;
+        
+        array[current_line][current_column] = file_idx;
+        ++current_line;
+        if (current_line == nb_line) {
+            ++current_column;
+            current_line = 0;
+        }
+        ++file_idx;
+        lst = lst->next;
+    }
+    return (array);
+}
 
 
 

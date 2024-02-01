@@ -193,6 +193,7 @@ int *get_max_by_column(t_list *lst, int nb_column, int nb_line)
 char **check_manage_colum(t_list *lst, int *err, int *value, int space_quote)
 {
     char    **tab = NULL; /* go to int */
+    // int     **array = NULL; 
     
     int     stdout_width = get_stdout_width(), nb_line = 0, max_per_line = 1, lst_len = get_lst_len(lst);
     int     *tab_max_unit = NULL, *all_len = get_all_len(lst, lst_len);
@@ -218,6 +219,7 @@ char **check_manage_colum(t_list *lst, int *err, int *value, int space_quote)
             return (NULL);
         }
         /* new call for int ** here */
+        // array = create_column_array(lst, tab_max_unit, max_per_line, nb_line, space_quote);
         tab = manage_column(lst, tab_max_unit, max_per_line, nb_line, space_quote);
         if (!tab)
             *err = MALLOC_ERR;
