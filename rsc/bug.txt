@@ -16,3 +16,6 @@ need to fix this regulat file mixed with dir with d OPTION ... {
 
 
 - owerflow on itoa get size in manage column for -l need to change it-> DONE ?
+
+
+Need to investigate, display total len with ls -lR

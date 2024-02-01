@@ -68,15 +68,22 @@ static int* get_all_len(t_list *lst, int len)
 
 
 /*--------------------------------------------START ALGO---------------------------------------------------------*/
-// get the max column len for specific column and test value
+// 
+/** Get_max_len_by_index
+ * Get the max column len for specific column and test value
+ * Args:    start: position index to start for build line, increment by test
+ *          test: the value tested (number of line)
+ *          max: tab size, number of file in lst
+ *          tab: array of all file's name len, store in list order
+ * Ret: The longest word len for targeted column 
+*/
 static int get_max_len_by_index(int start, int test ,int max, int* tab)
 {
     int nb = 0;
     int i = start;
     while (i < (start + test))
     {
-        if (i < max)
-        {
+        if (i < max) {
             if (nb < tab[i])
                 nb = tab[i];
         }
@@ -85,6 +92,16 @@ static int get_max_len_by_index(int start, int test ,int max, int* tab)
     return (nb);
 }
 
+
+/** Brut test
+ * Real brut test function test maximum len for one line
+ * Args:    i: position index to start for build line, increment by test
+ *          test: the value tested (number of line)
+ *          all_len: array of all file's name len, store in list order
+ *          nb_file: all_len size, number of file in lst
+ *          local_space: array of maximum space for this 'test' configuration
+ * Ret: Computed len for target line
+*/
 static int brut_test(int i, int test, int *all_len, int nb_file, int *local_space)
 {
     int ret = -1;
@@ -112,6 +129,14 @@ static int brut_test(int i, int test, int *all_len, int nb_file, int *local_spac
     return (ret);
 }
 
+/** Test_all
+ * Call the brut test function and build array of local space for each tested column
+ * Args:    test: the value tested (number of line)
+ *          all_len: array of all file's name len, store in list order
+ *          nb_file: all_len size, number of file in lst
+ *          stdout_w: width of stdout
+ * Ret: -1 for impossible 0 for ok
+*/
 static int test_all(int test, int* all_len, int nb_file, int stdout_w)
 {
     int *local_space = ft_calloc(sizeof(int), nb_file);
@@ -136,7 +161,7 @@ static int test_all(int test, int* all_len, int nb_file, int stdout_w)
  * Start brut force with test value, test if we can display all one 2 line if not increment test
  * args:    stdout_w: width of stdout, 
  *          lst: ptr on linked list to display 
- * ret: number of line
+ * ret: right tested value, number of line
 */
 static int get_nb_line(int stdout_w, int *all_len, int len)
 {
