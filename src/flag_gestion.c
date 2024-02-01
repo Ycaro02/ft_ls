@@ -1,5 +1,7 @@
 #include "../include/ft_ls.h"
 
+void display_flags(int flags);
+
 /**
 * 00000000 -> Our current flag value is 0
 * | 00000100 -> Do or operation with Flag3, which has a value of 4
@@ -72,36 +74,6 @@ t_int8 flag_already_present(int flags, int flag_val)
 }
 
 
-void display_flags(int flags) {
-    ft_printf_fd(2, "Flags: [%d] : ", flags);
-    if (flags & L_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "L_OPTION", RESET);
-    if (flags & A_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", YELLOW, "A_OPTION", RESET);
-    if (flags & T_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", RED, "T_OPTION", RESET);
-    if (flags & REVERSE_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", PURPLE, "REVERSE_OPTION", RESET);
-    if (flags & R_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "R_OPTION", RESET);
-    if (flags & Z_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", YELLOW, "Z_OPTION", RESET);
-    if (flags & U_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", RED, "U_OPTION", RESET);
-    if (flags & C_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", PURPLE, "C_OPTION", RESET);
-    if (flags & G_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "G_OPTION", RESET);
-    if (flags & F_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", YELLOW, "F_OPTION", RESET);
-    if (flags & D_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", RED, "D_OPTION", RESET);
-    if (flags & N_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", PURPLE, "N_OPTION", RESET);
-    if (flags & COLOR_OPTION)
-        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "COLOR_OPTION", RESET);
-    ft_printf_fd(2, "\n");
-}
 
 static int manage_bonus_flag(int nb)
 {
@@ -163,6 +135,38 @@ int parse_flag(int argc, char **argv)
     flags = manage_bonus_flag(flags);
     // display_flags(flags);
     return (flags);
+}
+
+
+void display_flags(int flags) {
+    ft_printf_fd(2, "Flags: [%d] : ", flags);
+    if (has_flag(flags, L_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "L_OPTION", RESET);
+    if (has_flag(flags, A_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", YELLOW, "A_OPTION", RESET);
+    if (has_flag(flags, T_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", RED, "T_OPTION", RESET);
+    if (has_flag(flags, REVERSE_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", PURPLE, "REVERSE_OPTION", RESET);
+    if (has_flag(flags, R_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "R_OPTION", RESET);
+    if (has_flag(flags, Z_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", YELLOW, "Z_OPTION", RESET);
+    if (has_flag(flags, U_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", RED, "U_OPTION", RESET);
+    if (has_flag(flags, C_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", PURPLE, "C_OPTION", RESET);
+    if (has_flag(flags, G_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "G_OPTION", RESET);
+    if (has_flag(flags, F_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", YELLOW, "F_OPTION", RESET);
+    if (has_flag(flags, D_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", RED, "D_OPTION", RESET);
+    if (has_flag(flags, N_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", PURPLE, "N_OPTION", RESET);
+    if (has_flag(flags, COLOR_OPTION))
+        ft_printf_fd(2, "%s[%s]%s, ", GREEN, "COLOR_OPTION", RESET);
+    ft_printf_fd(2, "\n");
 }
 
 

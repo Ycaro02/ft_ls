@@ -150,9 +150,11 @@ int main (int argc, char **argv)
     ft_bzero(g_buff.buffer, BUFFER_LEN - 1);
 
     flag_nb = parse_flag(argc, argv);
-
+    if (flag_nb == -1)
+        return (2);
     error = ft_ls(argv, flag_nb, &error);
     finish_print_buffer();
+
     return (error);
 }
 
