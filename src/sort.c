@@ -17,32 +17,56 @@ void free_node_ptr(t_list **lst)
 	*lst = NULL;
 }
 
-static void reverse_lst(t_list *lst, t_list **new)
-{
-    t_list *current;
+// static void reverse_lst(t_list *lst, t_list **new)
+// {
+//     t_list *current;
 
-    current = lst;
-    while (current) {
-        ft_lstadd_front(new, ft_lstnew(current->content));
-        current = current->next; 
-    }
-}
+//     current = lst;
+//     while (current) {
+//         ft_lstadd_front(new, ft_lstnew(current->content));
+//         current = current->next; 
+//     }
+// }
+
+// int safe_reverse_lst(t_list **lst,  int* error, int flag_nb)
+// {
+//     t_list *reverse = NULL;
+//     if (has_flag(flag_nb, F_OPTION))
+//         return (0);
+//     reverse_lst(*lst, &reverse);
+//     if (!reverse) {
+//         if (error)
+//             *error = MALLOC_ERR;
+//         return (MALLOC_ERR);
+//     }
+//     free_node_ptr(lst);
+//     *lst = reverse;
+//     return (0);
+// }
+
 
 int safe_reverse_lst(t_list **lst,  int* error, int flag_nb)
 {
-    t_list *reverse = NULL;
+    t_list *prev = NULL, *next = NULL, *current = *lst;
+    
+    (void)error;
     if (has_flag(flag_nb, F_OPTION))
         return (0);
-    reverse_lst(*lst, &reverse);
-    if (!reverse) {
-        if (error)
-            *error = MALLOC_ERR;
-        return (MALLOC_ERR);
-    }
-    free_node_ptr(lst);
-    *lst = reverse;
+    while (current) {
+        /* save next */
+        next = current->next;
+        /* reverse */
+        current->next = prev;
+
+        /* move ptr */
+        prev = current;
+        current = next;
+    }    
+    *lst = prev;
+
     return (0);
 }
+
 
 /**
 * parse special char

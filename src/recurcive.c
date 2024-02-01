@@ -81,8 +81,9 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
     }
     sort_lst(new, flag_nb);
     if (new && has_flag(flag_nb, REVERSE_OPTION)) {
-        if (safe_reverse_lst(&new, error, flag_nb) == MALLOC_ERR)
-            return (NULL);
+        safe_reverse_lst(&new, error, flag_nb);
+        // if (safe_reverse_lst(&new, error, flag_nb) == MALLOC_ERR)
+        //     return (NULL);
     }
     return (new);
 }

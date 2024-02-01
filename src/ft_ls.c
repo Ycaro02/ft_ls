@@ -120,9 +120,6 @@ static void hard_display_d(t_file *file, int call_flag)
     if (file->type == DIRECTORY)
         fill_buffer(RESET);
     fill_buffer_char(' ');
-    free(file->parrent);
-    free(file->name);
-    free(file);
 }
 /*  call_flag:  0 for file display
                 1 for dir without file before

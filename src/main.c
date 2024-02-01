@@ -2,11 +2,13 @@
 
 t_buff g_buff;
 
-int ls(t_list * lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*, int, int), int* error, int call_flag)
+int ls(t_list *lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*, int, int), int* error, int call_flag)
 {
+    if (!lst)
+        return (42);
     t_list *current = lst;
     int idx = 0;
-    int lst_len = get_lst_len(lst);
+    int lst_len = ft_lstsize(lst);
     int err = 0;
     while (current) {
         err = ls_function(current->content, flag_nb, lst_len, error, call_flag, idx);
@@ -58,11 +60,15 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error, int call_flag)
     else
         err = ls(dir_lst, flag_nb, ls_one_dir, error, call_flag);
 
-    if (!has_flag(flag_nb, D_OPTION) || (has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION)))
-        new_lstclear(&dir_lst, free);
-    else
-        free_node_ptr(&dir_lst);
+    // if (!has_flag(flag_nb, D_OPTION) || (has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION)))
+    new_lstclear(&dir_lst, free);
+    // else
+    //     free_node_ptr(&dir_lst);
     
+
+    // if (has_flag(flag_nb, REVERSE_OPTION))
+    //     new_lstclear(&dir_lst, free);
+
     if (err == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error exit\n");
         exit(MALLOC_ERR);
@@ -70,14 +76,14 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error, int call_flag)
     // finish_print_buffer();
 }
 
-static int basic_sort_lst(t_list *lst, int flag, int *error)
+static int basic_sort_lst(t_list **lst, int flag, int *error)
 {
-    sort_lst(lst, flag);
+    sort_lst(*lst, flag);
     if (!lst)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
     if (has_flag(flag , REVERSE_OPTION)) {
-        if (safe_reverse_lst(&lst, error, flag) == MALLOC_ERR) {
-            new_lstclear(&lst, free);
+        if (safe_reverse_lst(lst, error, flag) == MALLOC_ERR) {
+            new_lstclear(lst, free);
             return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
         }
     }
@@ -115,7 +121,7 @@ int ft_ls(char **argv, int flag_nb, int* error)
         t_list *new = NULL;
         new = lst_join(dir_lst, simple_file);
         if (new) {
-            if (basic_sort_lst(dir_lst, flag_nb, error) == 1)
+            if (basic_sort_lst(&dir_lst, flag_nb, error) == 1)
                 return (1);
             call_ls(new, flag_nb, error, call_value);
             return (*error);
@@ -123,10 +129,10 @@ int ft_ls(char **argv, int flag_nb, int* error)
     }
 
     /* sort */
-    if (basic_sort_lst(dir_lst, flag_nb, error) == 1)
+    if (basic_sort_lst(&dir_lst, flag_nb, error) == 1)
         return (1);
     if (simple_file){
-        if (basic_sort_lst(simple_file, flag_nb, error) == 1) {
+        if (basic_sort_lst(&simple_file, flag_nb, error) == 1) {
             // clear ?
             return (1);
         }
@@ -135,6 +141,10 @@ int ft_ls(char **argv, int flag_nb, int* error)
     }
 
     call_ls(dir_lst, flag_nb, error, call_value + 1);
+
+    // display_file_lst(simple_file);
+    // display_file_lst(dir_lst);
+
     return (*error);
 }
 

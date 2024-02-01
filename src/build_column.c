@@ -85,45 +85,46 @@ static int get_max_len_by_index(int start, int test ,int max, int* tab)
     return (nb);
 }
 
-static int brut_test(int i, int test, int tab_len, int *all_len, int *local_space)
+static int brut_test(int i, int test, int *all_len, int nb_file, int *local_space)
 {
     int ret = -1;
     int column = 0;
     // printf("in brut test i = %d test = %d ", i ,test);
-    while (i < tab_len - test) {
+    while (i < nb_file - test) {
         if (ret == -1) {
-            local_space[column] = get_max_len_by_index(i, test, tab_len, all_len);
+            local_space[column] = get_max_len_by_index(i, test, nb_file, all_len);
             ret = local_space[column];
             ret += 2;
-            column++;
+            ++column;
         }
-        if (i + test <= tab_len) {
-            local_space[column] = get_max_len_by_index(i + test, test, tab_len, all_len);
+        if (i + test <= nb_file) {
+            local_space[column] = get_max_len_by_index(i + test, test, nb_file, all_len);
             ret += local_space[column];
             ret += 2;
-            column++;
+            ++column;
         }
         else
             break ;
         i += test;
     }
+    // ret -= 2; /* remove last 2 space */
     ret += 2; // brut pad value
     return (ret);
 }
 
-static int test_all(int test, int* all_len, int tab_len, int stdout_w)
+static int test_all(int test, int* all_len, int nb_file, int stdout_w)
 {
-    int *local_space = ft_calloc(sizeof(int), tab_len);
+    int *local_space = ft_calloc(sizeof(int), nb_file);
     int ret = -1;
     int i = 0;
     while (i < test) {
-        ret = brut_test(i, test, tab_len, all_len, local_space);
-        // printf("Ret = %d for [%d] width: %d\n", ret, test, stdout_w);
-        if (ret >= stdout_w - 2)
+        ret = brut_test(i, test, all_len, nb_file, local_space);
+        // printf("%sRet = %d for [%d] width: %d%s\n",RED, ret, test, stdout_w, RESET);
+        if (ret > stdout_w)
             break ;
         i++;
     }
-    if (ret >= stdout_w - 2)
+    if (ret > stdout_w)
         ret = -1;
     else
         ret = 0;
@@ -150,9 +151,10 @@ static int get_nb_line(int stdout_w, int *all_len, int len)
     while (ret != 0) {
         // ft_printf_fd(2, "width %d\n", stdout_w);
         ret = test_all(test, all_len, len, stdout_w);
-        test++;
+        if (ret != 0)
+            ++test;
     }
-    return (test - 1);
+    return (test);
 }
 /*--------------------------------------------END ALGO---------------------------------------------------------*/
 
@@ -193,9 +195,9 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
 {
     t_file *file = NULL;
 
-    for (int i = 0; array[i]; ++i) 
+    for (int i = 0; array[i]; ++i) /* i == line */
     {
-        for (int j = 0; array[i][j] != -1; ++j) 
+        for (int j = 0; array[i][j] != -1; ++j) /* j == column */
         {
             if ((i != 0 || j != 0) && array[i][j] == 0)
                 break ;
@@ -206,10 +208,13 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
 
                 // printf("%sArray[%d][%d]: [%d]->[%s] max col:[%d]->[%d]\n%s", CYAN, i, j, array[i][j], file->name, column_max, nb_space, RESET);
                 write_file_name(*file, check_file_perm(file->perm, 1), flag, space_quote);
-                if (space_quote == 0)
-                    fill_buffer_char(' ');
-                for (int k = 0; k < nb_space; ++k)
-                    fill_buffer_char(' ');
+                /* if is not the last name of line*/
+                if (array[i][j + 1] != -1) { 
+                    if (space_quote == 0)
+                        fill_buffer_char(' ');
+                    for (int k = 0; k < nb_space; ++k)
+                        fill_buffer_char(' ');
+                }
             }
         }
         if(array[i + 1])

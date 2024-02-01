@@ -23,33 +23,19 @@ static int build_file_lst
 {
     t_file *file = NULL;
     
+    (void)flag_nb;
     file = fill_file_struct(&sb, str, str, symlink);
     if (!file) {
         perror("Malloc");
         return (MALLOC_ERR);
     }
     // if (file->type == DIRECTORY)
-    if (get_type(sb) == DIRECTORY)
+    if (get_type(sb) == DIRECTORY) {
         ft_lstadd_back(new, ft_lstnew(file));
-    else 
-    {
+    }
+    else {
         *found = 1;
-        if (has_flag(flag_nb, L_OPTION)) {
-            // int array[S_MAX] = {0}; /* Todo malloc here */
-            ft_lstadd_back(simple_file, ft_lstnew(file));
-            // fill_buffer_l_option(*file, array, flag_nb);
-        }
-        else {
-            /* need to build file lst  to sort and display it before directory */
-            ft_lstadd_back(simple_file, ft_lstnew(file));
-            // int is_exec = 1;
-            // char *perm = get_perm(file->perm);
-            // if (perm) {
-            //     for (int i = 0; perm && perm[i]; ++i)
-            //         fill_buffer_perm(perm[i], &is_exec, 0);
-            //     write_file_name(*file, 0, flag_nb, is_exec);
-            //     free(perm);
-            }
+        ft_lstadd_back(simple_file, ft_lstnew(file));
     }
     // if (file->parrent)
     //     free(file->parrent);
