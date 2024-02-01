@@ -14,5 +14,4 @@ need to fix this regulat file mixed with dir with d OPTION ... {
 ➜  ft_ls git:(main) ✗ ls '"ahah"' . .. acl libft out -d libft/ft_atoi.c  -> DONE
  .   ..   acl  '"ahah"'   libft   libft/ft_atoi.c   out
 
-
 - owerflow on itoa get size in manage column for -l need to change it-> DONE ?

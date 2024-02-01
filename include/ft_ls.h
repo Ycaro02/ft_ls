@@ -153,7 +153,7 @@ int     get_flag(enum e_flag *flag);
 //      parse.c                //
 //-------------------------------
 t_list  *get_all_file_struct(t_file *file, int flag_nb, int* error);
-t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file);
+t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file, int* args_found);
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------

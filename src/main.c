@@ -105,45 +105,52 @@ t_list *lst_join(t_list *first, t_list *second)
 int ft_ls(char **argv, int flag_nb, int* error)
 {
     t_list *dir_lst, *simple_file = NULL;
-    int call_value = 0;
+    int call_value = 0, args_found = 0;
     
-    dir_lst = get_dir_args(&argv[1], error, flag_nb, &simple_file);
-        
+    dir_lst = get_dir_args(&argv[1], error, flag_nb, &simple_file, &args_found);
+    
     /* Error management */
     if (!dir_lst && *error == MALLOC_ERR)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
-    else if (!dir_lst)
-        return (*error);
 
-
-
-    if (has_flag(flag_nb, D_OPTION)) {
-        t_list *new = NULL;
-        new = lst_join(dir_lst, simple_file);
-        if (new) {
-            if (basic_sort_lst(&new, flag_nb, error) == 1)
-                return (1);
-            call_ls(new, flag_nb, error, call_value);
-            return (*error);
+    if (dir_lst) {
+        if (has_flag(flag_nb, D_OPTION)) {
+            t_list *new = NULL;
+            new = lst_join(dir_lst, simple_file);
+            if (new) {
+                if (basic_sort_lst(&new, flag_nb, error) == 1)
+                    return (1);
+                call_ls(new, flag_nb, error, call_value);
+                return (*error);
+            }
         }
+        /* sort */
+        if (basic_sort_lst(&dir_lst, flag_nb, error) == 1)
+            return (1);
     }
 
-    /* sort */
-    if (basic_sort_lst(&dir_lst, flag_nb, error) == 1)
-        return (1);
     if (simple_file){
         if (basic_sort_lst(&simple_file, flag_nb, error) == 1) {
-            // clear ?
+            new_lstclear(&simple_file, free);
             return (1);
         }
         call_ls(simple_file, flag_nb, error, call_value);
         ++call_value;
     }
 
-    call_ls(dir_lst, flag_nb, error, call_value + 1);
+    if (args_found && call_value == 0 && dir_lst) {
+        t_file *file = dir_lst->content;
+        int quote = quotes_required(file->name);
+        if (quote > NOEFFECT_CHAR)
+            display_quote(quote);
+        fill_buffer(file->name);
+        if (quote > NOEFFECT_CHAR)
+            display_quote(quote);
+        fill_buffer(":\n");
+    }
 
-    // display_file_lst(simple_file);
-    // display_file_lst(dir_lst);
+    if (dir_lst)  
+        call_ls(dir_lst, flag_nb, error, call_value + 1);
 
     return (*error);
 }

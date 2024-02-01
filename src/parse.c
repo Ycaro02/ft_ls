@@ -66,22 +66,21 @@ static int check_args(char *str, t_list **new, t_list **simple_file, int *found,
     return (0);
 }
 
-t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file)
+t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file, int* args_found)
 {
     int i = 0;
     t_list *new = NULL;
 
-    int found = 0;
     while (argv && argv[i]) {
         if (argv[i][0] != '-') {
-            if (check_args(argv[i], &new,  simple_file, &found, error, flag_nb) == MALLOC_ERR) {
+            if (check_args(argv[i], &new,  simple_file, args_found, error, flag_nb) == MALLOC_ERR) {
                 *error = MALLOC_ERR;
                 return (NULL);
             }
         }
         i++;
     }
-    if (!new && found == 0)
+    if (!new && *args_found == 0)
         ft_lstadd_back(&new, ft_lstnew(default_file_struct(flag_nb)));
 
     return (new);
