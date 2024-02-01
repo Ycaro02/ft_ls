@@ -29,6 +29,7 @@ SRCS	=	src/main.c\
 			src/manage_column.c\
 			src/list_xattr.c\
 			src/manage_space.c\
+			src/build_column.c\
 
 
 OBJ = $(SRCS:.c=.o)

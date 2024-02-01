@@ -71,6 +71,10 @@ void	ft_lstclear(t_list **lst, void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
+int 	ft_strcpy(char* dst, char *src, int len);	
+
+ 
+
 void 		ft_free_tab(char **tab);
 char        *ft_strjoin_free(char *s1, char *s2, char option);
 int 		ft_lower_strcmp(char *s1, char *s2);

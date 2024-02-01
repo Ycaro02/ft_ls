@@ -209,10 +209,15 @@ void    finish_print_buffer();
 void    multiple_fill_buff(char *s1, char*s2, char *s3, char *s4);
 void    fill_color(enum e_color color);
 //-------------------------------
+//      build_coloumn.c         //
+//-------------------------------
+char    **check_manage_colum(t_list *lst, int *err, int *value, int space_quote);
+//-------------------------------
 //      manage_column.c         //
 //-------------------------------
-int    fill_buffer_with_column(char **tab, int nb_raw, t_list **lst, int flag_nb, int quote_space);
-char    **check_manage_colum(t_list *lst, int *err, int *value, int lst_len, int space_quote);
+int    fill_buffer_with_column(char **tab, int nb_line, t_list **lst, int flag_nb, int quote_space);
+char **manage_column(t_list *lst, int *max_unit_len, int max_per_line, int nb_line, int space_quote);
+int *get_max_by_column(t_list *lst, int nb_column, int nb_line);
 //-------------------------------
 //      list_xattr.c           //
 //-------------------------------
