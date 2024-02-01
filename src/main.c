@@ -84,23 +84,43 @@ static int basic_sort_lst(t_list *lst, int flag, int *error)
     return (0);
 }
 
+
+t_list *lst_join(t_list *first, t_list *second)
+{
+    t_list *current = second;
+    while (current) {
+        ft_lstadd_back(&first, ft_lstnew(current->content));
+        current = current->next;
+    }
+    free_node_ptr(&second);
+    return (first);
+}
+
 int ft_ls(char **argv, int flag_nb, int* error)
 {
     t_list *dir_lst, *simple_file = NULL;
     int call_value = 0;
     
     dir_lst = get_dir_args(&argv[1], error, flag_nb, &simple_file);
-    // if (simple_file != NULL) {
-    //     printf("simple file not null\n");
-    // }
-    // else
-    //     printf("simple file NULL\n");
         
     /* Error management */
     if (!dir_lst && *error == MALLOC_ERR)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
     else if (!dir_lst)
         return (*error);
+
+
+
+    if (has_flag(flag_nb, D_OPTION)) {
+        t_list *new = NULL;
+        new = lst_join(dir_lst, simple_file);
+        if (new) {
+            if (basic_sort_lst(dir_lst, flag_nb, error) == 1)
+                return (1);
+            call_ls(new, flag_nb, error, call_value);
+            return (*error);
+        }
+    }
 
     /* sort */
     if (basic_sort_lst(dir_lst, flag_nb, error) == 1)
@@ -113,16 +133,6 @@ int ft_ls(char **argv, int flag_nb, int* error)
         call_ls(simple_file, flag_nb, error, call_value);
         ++call_value;
     }
-
-    // sort_lst(dir_lst, flag_nb);
-    // if (!dir_lst)
-    //     return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
-    // if (has_flag(flag_nb , REVERSE_OPTION)) {
-    //     if (safe_reverse_lst(&dir_lst, error, flag_nb) == MALLOC_ERR) {
-    //         new_lstclear(&dir_lst, free);
-    //         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
-    //     }
-    // }
 
     call_ls(dir_lst, flag_nb, error, call_value + 1);
     return (*error);
@@ -185,21 +195,15 @@ struct stat *check_for_stat(char* name, int flag, int *save_symlink)
 
     if (!sb)
         return (NULL);
-    if (lstat(name, sb) == -1) {
-            // printf("parrent path: %s\n", name);
-            // perror("lstat");
-            return (NULL);
-    }
-    
-    *save_symlink = get_type(*sb) == SYMLINK;
+    if (lstat(name, sb) == -1)
+        return (NULL);
 
-    if (!has_flag(flag, L_OPTION)) {
-        if (stat(name, sb) == -1) {
-            // printf("path: %s\n", name);
-            // perror("stat error");
-            return (NULL);
-        }
-    }
+    *save_symlink = get_type(*sb) == SYMLINK; /* need to just stopre sb.st_mode entire */
 
+    if (!has_flag(flag, L_OPTION))
+        if (stat(name, sb) == -1)
+            return (NULL);
+    // printf("parrent path: %s\n", name);
+    // perror("lstat");
     return (sb);
 }

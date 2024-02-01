@@ -106,12 +106,13 @@ void display_quote(int quote)
 
 static void hard_display_d(t_file *file, int call_flag)
 {
-    if (call_flag != 1)
+    (void)call_flag;
+    if (file->type == DIRECTORY)
         fill_buffer(BLUE);
     display_quote(file->quote);
     fill_buffer(file->name);
     display_quote(file->quote);
-    if (call_flag != 1)
+    if (file->type == DIRECTORY)
         fill_buffer(RESET);
     fill_buffer_char(' ');
     free(file->parrent);
@@ -132,8 +133,7 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
     }
 
     (void)lst_len;
-    // printf("for file: %s call %d idx %d\n", file->name, call_flag, index);
-    printf("%sCallC: %d idx: %d for %s%s\n", CYAN, call_flag, index, file->name, RESET);
+    // printf("%sCallC: %d idx: %d for %s%s\n", CYAN, call_flag, index, file->name, RESET);
 
     /* really ugly need to apply mange column here but still working */
     if (call_flag == 0) {
