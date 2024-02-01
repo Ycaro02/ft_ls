@@ -25,7 +25,7 @@ void *get_lst_index_content(t_list *lst, int index)
  * Args:    lst: ptr target lst
  * ret : total file len + (2 * len) for space: maybe can adapt with bool quote +1 or +2
 */
-static long long get_total_len(t_list *list)
+long long get_total_len(t_list *list)
 {
     long long total;
     t_file *file;
@@ -141,7 +141,7 @@ static int get_nb_line(int stdout_w, int *all_len, int len)
 {
     if (!all_len)
         return (MALLOC_ERR);
-    int test = 2; // test value for nb_line, brute force it
+    int test = 1; // test value for nb_line, brute force it
     int ret = -1;
 
     if (stdout_w <= 0)
@@ -212,7 +212,8 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
                     fill_buffer_char(' ');
             }
         }
-        fill_buffer_char('\n');
+        if(array[i + 1])
+            fill_buffer_char('\n');
     }
 }
 
@@ -236,20 +237,20 @@ int manage_basic_column(t_list *lst, int *value, int space_quote, int flag)
     *value = nb_line; // second return need to kept nb_line
     max_per_line  = (int)(lst_len / nb_line) + (lst_len % nb_line != 0); // add 1 if (lst_len % nb_line != 0)
     
-    if (get_total_len(lst) > (long long)stdout_width) { /* not necesary ? always call ? */
-        tab_max_unit = get_max_by_column(lst, max_per_line, nb_line);
-        if (!tab_max_unit) {
-            free(all_len);
-            new_lstclear(&lst, free);
-            return (MALLOC_ERR);
-        }
-        /* new call for int ** here */
-        array = create_column_array(lst, max_per_line, nb_line);
-        if (array) 
-            display_column(lst, array, tab_max_unit, flag, space_quote);
-        free_incomplete_array((void **)array, nb_line);
-        free(tab_max_unit);
+    // if (get_total_len(lst) > (long long)stdout_width) { /* not necesary ? always call ? */
+    tab_max_unit = get_max_by_column(lst, max_per_line, nb_line);
+    if (!tab_max_unit) {
+        free(all_len);
+        new_lstclear(&lst, free);
+        return (MALLOC_ERR);
     }
+    /* new call for int ** here */
+    array = create_column_array(lst, max_per_line, nb_line);
+    if (array) 
+        display_column(lst, array, tab_max_unit, flag, space_quote);
+    free_incomplete_array((void **)array, nb_line);
+    free(tab_max_unit);
+    // }
     new_lstclear(&lst, free);
     free(all_len);
     return (0);
