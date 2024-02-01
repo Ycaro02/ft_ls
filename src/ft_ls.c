@@ -12,24 +12,23 @@ static int display_dir_header(t_file file, int lst_len, int call, int index, int
 {
     int quote = quotes_required(file.name);
 
-    // printf("%sCall: %d idx: %d for %s%s\n", CYAN, call, index, file.name, RESET);
+    // printf("%sCall: [%d] idx: [%d] l_flag: [%d] for |%s|%s\n", CYAN, call, index, l_flag, file.name, RESET);
     if ((call > 1 || index != 0) || (call >= 1 && lst_len > 1))
     {
-        if (index == 0 && call > 1 && l_flag == 2) // && L + R_OPTION
+        if (index == 0 && call > 1 && l_flag != 1) // && L + R_OPTION
             fill_buffer("\n\n");
         else if (index == 0 && call > 1)
             fill_buffer_char('\n');
             
         if (index != 0)
             fill_buffer("\n\n");
-        //     fill_buffer_char('\n');
-        // if (index != 0 && l_flag == 1)
-        //     fill_buffer_char('\n');
+
         if (quote > NOEFFECT_CHAR)
             display_quote(quote);
         fill_buffer(file.name);
         if (quote > NOEFFECT_CHAR)
             display_quote(quote);
+
         fill_buffer(":\n");
     }
     if (l_flag == 1) {
@@ -37,9 +36,6 @@ static int display_dir_header(t_file file, int lst_len, int call, int index, int
         if (!total_str)
             return (MALLOC_ERR);
         multiple_fill_buff("total ", total_str, "\n", NULL);
-        // fill_buffer("total ");
-        // fill_buffer(total_str);
-        // fill_buffer("\n");
         free(total_str);
     }
     return (0);
@@ -141,8 +137,6 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
         display_quote(quote);
         fill_buffer(file->name);
         display_quote(quote);
-        if (index == lst_len - 1)
-            fill_buffer_char('\n');
         return (0);
     }
 

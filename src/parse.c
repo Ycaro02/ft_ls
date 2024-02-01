@@ -87,7 +87,6 @@ t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file)
     return (new);
 }
 
-
 static int check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, int *error, int flag)
 {
     char *full_path;

@@ -80,11 +80,8 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
         return (NULL);
     }
     sort_lst(new, flag_nb);
-    if (new && has_flag(flag_nb, REVERSE_OPTION)) {
+    if (new && has_flag(flag_nb, REVERSE_OPTION))
         safe_reverse_lst(&new, error, flag_nb);
-        // if (safe_reverse_lst(&new, error, flag_nb) == MALLOC_ERR)
-        //     return (NULL);
-    }
     return (new);
 }
 
@@ -95,8 +92,9 @@ static int recurcive_ls(t_list *dir_lst, int flag_nb ,int* error, int lst_len, i
     err = 0;
     if (has_flag(flag_nb, L_OPTION))
         err = ls_l_one_dir(dir_lst->content, flag_nb, lst_len, error, *call_flag, idx);
-    else
+    else {
         err = ls_one_dir(dir_lst->content, flag_nb, lst_len, error, *call_flag, idx);
+    }
     if (*call_flag == 1)
         *call_flag = 2;
     if (err == MALLOC_ERR)
