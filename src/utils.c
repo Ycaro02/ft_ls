@@ -148,7 +148,7 @@ int get_stdout_width()
     int width;
     
     if (ioctl(1, TIOCGWINSZ, &win) != 0)
-        return (-1); 
+        return (80); /* default width for redir need to move this */
     width = win.ws_col; 
     return (width);
 }

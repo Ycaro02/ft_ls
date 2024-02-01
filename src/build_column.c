@@ -81,8 +81,7 @@ static int get_max_len_by_index(int start, int test ,int max, int* tab)
 {
     int nb = 0;
     int i = start;
-    while (i < (start + test))
-    {
+    while (i < (start + test)) {
         if (i < max) {
             if (nb < tab[i])
                 nb = tab[i];
@@ -105,30 +104,22 @@ static int get_max_len_by_index(int start, int test ,int max, int* tab)
 */
 static int brut_test(int i, int test, int *all_len, int nb_file, int *local_space, int bool_quote)
 {
-    int ret = -1;
-    int column = 0;
     /* basic space is 2, 4 for bool quote*/
-    int space = 2 + (bool_quote + bool_quote);
+    int column = 1, ret = -1, space = 2 + (bool_quote + bool_quote);
 
-    // printf("in brut test i = %d test = %d ", i ,test);
+    local_space[0] = get_max_len_by_index(i, test, nb_file, all_len);
+    ret = (local_space[0] + space);
+
     while (i < nb_file - test) {
-        if (ret == -1) {
-            local_space[column] = get_max_len_by_index(i, test, nb_file, all_len);
-            ret = local_space[column];
-            ret += space;
-            ++column;
-        }
         if (i + test <= nb_file) {
             local_space[column] = get_max_len_by_index(i + test, test, nb_file, all_len);
-            ret += local_space[column];
-            ret += space;
+            ret += (local_space[column] + space);
             ++column;
         }
         else
             break ;
         i += test;
     }
-    // ret -= 2; /* remove last 2 space */
     ret += 2; // brut pad value
     return (ret);
 }
@@ -154,10 +145,7 @@ static int test_all(int test, int* all_len, int nb_file, int stdout_w, int bool_
             break ;
         i++;
     }
-    if (ret > stdout_w)
-        ret = -1;
-    else
-        ret = 0;
+    ret = ret > stdout_w ? -1 : 0;
     free(local_space);
     return (ret);
 }
@@ -176,11 +164,7 @@ static int get_nb_line(int stdout_w, int *all_len, int len, int bool_quote)
     int test = 1; // test value for nb_line, brute force it
     int ret = -1;
 
-    if (stdout_w <= 0)
-        stdout_w = 80;
-
     while (ret != 0) {
-        // ft_printf_fd(2, "width %d\n", stdout_w);
         ret = test_all(test, all_len, len, stdout_w, bool_quote);
         if (ret != 0)
             ++test;
@@ -233,6 +217,7 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
     for (int i = 0; array[i]; ++i) {
         /* j == column */
         for (int j = 0; array[i][j] != -1; ++j)  {
+            /* protection against calloc value at the end of last line */
             if ((i != 0 || j != 0) && array[i][j] == 0)
                 break ;
             file = get_lst_index_content(lst, array[i][j]);
@@ -266,7 +251,7 @@ int manage_basic_column(t_list *lst, int *value, int space_quote, int flag)
     int     stdout_width = get_stdout_width(), nb_line = 0, max_per_line = 1, lst_len = get_lst_len(lst);
     int     *tab_max_unit = NULL, *all_len = get_all_len(lst, lst_len);
 
-    if (!all_len){
+    if (!all_len || stdout_width <= 0) {
         ft_printf_fd(2, "Error alloc all_len manage column\n");
         return (MALLOC_ERR);
     }
