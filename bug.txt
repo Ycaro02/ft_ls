@@ -10,10 +10,9 @@ file in futur same logic for oldest file (+ 6 month) print year
 ./ft_ls count.sh -G /proc/self -> don't print
 ./ft_ls count.sh -G /proc/self -l . -h
 
+need to fix this regulat file mixed with dir with d OPTION ... {
+➜  ft_ls git:(main) ✗ ls '"ahah"' . .. acl libft out -d libft/ft_atoi.c  -> DONE
+ .   ..   acl  '"ahah"'   libft   libft/ft_atoi.c   out
+
 
 - owerflow on itoa get size in manage column for -l need to change it-> DONE ?
-
-
-need to fix this regulat file mixed with dir with d OPTION ... {
-➜  ft_ls git:(main) ✗ ls '"ahah"' . .. acl libft out -d libft/ft_atoi.c 
- .   ..   acl  '"ahah"'   libft   libft/ft_atoi.c   out
