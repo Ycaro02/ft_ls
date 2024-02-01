@@ -6,7 +6,7 @@
  *      lst_len: file's lst_len
  *      call: call deep, 0 for only file, 1 for first call, 2 for next
  *      index: index of file in lst
- *      l_flag: bool flag for l option (just display total) 
+ *      l_flag: bool flag for l option 0 for no, 1 for l, 2 for l + r (just display total) 
 */
 static int display_dir_header(t_file file, int lst_len, int call, int index, int l_flag)
 {
@@ -15,8 +15,11 @@ static int display_dir_header(t_file file, int lst_len, int call, int index, int
     // printf("%sCall: %d idx: %d for %s%s\n", CYAN, call, index, file.name, RESET);
     if ((call > 1 || index != 0) || (call >= 1 && lst_len > 1))
     {
-        if (index == 0 && call > 1)
+        if (index == 0 && call > 1 && l_flag == 2) // && L + R_OPTION
+            fill_buffer("\n\n");
+        else if (index == 0 && call > 1)
             fill_buffer_char('\n');
+            
         if (index != 0)
             fill_buffer("\n\n");
         //     fill_buffer_char('\n');
@@ -33,9 +36,10 @@ static int display_dir_header(t_file file, int lst_len, int call, int index, int
         char *total_str = ft_ltoa(file.total_size);
         if (!total_str)
             return (MALLOC_ERR);
-        fill_buffer("total ");
-        fill_buffer(total_str);
-        fill_buffer("\n");
+        multiple_fill_buff("total ", total_str, "\n", NULL);
+        // fill_buffer("total ");
+        // fill_buffer(total_str);
+        // fill_buffer("\n");
         free(total_str);
     }
     return (0);
@@ -68,6 +72,7 @@ int ls_only_file_L(t_list *lst, int flag_nb)
 int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag, int index)
 {
     t_list *lst = NULL;
+    int r_flag = has_flag(flag_nb, R_OPTION); /* bool r_flag enable */
 
     if (call_flag != 0 && file->type != DIRECTORY)
         return (0);
@@ -82,7 +87,7 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_fl
 
     // printf("forL file: %s call %d idx %d\n", file->name, call_flag, index);
     
-    if (display_dir_header(*file, lst_len, call_flag, index, 1) == MALLOC_ERR)
+    if (display_dir_header(*file, lst_len, call_flag, index, 1 + r_flag) == MALLOC_ERR)
         return (MALLOC_ERR);
     
     

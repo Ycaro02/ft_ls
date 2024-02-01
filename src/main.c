@@ -48,7 +48,7 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error, int call_flag)
     int err = 0;
 
     if (call_flag != 0 && has_flag(flag_nb, R_OPTION) && !has_flag(flag_nb, D_OPTION))
-        err = search_recurcive_dir(dir_lst, flag_nb, error);
+        err = search_recurcive_dir(dir_lst, flag_nb, error, call_flag);
     else if (call_flag != 0 && has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION))
         err = ls_only_dir(dir_lst, flag_nb);
     else if (has_flag(flag_nb, L_OPTION) && call_flag != 0)

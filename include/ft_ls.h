@@ -164,7 +164,7 @@ void    display_quote(int quote);
 //-------------------------------
 //      recurcive.c            //
 //-------------------------------
-int     search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error);
+int search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error, int call_flag);
 //-------------------------------
 //      l_options.c            //
 //-------------------------------
