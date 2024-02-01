@@ -159,8 +159,6 @@ static int test_all(int test, int* all_len, int nb_file, int stdout_w, int bool_
 */
 static int get_nb_line(int stdout_w, int *all_len, int len, int bool_quote)
 {
-    if (!all_len)
-        return (MALLOC_ERR);
     int test = 1; // test value for nb_line, brute force it
     int ret = -1;
 
@@ -248,28 +246,24 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
 int manage_basic_column(t_list *lst, int space_quote, int flag)
 {
     int     **array = NULL; 
-    int     stdout_width = get_stdout_width(), nb_line = 0, max_per_line = 1, lst_len = get_lst_len(lst);
+    int     stdout_width = get_stdout_width(), nb_line = 0, nb_column = 1, lst_len = get_lst_len(lst);
     int     *tab_max_unit = NULL, *all_len = get_all_len(lst, lst_len);
 
-    if (!all_len || stdout_width <= 0) {
+    if (!all_len) {
         ft_printf_fd(2, "Error alloc all_len manage column\n");
         return (MALLOC_ERR);
     }
     /* brut force here */
     nb_line = get_nb_line(stdout_width, all_len, lst_len, space_quote);
-    if (nb_line == MALLOC_ERR)
-        return (MALLOC_ERR);
-
-    // *value = nb_line; // second return need to kept nb_line
-    max_per_line  = (int)(lst_len / nb_line) + (lst_len % nb_line != 0); // add 1 if (lst_len % nb_line != 0)
+    nb_column  = (int)(lst_len / nb_line) + (lst_len % nb_line != 0); // add 1 if (lst_len % nb_line != 0)
     
-    tab_max_unit = get_max_by_column(lst, max_per_line, nb_line);
+    tab_max_unit = get_max_by_column(lst, nb_column, nb_line);
     if (!tab_max_unit) {
         free(all_len);
         new_lstclear(&lst, free);
         return (MALLOC_ERR);
     }
-    array = create_column_array(lst, max_per_line, nb_line);
+    array = create_column_array(lst, nb_column, nb_line);
     if (array) 
         display_column(lst, array, tab_max_unit, flag, space_quote);
     free_incomplete_array((void **)array, nb_line);
