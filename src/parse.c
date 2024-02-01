@@ -6,7 +6,6 @@ static t_file *default_file_struct(int flag)
     int symlink = 0;
 
     struct stat *sb = check_for_stat(".", flag, &symlink);
-
     if (!sb)
         return (NULL);
 
@@ -15,6 +14,7 @@ static t_file *default_file_struct(int flag)
         perror("Malloc");
         return (NULL);
     }
+    free(sb);
     return (file);
 }
 

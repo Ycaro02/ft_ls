@@ -205,14 +205,18 @@ struct stat *check_for_stat(char* name, int flag, int *save_symlink)
 
     if (!sb)
         return (NULL);
-    if (lstat(name, sb) == -1)
+    if (lstat(name, sb) == -1) {
+        free(sb);
         return (NULL);
+    }
 
-    *save_symlink = get_type(*sb) == SYMLINK; /* need to just stopre sb.st_mode entire */
+    *save_symlink = get_type(*sb) == SYMLINK; /* need to just store sb.st_mode entire */
 
     if (!has_flag(flag, L_OPTION))
-        if (stat(name, sb) == -1)
+        if (stat(name, sb) == -1){
+            free(sb);
             return (NULL);
+        }
     // printf("parrent path: %s\n", name);
     // perror("lstat");
     return (sb);
