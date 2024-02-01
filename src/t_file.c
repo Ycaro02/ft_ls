@@ -76,12 +76,13 @@ static char *perm_to_string(mode_t mode, char type)
     if (mode & S_IXUSR) /*first X*/
         exe_tmp = 'x';
     /* STICKY */
-    if (mode & __S_ISVTX)  {
+    if (mode & S_ISUID) {
         if (exe_tmp == 'x')
-            exe_tmp = 't';
+            exe_tmp = 's';
         else
-            exe_tmp = 'T';
+            exe_tmp = 'S';
     }
+
     perm[3] = exe_tmp;
     exe_tmp = '-';
 
@@ -113,12 +114,13 @@ static char *perm_to_string(mode_t mode, char type)
     if (mode & S_IXOTH) /*last x 1*/
         exe_tmp = 'x';
     /*Set UID*/
-    if (mode & S_ISUID) {
+    if (mode & __S_ISVTX)  {
         if (exe_tmp == 'x')
-            exe_tmp = 's';
+            exe_tmp = 't';
         else
-            exe_tmp = 'S';
+            exe_tmp = 'T';
     }
+
     perm[9] = exe_tmp;
     return (perm);
 }
