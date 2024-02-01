@@ -101,10 +101,22 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb)
         int ret = readlink(tmp, buff, 199);
         if (ret == -1)
             perror("readlink");
-        else
-        {
+        else {
             buff[ret] = '\0';
-            fill_buffer(buff);
+            int sym_bool = 0;
+            struct stat *sb = check_for_stat(buff, flag_nb, &sym_bool); 
+            if (sb) {
+                t_file *file = fill_file_struct(sb, buff, NULL, sym_bool);
+                if (file) {
+                    write_file_name(*file, flag_nb, -1);
+                    // printf("file->name %s: ", file->name);
+                    // printf("for buff %s\n", buff);
+                    free(file->name);
+                    free(file);
+                } 
+                free(sb);
+            }
+            // fill_buffer(buff);
         }
         free(tmp);
     }
@@ -135,10 +147,12 @@ int write_file_name(t_file file, int flag_nb, int space)
         fill_buffer_char(c);
     }
 
-    if(file.type == SYMLINK) {
+    if(file.type == SYMLINK && space != -1) {
         if (write_symlink(file.name, file.parrent, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
     }
+    else if (file.type == SYMLINK)
+        fill_buffer_color(file.name, E_CYAN, flag_nb);
     else if (file.type == CHARACTER || file.type == BLOCK)
         fill_buffer_color(file.name, E_YELLOW, flag_nb);
     else if (perm_color == E_FILL_GREEN)

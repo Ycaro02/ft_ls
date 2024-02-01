@@ -166,6 +166,8 @@ static int get_nb_line(int stdout_w, int *all_len, int len, int bool_quote)
         ret = test_all(test, all_len, len, stdout_w, bool_quote);
         if (ret != 0)
             ++test;
+        if (test > len)
+            return (len);
     }
     return (test);
 }
