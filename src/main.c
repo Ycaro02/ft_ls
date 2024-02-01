@@ -121,7 +121,7 @@ int ft_ls(char **argv, int flag_nb, int* error)
         t_list *new = NULL;
         new = lst_join(dir_lst, simple_file);
         if (new) {
-            if (basic_sort_lst(&dir_lst, flag_nb, error) == 1)
+            if (basic_sort_lst(&new, flag_nb, error) == 1)
                 return (1);
             call_ls(new, flag_nb, error, call_value);
             return (*error);
