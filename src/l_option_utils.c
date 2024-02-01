@@ -1,29 +1,5 @@
 #include "../include/ft_ls.h"
 
-/*
- * fill buffer with permision take flag for no display
-*/
-void fill_buffer_perm(char c, int *is_exec, int display_flag)
-{
-    int nb = c - 48;
-    char r = '-';
-    char w = '-';
-    char x = '-';
-    if (nb & 4)
-        r = 'r';
-    if (nb & 2)
-        w = 'w';
-    if (nb & 1) {
-        x = 'x';
-        *is_exec = 0;   
-    }
-    if (display_flag == 1) {
-        fill_buffer_char(r);
-        fill_buffer_char(w);
-        fill_buffer_char(x);
-    }
-}
-
 void convert_ato(char* perm, int nbr, int index) // array to octal
 {
         int             b_size = 8;
@@ -75,6 +51,33 @@ char *get_perm(int nbr)
     if (tmp)
         return (tmp);
     return (perm);
+}
+
+/*
+ * fill buffer with permision take flag for no display
+*/
+void fill_buffer_perm(char c, int *is_exec, int display_flag)
+{
+    int nb = c - 48;
+    char r = '-';
+    char w = '-';
+    char x = '-';
+
+    // char spe = '-';
+
+    if (nb & 4)
+        r = 'r';
+    if (nb & 2)
+        w = 'w';
+    if (nb & 1) {
+        x = 'x';
+        *is_exec = 0;   
+    }
+    if (display_flag == 1) {
+        fill_buffer_char(r);
+        fill_buffer_char(w);
+        fill_buffer_char(x);
+    }
 }
 
 char get_type(struct stat sb)

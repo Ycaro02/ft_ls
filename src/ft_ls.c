@@ -105,9 +105,8 @@ void display_quote(int quote)
         fill_buffer_char(' ');
 }
 
-static void hard_display_d(t_file *file, int call_flag)
+static int hard_display_d(t_file *file)
 {
-    (void)call_flag;
     if (file->type == DIRECTORY)
         fill_buffer(BLUE);
     display_quote(file->quote);
@@ -116,8 +115,10 @@ static void hard_display_d(t_file *file, int call_flag)
     if (file->type == DIRECTORY)
         fill_buffer(RESET);
     fill_buffer_char(' ');
+    return (0);
 }
-/*  call_flag:  0 for file display
+/*  
+    call_flag:  0 for file display
                 1 for dir without file before
                 2 for dir with file or another dir before
 */
@@ -125,10 +126,8 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
 {
     t_list *lst = NULL;
 
-    if (has_flag(flag_nb, D_OPTION)) {
-        hard_display_d(file, call_flag);
-        return (0);
-    }
+    if (has_flag(flag_nb, D_OPTION))
+        return (hard_display_d(file));
 
     // printf("%sCallC: %d idx: %d for %s%s\n", CYAN, call_flag, index, file->name, RESET);
     /* really ugly need to apply mange column here but still working */

@@ -41,7 +41,87 @@ int check_for_quote(char *str)
 
 
 
+static char *perm_to_string(mode_t mode, char type)
+{
+    char *perm = ft_calloc(sizeof(char), 10);
+    if (!perm)
+        return (NULL);
+    char exe_tmp = '-';
 
+    for (int i = 0; i < 11; ++i)
+        perm[i] = '-';
+    perm[10] = '\0';
+    perm[0] = type;
+
+    /* for last x perm (other) S_IXOTH, STICKY
+        if just exec:   x
+        if just sticky: T
+        if sticky + x:  t
+        
+        for second x perm (group) S_IXGRP, GID
+        if just exec:   x
+        if just GID: S
+        if GID + x:  s
+
+        for first x perm (group) S_IXGRP, SUID
+        if just exec:   x
+        if just GID: S
+        if GID + x:  s
+        */
+    if (mode & S_IRUSR) /*first R*/
+        perm[1] = 'r';
+    if (mode & S_IWUSR) /*first W*/
+        perm[2] = 'w';
+
+    if (mode & S_IXUSR) /*first X*/
+        exe_tmp = 'x';
+    /* STICKY */
+    if (mode & __S_ISVTX)  {
+        if (exe_tmp == 'x')
+            exe_tmp = 't';
+        else
+            exe_tmp = 'T';
+    }
+    perm[3] = exe_tmp;
+    exe_tmp = '-';
+
+    if (mode & S_IRGRP) /*second R*/
+        perm[4] = 'r';
+    
+    if (mode & S_IWGRP) /*second W*/
+        perm[5] = 'w';
+
+
+    if (mode & S_IXGRP) /*second x*/
+        exe_tmp = 'x';
+    /*set GID*/
+    if (mode & S_ISGID) {
+        if (exe_tmp == 'x')
+            exe_tmp = 's';
+        else
+            exe_tmp = 'S';
+    }
+    perm[6] = exe_tmp;
+    exe_tmp = '-';
+    
+
+    if (mode & S_IROTH) /*last r 4*/
+        perm[7] = 'r';
+    if (mode & S_IWOTH) /*last w 2*/
+        perm[8] = 'w';
+
+    if (mode & S_IXOTH) /*last x 1*/
+        exe_tmp = 'x';
+    /*Set UID*/
+    if (mode & S_ISUID) {
+        if (exe_tmp == 'x')
+            exe_tmp = 's';
+        else
+            exe_tmp = 'S';
+    }
+    perm[9] = exe_tmp;
+    return (perm);
+}
 
 /*  Need to refact, call stat here, check file type, if link call lstat instead 
     Need to store space here to, each field will check for him
@@ -61,6 +141,12 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
         file->type = SYMLINK;
     
     file->perm = sb->st_mode & 0777;
+
+    // if (sb->st_mode & S_IWUSR)
+    //     printf("le propriétaire a le droit d'écriture: sb->st_mode & S_IWUSR [%d] \n", sb->st_mode & S_IWUSR);
+    char* perm = perm_to_string(sb->st_mode, file->type);
+    printf("Perm: %s for -> %s\n", perm, path);
+
     file->size = sb->st_size;
     file->nb_link = sb->st_nlink;
     file->last_status_change = sb->st_ctim;
@@ -75,3 +161,11 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
     file->quote = check_for_quote(file->name);
     return (file);
 }
+
+// #if defined __USE_MISC || defined __USE_XOPEN
+    // S_ISVTX /* sticky bits*/
+// #endif
+
+    // if (mode & S_IRWXU) /* full first */
+    // if (mode & S_IWGRP)/* full second */
+    // if (mode & S_IRWXO) /* fulll last 7 */
