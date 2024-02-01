@@ -79,7 +79,7 @@ typedef enum e_flag t_eflag;
 typedef struct s_file 
 {
     char        type;
-    int         perm;
+    mode_t      perm;
     nlink_t     nb_link;
     uid_t       user_id;
     gid_t       group_id;
@@ -112,6 +112,9 @@ extern t_buff g_buff; // GLOBAL VARIABLE buffer
 int check_for_quote(char *str);
 struct stat *check_for_stat(char* name, int flag, int *save);
 
+
+char *perm_to_string(mode_t mode, char type);
+
 //flag_gestion
 void set_flag(int *flags, int flag_val);
 void unset_flag(int *flags, int flag_val);
@@ -133,7 +136,6 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink_
 //-------------------------------
 void display_error_phrase(char *str);
 int     ft_strlen_word(char *s);
-int     check_file_perm(int perm, int to_check);
 int     get_stdout_width();
 void    update_error(int *error);
 int     print_error(char *msg, char* str, int error_type, int use_perror);
@@ -170,13 +172,12 @@ int search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error, int call_flag
 //-------------------------------
 void    insert_space(int nb);
 int     fill_buffer_l_option(t_file file, int* space, int nb_flag);
-int     write_file_name(t_file file, int is_exec, int flag_nb, int space);
+int write_file_name(t_file file, int flag_nb, int space);
 void    write_user_name(long user_id, int space, int flag_nb);
 void    write_group_name(long group_id, int space, int flag_nb);
 //-------------------------------
 //      l_option_utils.c       //
 //-------------------------------
-char    *get_perm(int nbr);
 void    fill_buffer_perm(char c, int *is_exec, int display_flag);
 char    get_type(struct stat sb);
 //-------------------------------

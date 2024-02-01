@@ -124,30 +124,9 @@ void finish_print_buffer()
     }
 }
 
-/*  CARE display attr is here ---> */
-
-// static int classic_store(t_list *lst, int flag_nb)
-// {
-//     int is_exec = 0;
-//     t_list *current = lst;
-//     while (current)
-//     {
-//         t_file *file = current->content;
-//         is_exec = check_file_perm(file->perm, 1);
-//         if (is_exec == MALLOC_ERR)
-//             return (MALLOC_ERR);
-//         /* TOCHECK */
-//         if (write_file_name(*file, is_exec, flag_nb , 1) == MALLOC_ERR)
-//             return (MALLOC_ERR);
+/* ACL attr */
 //         if (has_flag(flag_nb, Z_OPTION)) {
 //             fill_buffer_char('\n');
 //             diplay_xattr_acl(file);
 //             fill_buffer_char('\n');
 //         }
-//         else if (current->next)
-//             fill_buffer(" ");
-//         current = current->next;
-//     }
-//     new_lstclear(&lst, free);
-//     return (0);
-// }

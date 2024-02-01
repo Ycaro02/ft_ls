@@ -1,5 +1,21 @@
 #include "../include/ft_ls.h"
 
+/* for last x perm (other) S_IXOTH, STICKY
+        if just exec:   x
+        if just sticky: T
+        if sticky + x:  t
+        
+        for second x perm (group) S_IXGRP, GID
+        if just exec:   x
+        if just GID: S
+        if GID + x:  s
+
+        for first x perm (group) S_IXGRP, SUID
+        if just exec:   x
+        if just GID: S
+        if GID + x:  s
+    */
+
 static int fill_name_and_parent(t_file *file, char *path, char *parent)
 {
     file->name = ft_strdup(path);
@@ -23,27 +39,10 @@ int check_for_quote(char *str)
     return (quote > NOEFFECT_CHAR ? quote : NORMAL_CHAR);
 }
 
-    // if (quote > NOEFFECT_CHAR) {
-    //     return (quote);
-    // return (NORMAL_CHAR);
-    // char *tmp = NULL;
-    //     if (quote == ADD_SIMPLE_QUOTE_CHAR) {
-    //         tmp = ft_strjoin_free("'", str, 's');
-    //         tmp = ft_strjoin_free(tmp, "'", 'f');
-    //         str = tmp;
-    //     }
-    //     else {
-    //         tmp = ft_strjoin_free("\"", str, 's');
-    //         tmp = ft_strjoin_free(tmp, "\"", 'f');
-    //         str = tmp;
-    //     }
-    // }
 
-
-
-static char *perm_to_string(mode_t mode, char type)
+char *perm_to_string(mode_t mode, char type)
 {
-    char *perm = ft_calloc(sizeof(char), 10);
+    char *perm = ft_calloc(sizeof(char), 11);
     if (!perm)
         return (NULL);
     char exe_tmp = '-';
@@ -53,21 +52,7 @@ static char *perm_to_string(mode_t mode, char type)
     perm[10] = '\0';
     perm[0] = type;
 
-    /* for last x perm (other) S_IXOTH, STICKY
-        if just exec:   x
-        if just sticky: T
-        if sticky + x:  t
-        
-        for second x perm (group) S_IXGRP, GID
-        if just exec:   x
-        if just GID: S
-        if GID + x:  s
-
-        for first x perm (group) S_IXGRP, SUID
-        if just exec:   x
-        if just GID: S
-        if GID + x:  s
-        */
+    
     if (mode & S_IRUSR) /*first R*/
         perm[1] = 'r';
     if (mode & S_IWUSR) /*first W*/
@@ -105,7 +90,6 @@ static char *perm_to_string(mode_t mode, char type)
     perm[6] = exe_tmp;
     exe_tmp = '-';
     
-
     if (mode & S_IROTH) /*last r 4*/
         perm[7] = 'r';
     if (mode & S_IWOTH) /*last w 2*/
@@ -142,12 +126,14 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
     else
         file->type = SYMLINK;
     
-    file->perm = sb->st_mode & 0777;
+    // file->perm = sb->st_mode & 0777;
+    file->perm = sb->st_mode;
 
     // if (sb->st_mode & S_IWUSR)
     //     printf("le propriétaire a le droit d'écriture: sb->st_mode & S_IWUSR [%d] \n", sb->st_mode & S_IWUSR);
-    char* perm = perm_to_string(sb->st_mode, file->type);
-    printf("Perm: %s for -> %s\n", perm, path);
+
+    // char* perm = perm_to_string(sb->st_mode, file->type);
+    // printf("Perm: %s for -> %s\n", perm, path);
 
     file->size = sb->st_size;
     file->nb_link = sb->st_nlink;

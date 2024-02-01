@@ -13,30 +13,6 @@ int ft_strlen_word(char *s)
 	return (i);
 }
 
-int check_file_perm(int perm, int to_check)
-{
-    char    *tmp;
-    int     i;
-    int     ret;
-
-    i = 0;
-    ret = 1;
-    tmp = get_perm(perm);
-    if (!tmp)
-        return (MALLOC_ERR);
-    while (tmp[i])
-    {
-        if ((tmp[i] - 48) & to_check)
-        {
-            ret = 0;
-            break;
-        }
-        i++;
-    }
-    free(tmp);
-    return (ret);
-}
-
 void update_error(int *error)
 {
      if (*error != NA_CMD_LINE_ERR)

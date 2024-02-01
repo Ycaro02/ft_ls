@@ -204,7 +204,6 @@ int *get_max_by_column(t_list *lst, int nb_column, int nb_line)
 }
 
 /**
- * Display coloumn call write_file_name
  *          space_quote: quote present in lst dir 0 for no 1 for yes
 */
 static void display_column(t_list *lst, int** array, int* max_per_column, int flag, int space_quote)
@@ -224,7 +223,8 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
                 int nb_space = column_max - ft_strlen(file->name);
 
                 // printf("%sArray[%d][%d]: [%d]->[%s] max col:[%d]->[%d]\n%s", CYAN, i, j, array[i][j], file->name, column_max, nb_space, RESET);
-                write_file_name(*file, check_file_perm(file->perm, 1), flag, space_quote);
+                // int perm = (file->perm & S_IXOTH) ? 1 : 0;
+                write_file_name(*file, flag, space_quote);
                 /* if is not the last name of line*/
                 if (array[i][j + 1] != -1) { 
                     if (space_quote == 1)

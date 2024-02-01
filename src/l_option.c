@@ -111,9 +111,14 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb)
     return (0);
 }
 
-int write_file_name(t_file file, int is_exec, int flag_nb, int space)
+int write_file_name(t_file file, int flag_nb, int space)
 {
     char c = ' ';
+    int is_exec = 0;
+    // int is_exec = (file.perm & S_IXGRP ? 1 : 0);
+    
+    if (file.perm & S_IXOTH || file.perm & S_IXGRP || file.perm & S_IXUSR)
+        is_exec = 1;
 
     if (space != 0) {
         // printf("for %s quote = %d\n", file.name, file.quote);
@@ -128,10 +133,10 @@ int write_file_name(t_file file, int is_exec, int flag_nb, int space)
     }
     else if (file.type == DIRECTORY)
         fill_buffer_color(file.name, E_BLUE, flag_nb);
-    else if (is_exec == 0)
-        fill_buffer_color(file.name, E_GREEN, flag_nb);
-    else if (file.type == CHARACTER)
+    else if (file.type == CHARACTER || file.type == BLOCK)
         fill_buffer_color(file.name, E_YELLOW, flag_nb);
+    else if (is_exec == 1)
+        fill_buffer_color(file.name, E_GREEN, flag_nb);
     else
         fill_buffer(file.name);
 
@@ -149,24 +154,11 @@ int write_file_name(t_file file, int is_exec, int flag_nb, int space)
 
 static int write_perm(t_file file, int *is_exec, int space)
 {
-    char    *tmp;
-    int     len;
-    int     i;
-
-    i = 0;
-    tmp = get_perm(file.perm);
-    if (!tmp)
-        return (MALLOC_ERR);
-    len = ft_strlen(tmp);
-    if (len <= 1)
-        fill_buffer("------");
-    else if (len == 2)
-        fill_buffer("---");
-    while (tmp && tmp[i]) {
-        fill_buffer_perm(tmp[i], is_exec, 1);
-        i++;
-    }
+    char    *tmp = perm_to_string(file.perm, file.type);
+    fill_buffer(tmp);
     free(tmp);
+    (void)is_exec;
+    /* ACL management */
     int ret = check_acl(&file);
     if (ret == 0)
         fill_buffer_char('+');
@@ -272,7 +264,7 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
     write_group_name(file.group_id, space[S_GROUP], flag_nb);
     if (write_size(file, space) == MALLOC_ERR || \
         write_date(file, space, flag_nb) == MALLOC_ERR || \
-        write_file_name(file, is_exec, flag_nb, space[S_NAME_QUOTE]) == MALLOC_ERR)
+        write_file_name(file, flag_nb, space[S_NAME_QUOTE]) == MALLOC_ERR)
             return (MALLOC_ERR);
     if (has_flag(flag_nb, Z_OPTION))
         diplay_xattr_acl(&file);
