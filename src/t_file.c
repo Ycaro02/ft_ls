@@ -155,5 +155,5 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
 // #endif
 
     // if (mode & S_IRWXU) /* full first */
-    // if (mode & S_IWGRP)/* full second */
+    // if (mode & S_IRWGRP)/* full second */
     // if (mode & S_IRWXO) /* fulll last 7 */

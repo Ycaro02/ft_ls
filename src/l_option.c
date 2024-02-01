@@ -111,14 +111,25 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb)
     return (0);
 }
 
+
+static int check_full_perm(mode_t mode)
+{
+    return ((mode & S_IRWXO) == S_IRWXO && (mode & S_IRWXG) == S_IRWXG);
+}
+
 int write_file_name(t_file file, int flag_nb, int space)
 {
     char c = ' ';
-    int is_exec = 0;
-    // int is_exec = (file.perm & S_IXGRP ? 1 : 0);
+    int perm_color = 0;
+    // int perm_color = (file.perm & S_IXGRP ? 1 : 0);
     
     if (file.perm & S_IXOTH || file.perm & S_IXGRP || file.perm & S_IXUSR)
-        is_exec = 1;
+        perm_color = 1;
+
+    // if ((file.perm & S_IRWXU) && (file.perm & S_IRWXG) && (file.perm & S_IRWXO))
+    if (check_full_perm(file.perm))
+        perm_color = 2;
+// FILL_GREEN
 
     if (space != 0) {
         // printf("for %s quote = %d\n", file.name, file.quote);
@@ -131,11 +142,13 @@ int write_file_name(t_file file, int flag_nb, int space)
         if (write_symlink(file.name, file.parrent, flag_nb) == MALLOC_ERR)
             return (MALLOC_ERR);
     }
-    else if (file.type == DIRECTORY)
-        fill_buffer_color(file.name, E_BLUE, flag_nb);
     else if (file.type == CHARACTER || file.type == BLOCK)
         fill_buffer_color(file.name, E_YELLOW, flag_nb);
-    else if (is_exec == 1)
+    else if (perm_color == 2)
+        fill_buffer_color(file.name, E_FILL_GREEN, flag_nb);
+    else if (file.type == DIRECTORY)
+        fill_buffer_color(file.name, E_BLUE, flag_nb);
+    else if (perm_color == 1)
         fill_buffer_color(file.name, E_GREEN, flag_nb);
     else
         fill_buffer(file.name);

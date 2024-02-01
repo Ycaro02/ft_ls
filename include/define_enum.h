@@ -124,6 +124,7 @@ enum e_color  {
     E_BLUE,
     E_PURPLE,
     E_CYAN,
+    E_FILL_GREEN,
 };
 //-------------------------------
 //      ERROR                   //

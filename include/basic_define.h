@@ -34,4 +34,7 @@ typedef unsigned long 			t_uint64;
 # define    CYAN "\033[1;36m"
 # define    RESET "\033[0m"
 
+# define    FILL_GREEN "\033[7;32m"
+
+
  # endif /* BASIC_DEF_TYPE_HEADER */
