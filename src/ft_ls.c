@@ -31,7 +31,7 @@ static int display_dir_header(t_file file, int lst_len, int call, int index, int
 
         fill_buffer(":\n");
     }
-    if (l_flag == 1) {
+    if (l_flag >= 1) {
         char *total_str = ft_ltoa(file.total_size);
         if (!total_str)
             return (MALLOC_ERR);
