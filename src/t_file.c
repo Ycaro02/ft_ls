@@ -129,12 +129,6 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
     // file->perm = sb->st_mode & 0777;
     file->perm = sb->st_mode;
 
-    // if (sb->st_mode & S_IWUSR)
-    //     printf("le propriétaire a le droit d'écriture: sb->st_mode & S_IWUSR [%d] \n", sb->st_mode & S_IWUSR);
-
-    // char* perm = perm_to_string(sb->st_mode, file->type);
-    // printf("Perm: %s for -> %s\n", perm, path);
-
     file->size = sb->st_size;
     file->nb_link = sb->st_nlink;
     file->last_status_change = sb->st_ctim;
@@ -153,7 +147,3 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
 // #if defined __USE_MISC || defined __USE_XOPEN
     // S_ISVTX /* sticky bits*/
 // #endif
-
-    // if (mode & S_IRWXU) /* full first */
-    // if (mode & S_IRWGRP)/* full second */
-    // if (mode & S_IRWXO) /* fulll last 7 */
