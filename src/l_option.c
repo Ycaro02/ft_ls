@@ -180,14 +180,20 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb, int space)
 
 static int is_full_perm(mode_t mode)
 {
-    return ((mode & S_IRWXO) == S_IRWXO && (mode & S_IRWXG) == S_IRWXG &&(mode & S_IRWXU) == S_IRWXU);
+    return ((mode & S_IRWXO) == S_IRWXO && (mode & S_IRWXG) == S_IRWXG && (mode & S_IRWXU) == S_IRWXU);
+}
+
+static int is_executable_file(mode_t mode)
+{
+    return ((mode & S_IXOTH || mode & S_IXGRP || mode & S_IXUSR));
 }
 
 int write_file_name(t_file file, int flag_nb, int space)
 {
     int perm_color = E_NONE;
 
-    if (file.perm & S_IXOTH || file.perm & S_IXGRP || file.perm & S_IXUSR)
+    // if (file.perm & S_IXOTH || file.perm & S_IXGRP || file.perm & S_IXUSR)
+    if (is_executable_file(file.perm))
         perm_color = E_GREEN;
 
     if (is_full_perm(file.perm))
@@ -205,22 +211,13 @@ int write_file_name(t_file file, int flag_nb, int space)
     else if (file.type == DIRECTORY)
         perm_color = E_BLUE;
     
-    
-    if(file.type == SYMLINK && space != -1) { /* space -1 against recurcive SYMLINK display */
+    /* space -1 against recurcive SYMLINK display */
+    if(file.type == SYMLINK && space != -1) {
         if (write_symlink(file.name, file.parrent, flag_nb, space) == MALLOC_ERR)
             return (MALLOC_ERR);
     }
     else
         fill_buffer_color(file.name, perm_color, flag_nb, space, file.quote);
-
-    // fill_buffer_color(file.name, E_CYAN, flag_nb, space, file.quote);
-    // fill_buffer_color(file.name, E_YELLOW, flag_nb, space, file.quote);
-    // else if (perm_color == E_FILL_GREEN)
-        // perm_color = E_FILL_YELLOW;
-        // fill_buffer_color(file.name, perm_color, flag_nb, space, file.quote);
-        // fill_buffer_color(file.name, E_BLUE, flag_nb, space, file.quote);
-    // else
-    
 
     if (!has_flag(flag_nb, L_OPTION) && space == 0)
         fill_buffer(" ");
@@ -240,6 +237,7 @@ static int write_perm(t_file file, int *is_exec, int space)
         fill_buffer_char('+');
     else if (ret == MALLOC_ERR)
         return (ret);
+    /* insert max space - 10 (basic perm len) + bool acl*/
     insert_space(space - (10 + (ret == 0)));
     return (0);
 }

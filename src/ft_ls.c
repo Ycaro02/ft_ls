@@ -59,8 +59,10 @@ int ls_only_file_L(t_list *lst, int flag_nb)
 {
     if (fill_l_buffer(lst, flag_nb, 0) == MALLOC_ERR)
         return (MALLOC_ERR);
-    if (!has_flag(flag_nb, R_OPTION))
-        fill_buffer_char('\n');
+    // fill_buffer("|1KOALA|");
+    // if (!has_flag(flag_nb, R_OPTION))
+        // fill_buffer_char('\n');
+    // fill_buffer("|2KOALA|");
     return (0);
 }
 

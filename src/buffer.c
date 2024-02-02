@@ -34,7 +34,8 @@ int fill_l_buffer(t_list *lst, int flag_nb, int call_flag)
     while (current) {
         fill_buffer_l_option(*((t_file *)current->content), space, flag_nb); // change to int return for malloc check
         ++i;
-        if (i != lst_len)
+        // printf("Fill_l_buffer: i->[%d], lst_len[%d], call [%d]\n",i, lst_len, call_flag);
+        if (i < lst_len)
             fill_buffer("\n");
         current = current->next;
     }

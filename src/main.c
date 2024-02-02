@@ -60,20 +60,11 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error, int call_flag)
     else
         err = ls(dir_lst, flag_nb, ls_one_dir, error, call_flag);
 
-    // if (!has_flag(flag_nb, D_OPTION) || (has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION)))
     new_lstclear(&dir_lst, free);
-    // else
-    //     free_node_ptr(&dir_lst);
-    
-
-    // if (has_flag(flag_nb, REVERSE_OPTION))
-    //     new_lstclear(&dir_lst, free);
-
     if (err == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error exit\n");
         exit(MALLOC_ERR);
     }
-    // finish_print_buffer();
 }
 
 static int basic_sort_lst(t_list **lst, int flag, int *error)
@@ -81,12 +72,8 @@ static int basic_sort_lst(t_list **lst, int flag, int *error)
     sort_lst(*lst, flag);
     if (!lst)
         return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
-    if (has_flag(flag , REVERSE_OPTION)) {
-        if (safe_reverse_lst(lst, error, flag) == MALLOC_ERR) {
-            new_lstclear(lst, free);
-            return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
-        }
-    }
+    if (has_flag(flag , REVERSE_OPTION))
+        safe_reverse_lst(lst, error, flag);
     return (0);
 }
 
@@ -124,7 +111,6 @@ int ft_ls(char **argv, int flag_nb, int* error)
                 return (*error);
             }
         }
-        /* sort */
         if (basic_sort_lst(&dir_lst, flag_nb, error) == 1)
             return (1);
     }
@@ -136,21 +122,28 @@ int ft_ls(char **argv, int flag_nb, int* error)
         }
         call_ls(simple_file, flag_nb, error, call_value);
         ++call_value;
+        if (has_flag(flag_nb, L_OPTION) && dir_lst)
+            fill_buffer("\n");
     }
+    
 
-    if (args_found && call_value == 0 && dir_lst && ft_lstsize(dir_lst) == 1) {
-        t_file *file = dir_lst->content;
-        int quote = quotes_required(file->name);
-        if (quote > NOEFFECT_CHAR)
-            display_quote(quote);
-        fill_buffer(file->name);
-        if (quote > NOEFFECT_CHAR)
-            display_quote(quote);
-        fill_buffer(":\n");
-    }
-
-    if (dir_lst)  
+    /*  display new band before ls call if:
+        args found (invalid args),
+        no simple file found (call value == 0)
+        lst_size != 1 */
+    if (dir_lst){
+        if (args_found && call_value == 0 && ft_lstsize(dir_lst) == 1) {
+            t_file *file = dir_lst->content;
+            int quote = quotes_required(file->name);
+            if (quote > NOEFFECT_CHAR)
+                display_quote(quote);
+            fill_buffer(file->name);
+            if (quote > NOEFFECT_CHAR)
+                display_quote(quote);
+            fill_buffer(":\n");
+        }
         call_ls(dir_lst, flag_nb, error, call_value + 1);
+    }
 
     return (*error);
 }

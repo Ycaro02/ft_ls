@@ -44,7 +44,7 @@ void free_node_ptr(t_list **lst)
 //     return (0);
 // }
 
-
+/* nned to be void function */
 int safe_reverse_lst(t_list **lst,  int* error, int flag_nb)
 {
     t_list *prev = NULL, *next = NULL, *current = *lst;

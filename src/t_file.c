@@ -53,15 +53,15 @@ char *perm_to_string(mode_t mode, char type)
     perm[0] = type;
 
     
-    if (mode & S_IRUSR) /*first R*/
+    if (mode & S_IRUSR)         /* first R */
         perm[1] = 'r';
-    if (mode & S_IWUSR) /*first W*/
+    if (mode & S_IWUSR)         /* first W */
         perm[2] = 'w';
 
-    if (mode & S_IXUSR) /*first X*/
+    if (mode & S_IXUSR)         /* first X */
         exe_tmp = 'x';
-    /* STICKY */
-    if (mode & S_ISUID) {
+    
+    if (mode & S_ISUID) {       /* UID */
         if (exe_tmp == 'x')
             exe_tmp = 's';
         else
@@ -71,17 +71,17 @@ char *perm_to_string(mode_t mode, char type)
     perm[3] = exe_tmp;
     exe_tmp = '-';
 
-    if (mode & S_IRGRP) /*second R*/
+    if (mode & S_IRGRP)         /* second R */
         perm[4] = 'r';
     
-    if (mode & S_IWGRP) /*second W*/
+    if (mode & S_IWGRP)         /* second W */
         perm[5] = 'w';
 
 
-    if (mode & S_IXGRP) /*second x*/
+    if (mode & S_IXGRP)         /* second x */
         exe_tmp = 'x';
-    /*set GID*/
-    if (mode & S_ISGID) {
+    
+    if (mode & S_ISGID) {       /* GID */
         if (exe_tmp == 'x')
             exe_tmp = 's';
         else
@@ -90,15 +90,15 @@ char *perm_to_string(mode_t mode, char type)
     perm[6] = exe_tmp;
     exe_tmp = '-';
     
-    if (mode & S_IROTH) /*last r 4*/
+    if (mode & S_IROTH)         /* last r 4 */
         perm[7] = 'r';
-    if (mode & S_IWOTH) /*last w 2*/
+    if (mode & S_IWOTH)         /* last w 2 */
         perm[8] = 'w';
 
-    if (mode & S_IXOTH) /*last x 1*/
+    if (mode & S_IXOTH)         /* last x 1 */
         exe_tmp = 'x';
-    /*Set UID*/
-    if (mode & __S_ISVTX)  {
+
+    if (mode & __S_ISVTX)  {    /* STICKY */
         if (exe_tmp == 'x')
             exe_tmp = 't';
         else
