@@ -25,10 +25,8 @@ static int build_file_lst
     
     (void)flag_nb;
     file = fill_file_struct(&sb, str, str, symlink);
-    if (!file) {
-        perror("Malloc");
+    if (!file)
         return (MALLOC_ERR);
-    }
     // if (file->type == DIRECTORY)
     if (get_type(sb) == DIRECTORY) {
         ft_lstadd_back(new, ft_lstnew(file));
@@ -61,7 +59,6 @@ static int check_args(char *str, t_list **new, t_list **simple_file, int *found,
         free(sb);
         return (MALLOC_ERR);
     }
-
     free(sb);
     return (0);
 }
@@ -82,7 +79,6 @@ t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file,
     }
     if (!new && *args_found == 0) /* default search if nothing found */
         ft_lstadd_back(&new, ft_lstnew(default_file_struct(flag_nb)));
-
     return (new);
 }
 

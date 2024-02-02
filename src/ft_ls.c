@@ -77,9 +77,11 @@ int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_fl
     lst = get_all_file_struct(file, flag_nb, error);
     if (!lst && *error == MALLOC_ERR) // one of case where int pointer error is mandatory
         return (MALLOC_ERR);
-    if (!lst) {
-        fill_buffer("total 0\n");
-        return (0);
+    else if (!lst) {
+        multiple_fill_buff("\nft_ls: cannot open directory '", file->name, "': Permission denied", NULL);
+        if (!has_flag(flag_nb, R_OPTION))
+            return (2); /* CMD LINE ERROR */
+        return (1); /* classic denie error */
     }
     file->total_size = get_total_size(lst);
 
@@ -141,14 +143,24 @@ int ls_one_dir(t_file *file, int flag_nb, int lst_len, int *error, int call_flag
         return (0);
     }
 
-    if (display_dir_header(*file, lst_len, call_flag, index, 0) == MALLOC_ERR)
-        return (MALLOC_ERR);
+    // if (display_dir_header(*file, lst_len, call_flag, index, 0) == MALLOC_ERR)
+    //     return (MALLOC_ERR);
 
     lst = get_all_file_struct(file, flag_nb, error);
     if (!lst && *error == MALLOC_ERR)
         return (MALLOC_ERR);
-    if (!lst)
-        return (0);
+    else if (!lst) {
+        multiple_fill_buff("\nft_ls: cannot open directory '", file->name, "': Permission denied", NULL);
+        if (!has_flag(flag_nb, R_OPTION))
+            return (2); /* CMD LINE ERROR */
+        return (1); /* classic denie error */
+    }
+
+    if (display_dir_header(*file, lst_len, call_flag, index, 0) == MALLOC_ERR)
+        return (MALLOC_ERR);
+
+
+
     if (store_in_buffer(lst, flag_nb) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);

@@ -49,8 +49,11 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
 
     ret = 0;
     dir = opendir(file->name);
-    if (!dir)
-        return (print_error("Opendir error\n", NULL, 1, 1));
+    if (!dir){
+        // printf("Can't open %s\n", file->name);
+        return (1);
+        // return (print_error("Opendir error\n", NULL, 1, 1));
+    }
     do  {
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 1) == 1) {
@@ -73,8 +76,8 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
         if (ret == MALLOC_ERR)
             *error = MALLOC_ERR;
         else {
-            ft_putstr_fd("ft_ls: cannot open directory : ", 2);
-            perror(file->name);
+            // ft_putstr_fd("ft_ls: cannot open directory : ", 2);
+            // perror(file->name);
             update_error(error);
         }
         return (NULL);
