@@ -79,6 +79,71 @@ static int write_nb_link(long long nb_link, int space)
     return (0);
 }
 
+void display_symlink(struct stat *sb, int flag_nb, char *new, int sym_bool)
+{
+    t_file *file = fill_file_struct(sb, new, NULL, sym_bool);
+    if (file) {
+        write_file_name(*file, flag_nb, -1);
+        free(file->name);
+        free(file);
+    } 
+    free(sb);
+}
+
+
+static char* remove_last_word(char *str, char sep)
+{
+    int i = (int)ft_strlen(str);
+    int save_len = i;
+
+    while (i > 0) {
+        if (i == save_len && str[i] == sep)
+            --i;
+        else if (str[i] == sep)
+            break ;
+        --i;
+    }
+    str[i] = '\0';
+    char *new = ft_calloc(sizeof(char), i+1);
+    ft_strcpy(new, str, i+1);
+    return (new);
+}
+
+static void stat_symlink(char* buff, char *parrent_path, char* path, int flag_nb)
+{
+    int         sym_bool = 0;
+    char        *new = NULL;
+    struct stat *sb = check_for_stat(buff, flag_nb, &sym_bool);
+
+    // ft_printf_fd(2, "%sFor path: %s, parent |%s| buff|%s|%s\n", CYAN, path, parrent_path, buff, RESET);
+    /* check for buff real path */
+    if (sb)
+        display_symlink(sb, flag_nb, buff, sym_bool);
+    else { /* else check for add parrent path or / before */
+        if (parrent_path && ft_strcmp(parrent_path, "/") == 0)
+            new = ft_strjoin(parrent_path, buff);
+        else {
+            if (parrent_path && parrent_path[ft_strlen(parrent_path) -1] != '/') 
+                new = ft_strjoin(parrent_path, "/");
+            new = ft_strjoin_free(new, buff, 'f');
+        }
+        sb = check_for_stat(new, flag_nb, &sym_bool);
+        /* check for new path with parrent */
+        if (sb)
+            display_symlink(sb, flag_nb, buff, sym_bool);
+        else { /* else check to remove last word of path, this will search in current dir */
+            if (new)
+                free(new);
+            new = remove_last_word(path, '/');
+            sb = check_for_stat(new, flag_nb, &sym_bool);
+            if (sb)
+                display_symlink(sb, flag_nb, buff, sym_bool);
+            else
+                multiple_fill_buff(" ", buff, NULL, NULL);
+        }
+        free(new);
+    }
+}
 
 static int write_symlink(char *path, char *parrent_path, int flag_nb)
 {
@@ -88,7 +153,6 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb)
     fill_buffer_color(path, E_CYAN, flag_nb);
     if (has_flag(flag_nb, L_OPTION))
     {
-        // ft_printf_fd(2, "%sFor path: %s, parent |%s|%s\n", CYAN, path, parrent_path, RESET);
         
         if (parrent_path && path[0] != '/') /* avoid /bin/bin case*/
             tmp = join_parent_name(parrent_path, path);
@@ -97,26 +161,13 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb)
 
         if (!tmp)
             return (MALLOC_ERR);
-        fill_buffer(" -> ");
+        fill_buffer(" ->");
         int ret = readlink(tmp, buff, 199);
         if (ret == -1)
             perror("readlink");
         else {
             buff[ret] = '\0';
-            int sym_bool = 0;
-            struct stat *sb = check_for_stat(buff, flag_nb, &sym_bool); 
-            if (sb) {
-                t_file *file = fill_file_struct(sb, buff, NULL, sym_bool);
-                if (file) {
-                    write_file_name(*file, flag_nb, -1);
-                    // printf("file->name %s: ", file->name);
-                    // printf("for buff %s\n", buff);
-                    free(file->name);
-                    free(file);
-                } 
-                free(sb);
-            }
-            // fill_buffer(buff);
+            stat_symlink(buff, parrent_path, path, flag_nb);
         }
         free(tmp);
     }

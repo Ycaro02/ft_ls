@@ -138,7 +138,7 @@ int ft_ls(char **argv, int flag_nb, int* error)
         ++call_value;
     }
 
-    if (args_found && call_value == 0 && dir_lst) {
+    if (args_found && call_value == 0 && dir_lst && ft_lstsize(dir_lst) == 1) {
         t_file *file = dir_lst->content;
         int quote = quotes_required(file->name);
         if (quote > NOEFFECT_CHAR)
@@ -212,11 +212,13 @@ struct stat *check_for_stat(char* name, int flag, int *save_symlink)
 
     if (!sb)
         return (NULL);
+
     if (lstat(name, sb) == -1) {
+        // printf("%sName: %s%s\n",RED, name, RESET);
+        // perror("lstat");
         free(sb);
         return (NULL);
     }
-
     *save_symlink = get_type(*sb) == SYMLINK; /* need to just store sb.st_mode entire */
 
     if (!has_flag(flag, L_OPTION))
@@ -224,7 +226,5 @@ struct stat *check_for_stat(char* name, int flag, int *save_symlink)
             free(sb);
             return (NULL);
         }
-    // printf("parrent path: %s\n", name);
-    // perror("lstat");
     return (sb);
 }
