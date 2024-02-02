@@ -185,54 +185,45 @@ static int is_full_perm(mode_t mode)
 
 int write_file_name(t_file file, int flag_nb, int space)
 {
-    // char c = ' ';
     int perm_color = E_NONE;
-
-    // if (space != 0) {
-    //     // printf("for %s quote = %d\n", file.name, file.quote);
-    //     if (file.quote != NORMAL_CHAR)
-    //         c = file.quote == ADD_SIMPLE_QUOTE_CHAR ? '\'' : '\"';
-    //     fill_buffer_char(c);
-    // }
-
 
     if (file.perm & S_IXOTH || file.perm & S_IXGRP || file.perm & S_IXUSR)
         perm_color = E_GREEN;
 
     if (is_full_perm(file.perm))
         perm_color = E_FILL_GREEN;
-
-    if (file.type == FIFO)
+    else if (file.type == FIFO)
         perm_color = E_YELLOW_BLACK;
-    
-    if (file.perm & S_ISUID)
+    else if (file.perm & S_ISUID)
         perm_color = E_FILL_RED;
     else if (file.perm & S_ISGID)
         perm_color = E_FILL_YELLOW;
+    else if (file.type == SYMLINK)
+        perm_color = E_CYAN;
+    else if (file.type == CHARACTER || file.type == BLOCK)
+        perm_color = E_YELLOW;
+    else if (file.type == DIRECTORY)
+        perm_color = E_BLUE;
     
-    if(file.type == SYMLINK && space != -1) {
+    
+    if(file.type == SYMLINK && space != -1) { /* space -1 against recurcive SYMLINK display */
         if (write_symlink(file.name, file.parrent, flag_nb, space) == MALLOC_ERR)
             return (MALLOC_ERR);
     }
-    else if (file.type == SYMLINK)
-        fill_buffer_color(file.name, E_CYAN, flag_nb, space, file.quote);
-    else if (file.type == CHARACTER || file.type == BLOCK)
-        fill_buffer_color(file.name, E_YELLOW, flag_nb, space, file.quote);
-    else if (perm_color == E_FILL_GREEN)
-        fill_buffer_color(file.name, perm_color, flag_nb, space, file.quote);
-    else if (file.type == DIRECTORY)
-        fill_buffer_color(file.name, E_BLUE, flag_nb, space, file.quote);
     else
         fill_buffer_color(file.name, perm_color, flag_nb, space, file.quote);
 
-    // if (space != 0 && file.quote != NORMAL_CHAR)
-    // if (space != 0)
-    //     fill_buffer_char(c);
+    // fill_buffer_color(file.name, E_CYAN, flag_nb, space, file.quote);
+    // fill_buffer_color(file.name, E_YELLOW, flag_nb, space, file.quote);
+    // else if (perm_color == E_FILL_GREEN)
+        // perm_color = E_FILL_YELLOW;
+        // fill_buffer_color(file.name, perm_color, flag_nb, space, file.quote);
+        // fill_buffer_color(file.name, E_BLUE, flag_nb, space, file.quote);
+    // else
     
+
     if (!has_flag(flag_nb, L_OPTION) && space == 0)
         fill_buffer(" ");
-    //     fill_buffer_char('\n');
-    // else
     return (0);
 }
 
