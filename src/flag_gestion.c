@@ -32,10 +32,6 @@ void unset_flag(int *flags, int flag_val)
 * 00010110 -> Starting value has Flag2, Flag3 and Flag5 set
 * & 00000100 -> Perform & with Flag3
 * = 00000100 -> Result is equal to Flag3
-* -----------------------------------------------------------
-* 00010010 -> Starting value has Flag2 and Flag5 set
-* & 00000100 -> Perform & with Flag3
-* = 00000000 -> Result is equal to 0
 * check if flag_val enable in flags
 // __always_inline int has_flag(int flags, int flag_val)
 */
@@ -145,11 +141,8 @@ void display_flags(int flags) {
     ft_printf_fd(2, "\n");
 }
 
+
 /*
-* 00010010 -> Our current value has Flag2 and Flag5 set
-* ^ 00000100 -> Perform XOR with Flag3
-* = 00010110 -> New value has Flag3 set
------------------------------------------------------------------------
 * 00010110 -> Our current value has Flag2, Flag3 and Flag5 set
 * ^ 00000100 -> Perform XOR with Flag3
 * = 00010010 -> New value does not have Flag3 set

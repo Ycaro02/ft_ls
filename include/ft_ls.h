@@ -109,30 +109,16 @@ typedef struct s_buff
 
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
 
-int check_for_quote(char *str);
-struct stat *check_for_stat(char* name, int flag, int *save);
-
-
-char *perm_to_string(mode_t mode, char type);
-
-// Basic flag gestion
-void set_flag(int *flags, int flag_val);
-void unset_flag(int *flags, int flag_val);
-int  has_flag(int flags, int flag_val);
-
-int parse_flag(int argc, char **argv, int *special_err);
-
-// main.c to move
-int quotes_required(char *str);
-
 //-------------------------------
 //      t_file.c               //
 //-------------------------------
 t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink_bool);
+char *perm_to_string(mode_t mode, char type);
+int check_for_quote(char *str);
 //-------------------------------
 //      utils.c                 //
 //-------------------------------
-void display_error_phrase(char *str);
+void    display_error_phrase(char *str);
 int     ft_strlen_word(char *s);
 int     get_stdout_width();
 void    update_error(int *error);
@@ -227,5 +213,16 @@ char   *get_new_path(t_file *file);
 int     list_xattr(char *path, char *list);
 int     check_lst_acl(t_list *lst);
 int     check_acl(t_file *file);
+
+
+// Basic flag gestion
+void set_flag(int *flags, int flag_val);
+void unset_flag(int *flags, int flag_val);
+int  has_flag(int flags, int flag_val);
+// flag gestion
+int parse_flag(int argc, char **argv, int *special_err);
+// main.c to move
+struct stat *check_for_stat(char* name, int flag, int *save);
+int quotes_required(char *str);
 
 #endif /* FT_LS_H */
