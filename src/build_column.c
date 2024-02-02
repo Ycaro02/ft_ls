@@ -143,7 +143,7 @@ static int test_all(int test, int* all_len, int nb_file, int stdout_w, int bool_
         // printf("%sRet = %d for [%d] width: %d%s\n",RED, ret, test, stdout_w, RESET);
         if (ret > stdout_w)
             break ;
-        i++;
+        ++i;
     }
     ret = ret > stdout_w ? -1 : 0;
     free(local_space);
@@ -166,7 +166,7 @@ static int get_nb_line(int stdout_w, int *all_len, int len, int bool_quote)
         ret = test_all(test, all_len, len, stdout_w, bool_quote);
         if (ret != 0)
             ++test;
-        if (test > len)
+        if (test > len)     /* if impossible nb_line = nb_file */
             return (len);
     }
     return (test);
