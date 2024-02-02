@@ -57,7 +57,9 @@
         "ioctl.h": "c",
         "sysmacros.h": "c",
         "xattr.h": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "stdlib.h": "c",
+        "stddef.h": "c"
     },
 
     "highlight.regexes": {

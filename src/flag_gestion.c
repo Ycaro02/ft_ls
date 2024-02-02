@@ -54,6 +54,7 @@ void flip_flag(int *flags, int flag_val)
 * & 00000100 -> Perform & with Flag3
 * = 00000000 -> Result is equal to 0
 * check if flag_val enable in flags
+// __always_inline int has_flag(int flags, int flag_val)
 */
 int has_flag(int flags, int flag_val)
 {
@@ -104,15 +105,13 @@ int get_flag_value(char c)
     return (flag);
 }
 
-
 /* PUBLIC MAIN */
 
 int parse_flag(int argc, char **argv, int *special_err)
 {
     int i = 1, flags = 0, tmp_value = 0;
 
-    while (i < argc)
-    {
+    while (i < argc) {
         if (argv[i][0] == '-') {
             if (argv[i][1] == '\0') {   /* special case ugly */
                 ft_printf_fd(2, "ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
@@ -123,8 +122,7 @@ int parse_flag(int argc, char **argv, int *special_err)
                 continue;
             }
             else {
-                for (int j = 1; argv[i][j]; ++j) 
-                {
+                for (int j = 1; argv[i][j]; ++j) {
                     tmp_value =  get_flag_value(argv[i][j]);
                     if (tmp_value == -1) {
                         ft_printf_fd(2, "ft_ls: invalid option -- '%c'\nTry './ft_ls --help' for more information.\n", argv[i][j]);
@@ -134,7 +132,6 @@ int parse_flag(int argc, char **argv, int *special_err)
                         set_flag(&flags, tmp_value);
                 }
             }
-                
         }
         ++i;
     }

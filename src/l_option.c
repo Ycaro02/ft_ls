@@ -180,7 +180,8 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb, int space)
 
 static int is_full_perm(mode_t mode)
 {
-    return ((mode & S_IRWXO) == S_IRWXO && (mode & S_IRWXG) == S_IRWXG && (mode & S_IRWXU) == S_IRWXU);
+    // return ((mode & S_IRWXO) == S_IRWXO && (mode & S_IRWXG) == S_IRWXG && (mode & S_IRWXU) == S_IRWXU);
+    return (has_flag(mode, S_IRWXO) && has_flag(mode, S_IRWXG) && has_flag(mode, S_IRWXU));
 }
 
 static int is_executable_file(mode_t mode)
