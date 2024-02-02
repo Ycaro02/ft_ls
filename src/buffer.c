@@ -51,8 +51,8 @@ void fill_buffer(char *str)
     int i = 0;
     while (str[i]) {
         g_buff.buffer[g_buff.i] = str[i];
-        i++;
-        (g_buff.i)++;
+        ++i;
+        ++(g_buff.i);
         if (g_buff.i > PRINT_SIZE || (str[i] == '\n' && g_buff.i > PRINT_SIZE * 0.5))
             print_and_clear();
     }
@@ -82,23 +82,45 @@ void fill_color(enum e_color color)
         fill_buffer(FILL_YELBLACK);
 }
 
-void fill_buffer_color(char *str, enum e_color color, int flag_nb)
+void fill_buffer_color(char *str, enum e_color color, int flag_nb, int space, int quote)
 {
+    char c = ' ', color_bool = 0, quote_status = -1; /* -1 for nothing, 0 for space, 1 for real quote */
+
     if (!str)
         return ;
-    if (color != E_NONE && has_flag(flag_nb, COLOR_OPTION)) {
-        fill_color(color);
-        fill_buffer(str);
-        fill_buffer(RESET);
+    /* detect quote type */
+    if (space != 0) {
+        if (quote > NOEFFECT_CHAR)
+            c = quote == ADD_SIMPLE_QUOTE_CHAR ? '\'' : '\"';
+        quote_status = quote > NOEFFECT_CHAR ? 1 : 0;
     }
-    else
-        fill_buffer(str);
+
+    /* if no quote but need to print space, display it before color */
+    if (quote_status == 0)
+        fill_buffer_char(c);
+    if (color != E_NONE && has_flag(flag_nb, COLOR_OPTION)) {
+        color_bool = 1;
+        fill_color(color);
+    }
+
+    /* if quote display it after color */
+    if (quote_status == 1)
+        fill_buffer_char(c);
+    /* display name */
+    fill_buffer(str);
+    if (quote_status == 1)
+        fill_buffer_char(c);
+    
+    if (color_bool)
+        fill_buffer(RESET);
+    if (quote_status == 0)
+        fill_buffer_char(c);
 }
 
 void fill_buffer_char(char c)
 {
     g_buff.buffer[g_buff.i] = c;
-    (g_buff.i)++;
+    ++(g_buff.i);
     if (g_buff.i > PRINT_SIZE || (c == '\n' && g_buff.i > PRINT_SIZE * 0.5))
         print_and_clear();
 }

@@ -203,7 +203,7 @@ int     is_special_char(char c);
 void    fill_buffer(char *str);
 int     fill_l_buffer(t_list *lst, int flag_nb, int call_flag);
 void    fill_buffer_char(char c);
-void    fill_buffer_color(char *str, enum e_color color, int flag_nb);
+void    fill_buffer_color(char *str, enum e_color color, int flag_nb, int space, int quote);
 int     store_in_buffer(t_list *lst, int flag_nb);
 void    print_and_clear();
 void    finish_print_buffer();

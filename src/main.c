@@ -219,7 +219,8 @@ struct stat *check_for_stat(char* name, int flag, int *save_symlink)
         free(sb);
         return (NULL);
     }
-    *save_symlink = get_type(*sb) == SYMLINK; /* need to just store sb.st_mode entire */
+    /* store symlink type before call stat */
+    *save_symlink = get_type(*sb) == SYMLINK;
 
     if (!has_flag(flag, L_OPTION))
         if (stat(name, sb) == -1){

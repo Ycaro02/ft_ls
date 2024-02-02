@@ -145,12 +145,13 @@ static void stat_symlink(char* buff, char *parrent_path, char* path, int flag_nb
     }
 }
 
-static int write_symlink(char *path, char *parrent_path, int flag_nb)
+static int write_symlink(char *path, char *parrent_path, int flag_nb, int space)
 {
     char    buff[500];
     char    *tmp;
+    int quote = quotes_required(path);
 
-    fill_buffer_color(path, E_CYAN, flag_nb);
+    fill_buffer_color(path, E_CYAN, flag_nb, space, quote);
     if (has_flag(flag_nb, L_OPTION))
     {
         
@@ -161,7 +162,9 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb)
 
         if (!tmp)
             return (MALLOC_ERR);
-        fill_buffer(" ->");
+        if (space == 0)
+            fill_buffer_char(' ');
+        fill_buffer("->");
         int ret = readlink(tmp, buff, 199);
         if (ret == -1)
             perror("readlink");
@@ -182,15 +185,15 @@ static int is_full_perm(mode_t mode)
 
 int write_file_name(t_file file, int flag_nb, int space)
 {
-    char c = ' ';
+    // char c = ' ';
     int perm_color = E_NONE;
 
-    if (space != 0) {
-        // printf("for %s quote = %d\n", file.name, file.quote);
-        if (file.quote != NORMAL_CHAR)
-            c = file.quote == ADD_SIMPLE_QUOTE_CHAR ? '\'' : '\"';
-        fill_buffer_char(c);
-    }
+    // if (space != 0) {
+    //     // printf("for %s quote = %d\n", file.name, file.quote);
+    //     if (file.quote != NORMAL_CHAR)
+    //         c = file.quote == ADD_SIMPLE_QUOTE_CHAR ? '\'' : '\"';
+    //     fill_buffer_char(c);
+    // }
 
 
     if (file.perm & S_IXOTH || file.perm & S_IXGRP || file.perm & S_IXUSR)
@@ -208,23 +211,23 @@ int write_file_name(t_file file, int flag_nb, int space)
         perm_color = E_FILL_YELLOW;
     
     if(file.type == SYMLINK && space != -1) {
-        if (write_symlink(file.name, file.parrent, flag_nb) == MALLOC_ERR)
+        if (write_symlink(file.name, file.parrent, flag_nb, space) == MALLOC_ERR)
             return (MALLOC_ERR);
     }
     else if (file.type == SYMLINK)
-        fill_buffer_color(file.name, E_CYAN, flag_nb);
+        fill_buffer_color(file.name, E_CYAN, flag_nb, space, file.quote);
     else if (file.type == CHARACTER || file.type == BLOCK)
-        fill_buffer_color(file.name, E_YELLOW, flag_nb);
+        fill_buffer_color(file.name, E_YELLOW, flag_nb, space, file.quote);
     else if (perm_color == E_FILL_GREEN)
-        fill_buffer_color(file.name, perm_color, flag_nb);
+        fill_buffer_color(file.name, perm_color, flag_nb, space, file.quote);
     else if (file.type == DIRECTORY)
-        fill_buffer_color(file.name, E_BLUE, flag_nb);
+        fill_buffer_color(file.name, E_BLUE, flag_nb, space, file.quote);
     else
-        fill_buffer_color(file.name, perm_color, flag_nb);
+        fill_buffer_color(file.name, perm_color, flag_nb, space, file.quote);
 
     // if (space != 0 && file.quote != NORMAL_CHAR)
-    if (space != 0)
-        fill_buffer_char(c);
+    // if (space != 0)
+    //     fill_buffer_char(c);
     
     if (!has_flag(flag_nb, L_OPTION) && space == 0)
         fill_buffer(" ");
