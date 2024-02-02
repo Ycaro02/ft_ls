@@ -80,7 +80,7 @@ t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file,
         }
         i++;
     }
-    if (!new && *args_found == 0)
+    if (!new && *args_found == 0) /* default search if nothing found */
         ft_lstadd_back(&new, ft_lstnew(default_file_struct(flag_nb)));
 
     return (new);

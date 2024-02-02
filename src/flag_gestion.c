@@ -107,15 +107,17 @@ int get_flag_value(char c)
 
 /* PUBLIC MAIN */
 
-int parse_flag(int argc, char **argv)
+int parse_flag(int argc, char **argv, int *special_err)
 {
     int i = 1, flags = 0, tmp_value = 0;
 
     while (i < argc)
     {
         if (argv[i][0] == '-') {
-            if (argv[i][1] == '\0') /* special case ugly */
+            if (argv[i][1] == '\0') {   /* special case ugly */
                 ft_printf_fd(2, "ft_ls: cannot access '%s': No such file or directory\n", argv[i]); // special case
+                *special_err = 1;
+            } 
             else {
                 for (int j = 1; argv[i][j]; ++j) 
                 {

@@ -122,7 +122,7 @@ void flip_flag(int *flags, int flag_val);
 int  has_flag(int flags, int flag_val);
 int  has_any_flag(int flags, int flag_val);
 
-int parse_flag(int argc, char **argv);
+int parse_flag(int argc, char **argv, int *special_err);
 
 // main.c to move
 int quotes_required(char *str);

@@ -89,10 +89,10 @@ t_list *lst_join(t_list *first, t_list *second)
     return (first);
 }
 
-int ft_ls(char **argv, int flag_nb, int* error)
+int ft_ls(char **argv, int flag_nb, int* error, int special_err)
 {
     t_list *dir_lst, *simple_file = NULL;
-    int call_value = 0, args_found = 0;
+    int call_value = 0, args_found = special_err;
     
     dir_lst = get_dir_args(&argv[1], error, flag_nb, &simple_file, &args_found);
     
@@ -145,6 +145,9 @@ int ft_ls(char **argv, int flag_nb, int* error)
         call_ls(dir_lst, flag_nb, error, call_value + 1);
     }
 
+    if (special_err == 1) /* set return cmd value for special err */
+        *error = 2;
+    
     return (*error);
 }
 
@@ -161,7 +164,12 @@ static int check_display_help(int argc, char**argv)
 
 int main (int argc, char **argv)
 {
-    int error;
+    /* special error fir only '-' manage case:
+         exit code -2, 
+         don't active default search in current dir (".")
+         display if another args found (dir or file) 
+    */
+    int error = 0, special_error = 0;
     int flag_nb;
 
     error = 0;
@@ -169,10 +177,10 @@ int main (int argc, char **argv)
         return (0);
     ft_bzero(g_buff.buffer, BUFFER_LEN - 1);
 
-    flag_nb = parse_flag(argc, argv);
+    flag_nb = parse_flag(argc, argv, &special_error);
     if (flag_nb == -1)
         return (2);
-    error = ft_ls(argv, flag_nb, &error);
+    error = ft_ls(argv, flag_nb, &error, special_error);
     finish_print_buffer();
 
     return (error);
