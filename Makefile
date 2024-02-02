@@ -65,8 +65,6 @@ test_sort:	${NAME}
 			./ft_ls test/sort -al > myls_out
 			echo MYLS && cat myls_out -e && echo REALLS && cat real_ls_out -e
 
-# diff myls_out real_ls_out
-
 vtest:		${NAME}
 			valgrind ./ft_ls / -lR
 
@@ -75,6 +73,5 @@ fclean:		clean
 			@${RM} ${NAME} real_ls_out myls_out
 
 re:			fclean all
-
 
 .PHONY:		all clean fclean re bonus

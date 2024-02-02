@@ -56,7 +56,8 @@
         "define_enum.h": "c",
         "ioctl.h": "c",
         "sysmacros.h": "c",
-        "xattr.h": "c"
+        "xattr.h": "c",
+        "stdarg.h": "c"
     },
 
     "highlight.regexes": {
