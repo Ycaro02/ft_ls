@@ -329,7 +329,7 @@ int fill_buffer_l_option(t_file file, int *space, int flag_nb)
     int is_exec;
 
     is_exec = 1;
-    fill_buffer_char(file.type);
+    // fill_buffer_char(file.type); // here
     if (write_perm(file, &is_exec, space[S_PERM]) == MALLOC_ERR\
         || write_nb_link(file.nb_link, space[S_LINK]) == MALLOC_ERR)
         return (MALLOC_ERR);
