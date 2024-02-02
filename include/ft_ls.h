@@ -115,12 +115,10 @@ struct stat *check_for_stat(char* name, int flag, int *save);
 
 char *perm_to_string(mode_t mode, char type);
 
-//flag_gestion
+// Basic flag gestion
 void set_flag(int *flags, int flag_val);
 void unset_flag(int *flags, int flag_val);
-void flip_flag(int *flags, int flag_val);
 int  has_flag(int flags, int flag_val);
-int  has_any_flag(int flags, int flag_val);
 
 int parse_flag(int argc, char **argv, int *special_err);
 
