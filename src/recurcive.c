@@ -27,8 +27,10 @@ static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new, in
     int symlink = 0;
 
     str = join_parent_name(file->name, my_dir->d_name);
-    if (!str)
-        return (print_error("Malloc error\n", NULL, 1, 1));
+    if (!str) {
+        ft_printf_fd(2, "Malloc error\n");
+        return (MALLOC_ERR);
+    }
     sb = check_for_stat(str, flag, &symlink);
     if (!sb)
         return (0);
@@ -43,17 +45,12 @@ static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new, in
 
 static int read_dir(t_file *file, t_list **new, int flag_nb)
 {
-    struct dirent *my_dir;
-    DIR *dir;
-    int ret;
-
-    ret = 0;
-    dir = opendir(file->name);
-    if (!dir){
-        // printf("Can't open %s\n", file->name);
+    struct dirent   *my_dir = NULL;
+    DIR             *dir = opendir(file->name);
+    int             ret = 0;
+    
+    if (!dir)
         return (1);
-        // return (print_error("Opendir error\n", NULL, 1, 1));
-    }
     do  {
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 1) == 1) {
@@ -68,7 +65,8 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
 
 t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
 {
-    t_list *new = NULL;
+    t_list  *new = NULL;
+
     if (file->type != DIRECTORY)
         return (NULL);
     int ret = read_dir(file, &new, flag_nb) == 1;
@@ -87,9 +85,8 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
 
 static int recurcive_ls(t_list *dir_lst, int flag_nb ,int* error, int lst_len, int idx, int *call_flag)
 {
-    int err;
-    
-    err = 0;
+    int err = 0;
+
     if (has_flag(flag_nb, L_OPTION))
         err = ls_l_one_dir(dir_lst->content, flag_nb, lst_len, error, *call_flag, idx);
     else {
@@ -104,9 +101,8 @@ static int recurcive_ls(t_list *dir_lst, int flag_nb ,int* error, int lst_len, i
 
 int safe_recurcive(t_list *local_list, int flag_nb, int* error, int call_flag)
 {
-    int err;
+    int err = 0;
 
-    err = 0;
     if (local_list)
         err = search_recurcive_dir(local_list, flag_nb, error, call_flag);
     if (err == MALLOC_ERR)
@@ -116,12 +112,10 @@ int safe_recurcive(t_list *local_list, int flag_nb, int* error, int call_flag)
 
 int search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error, int call_flag)
 {
-    t_list *local_list;
-    int err = 0, index = 0, lst_len = get_lst_len(dir_lst);
+    t_list *local_list = NULL;
+    int     err = 0, index = 0, lst_len = get_lst_len(dir_lst);
 
-    local_list = NULL;
-    while(dir_lst)
-    {
+    while(dir_lst) {
         /* nned to take call flag, 0 for first time and increment it */
         err = recurcive_ls(dir_lst, flag_nb, error, lst_len, index, &call_flag);
         if (err == MALLOC_ERR)

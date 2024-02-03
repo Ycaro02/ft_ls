@@ -94,8 +94,10 @@ int ft_ls(char **argv, int flag_nb, int* error, int special_err)
     dir_lst = get_dir_args(&argv[1], error, flag_nb, &simple_file, &args_found);
     
     /* Error management */
-    if (!dir_lst && *error == MALLOC_ERR)
-        return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
+    if (!dir_lst && *error == MALLOC_ERR) {
+        ft_printf_fd (2, "Malloc Error ft_ls\n");
+        return (MALLOC_ERR);
+    }
 
     if (dir_lst) {
         if (has_flag(flag_nb, D_OPTION)) {
