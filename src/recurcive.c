@@ -22,25 +22,20 @@ static int create_new_file(struct stat sb, t_list **new, char *str, int symlink)
 
 static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new, int flag)
 {
-    char *str;
     struct stat *sb;
-    int symlink = 0;
-
-    str = join_parent_name(file->name, my_dir->d_name);
-    if (!str) {
-        ft_printf_fd(2, "Malloc error\n");
+    int symlink = 0, error = 0;
+    char *str = join_parent_name(file->name, my_dir->d_name);
+    
+    if (!str)
         return (MALLOC_ERR);
-    }
     sb = check_for_stat(str, flag, &symlink);
     if (!sb)
         return (0);
-    if (create_new_file(*sb, new, str, symlink) == MALLOC_ERR) {
-        free(str);
-        return (MALLOC_ERR);
-    }
+    if (create_new_file(*sb, new, str, symlink) == MALLOC_ERR)
+        error = (MALLOC_ERR);
     free(sb);
     free(str);
-    return (0);
+    return (error);
 }
 
 static int read_dir(t_file *file, t_list **new, int flag_nb)
@@ -55,8 +50,10 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 1) == 1) {
             ret = parse_directory(file, my_dir, new, flag_nb);
-            if (ret != 0)
+            if (ret != 0) {
+                ft_printf_fd(2, "Malloc error\n");
                 break;
+            }
         }
     } while (my_dir != NULL);
     closedir(dir);

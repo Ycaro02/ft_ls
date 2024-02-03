@@ -83,7 +83,7 @@ static t_int64 get_total_size(t_list *lst)
 static int display_total_size(t_file *file, t_int8 no_file)
 {
     char        *total_str = ft_ltoa(file->total_size);
-    
+
     if (!total_str)
         return (MALLOC_ERR);
     multiple_fill_buff("total ", total_str, NULL, NULL);
@@ -101,7 +101,9 @@ int ls_only_file_L(t_list *lst, int flag_nb)
     return (0);
 }
 
-
+/** ls_l_one_dir : ls_function, give in argument to ls() and call manualy in recurcive_ls()
+ * 
+*/
 int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
     t_list *lst = NULL;
@@ -157,8 +159,8 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
         return (0);
     }
 
-    lst = get_all_file_struct(file, c->flag_nb, &c->error);
-    if (!lst && c->error == MALLOC_ERR)
+    lst = get_all_file_struct(file, c->flag_nb, &local_err);
+    if (!lst && local_err == MALLOC_ERR)
         return (MALLOC_ERR);
     else if (!lst) {
         if (local_err == 1) {

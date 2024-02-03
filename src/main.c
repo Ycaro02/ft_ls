@@ -64,22 +64,23 @@ static void special_display_header(t_list *dir_lst, int args_found, int call_val
     }
 }
 
+/** call_ls
+ * Ls hub to choice which ls version call
+*/
 static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
 {
     int err = 0;
 
     if (call_flag != 0 && has_flag(c->flag_nb, R_OPTION) && !has_flag(c->flag_nb, D_OPTION))
-        err = search_recurcive_dir(dir_lst, c, call_flag);
-    
-    
+        err = search_recurcive_dir(dir_lst, c, call_flag); /* Call recurcive */
     else if (call_flag != 0 && has_flag(c->flag_nb, L_OPTION) && has_flag(c->flag_nb, D_OPTION))
-        err = ls_only_dir(dir_lst, c->flag_nb);
+        err = ls_only_dir(dir_lst, c->flag_nb); /* Call ls D option*/
     else if (has_flag(c->flag_nb, L_OPTION) && call_flag != 0)
-        err = ls(dir_lst, c, ls_l_one_dir, call_flag); /* HERE */
+        err = ls(dir_lst, c, ls_l_one_dir, call_flag); /* Call ls L option */
     else if (has_flag(c->flag_nb, L_OPTION) && call_flag == 0)
-        err = ls_only_file_L(dir_lst, c->flag_nb);
+        err = ls_only_file_L(dir_lst, c->flag_nb);  /* For mixed argument in cmd line */
     else
-        err = ls(dir_lst, c, ls_one_dir, call_flag); /* HERE */
+        err = ls(dir_lst, c, ls_one_dir, call_flag); /* Call classic ls option */
 
     file_lstclear(&dir_lst, free);
     if (err == MALLOC_ERR) {
@@ -88,7 +89,13 @@ static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
     }
 }
 
-// static int ft_ls(char **argv, int flag_nb, t_int8* error, t_int8 special_err)
+/** ft_ls: start ls called in main
+ * Parse command line argument and store directory and simple_file in separate linked list
+ * Args:    - argv: argv from main
+ *          - c: Pointer to the context containing flag, special_error, exit_code
+ *              - c->error is set in get_dir_args or ls_function (call_ls) 
+ * Return value: Return the appropriate exit code
+*/
 static int ft_ls(char **argv, t_context *c)
 {
     t_list  *dir_lst, *simple_file = NULL;
