@@ -12,7 +12,7 @@ int ls(t_list *lst, t_context *c, int (*ls_function)(t_file*, t_context*, t_file
     file_c.idx = 0;
     file_c.lst_len = ft_lstsize(lst);
     file_c.call_flag = call_flag;
-    
+
     while (current) {
         err = ls_function(current->content, c, &file_c);
         ++(file_c.idx);
@@ -124,7 +124,8 @@ static int ft_ls(char **argv, t_context *c)
 
 
     if (dir_lst){
-        special_display_header(dir_lst, args_found, call_value);
+        if (!has_flag(c->flag_nb, R_OPTION))
+            special_display_header(dir_lst, args_found, call_value);
         call_ls(dir_lst, c, call_value + 1);
     }
 
