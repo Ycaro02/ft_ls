@@ -14,11 +14,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Install valgrind
-      run: sudo apt install valgrind -y
+    # - name: Install valgrind
+      # run: sudo apt install valgrind -y
 
     - name: make test
-      run: make test_sort
+      run: make test
 
     - name: make fclean
       run: make fclean

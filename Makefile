@@ -47,6 +47,17 @@ LIB_LIST = libft/list/linked_list.a
 
 LIBACL = rsc/acl/libacl.a
 
+
+LS_OUTPUT = real_ls_out
+
+FT_LS_OUTPUT = myls_out
+
+DIFF_LS = rsc/ls_diff.sh
+
+T_FLAG	= -alr
+
+T_DIR	= test
+
 all:		${NAME}
 
 %.o : %.c
@@ -68,10 +79,8 @@ clean:
 			@${RM} ${OBJ}
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
-test_sort:	${NAME}
-			export LC_COLLATE=en_US.utf8 && ls test/sort -al > real_ls_out
-			./ft_ls test/sort -al > myls_out
-			echo MYLS && cat myls_out -e && echo REALLS && cat real_ls_out -e
+test:	${NAME}
+			./${DIFF_LS} ${T_FLAG} ${T_DIR}
 
 vtest:		${NAME}
 			valgrind ./ft_ls / -lR
@@ -79,7 +88,7 @@ vtest:		${NAME}
 fclean:		clean
 			@make -s -C libft fclean
 			@make -s -C libft/list fclean
-			@${RM} ${NAME} real_ls_out myls_out
+			@${RM} ${NAME} ${LS_OUTPUT} ${FT_LS_OUTPUT}
 
 re:			fclean all
 
