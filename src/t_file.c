@@ -40,63 +40,6 @@ int check_for_quote(char *str)
 }
 
 
-inline static void read_write_perm(mode_t mode, char *str, int first, int second)
-{
-    if (mode & first)
-        str[0] = 'r';
-    if (mode & second)
-        str[1] = 'w';
-}
-
-inline static char detect_exe_perm(mode_t mode, int first, int second)
-{
-    char exec = '-';
-    char special = 's';
-
-    if (second == __S_ISVTX)
-        special = 't';
-    if (mode & first)
-        exec = 'x';
-    if (mode & second) {
-        if (exec == 'x')
-            exec = special;
-        else
-            exec = special - 32;
-    }
-    return (exec);
-}
-
-char *perm_to_string(mode_t mode, char type)
-{
-    char *perm = ft_calloc(sizeof(char), 11);
-    if (!perm)
-        return (NULL);
-
-    for (int i = 0; i < 11; ++i)
-        perm[i] = '-';
-    perm[10] = '\0';
-    perm[0] = type;
-
-    /* Read/Write by owner */
-    read_write_perm(mode, &perm[1], S_IRUSR, S_IWUSR);
-    /* Execute by owner and Set User ID exe */
-    perm[3] = detect_exe_perm(mode, S_IXUSR, S_ISUID);
-    /* Read/Write by group */
-    read_write_perm(mode, &perm[4], S_IRGRP, S_IWGRP);
-    /* Execute by group and Set Group ID exe */
-    perm[6] = detect_exe_perm(mode, S_IXGRP, S_ISGID);
-    /* Read/Write by other */
-    read_write_perm(mode, &perm[7], S_IROTH, S_IWOTH);
-    /* Execute by other and Sticky (save swaped text) */
-    perm[9] = detect_exe_perm(mode, S_IXOTH, __S_ISVTX);
-
-    return (perm);
-}
-
-/*  Need to refact, call stat here, check file type, if link call lstat instead 
-    Need to store space here to, each field will check for him
-    Give space array here to check and store*/
-
 t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
 {
     t_file *file;
@@ -105,14 +48,8 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
     if (!file)
         return (NULL);
     file->total_size = -1;
-    if (symlink == 0)
-        file->type = get_type(*sb);
-    else
-        file->type = SYMLINK;
-    
-    // file->perm = sb->st_mode & 0777;
+    file->type = symlink == TRUE ? SYMLINK : get_type(*sb);
     file->perm = sb->st_mode;
-
     file->size = sb->st_size;
     file->nb_link = sb->st_nlink;
     file->last_status_change = sb->st_ctim;

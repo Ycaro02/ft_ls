@@ -135,11 +135,9 @@ int         check_for_quote(char *str);
 //-------------------------------
 //      utils.c                 //
 //-------------------------------
-void        display_error_phrase(char *str);
 int         ft_strlen_word(char *s);
 int         get_stdout_width();
 void        update_error(t_int8 *error);
-int         print_error(char *msg, char* str, int error_type, int use_perror);
 int         last_char_is_slash(char *str);
 void        file_lstclear(t_list **lst, void (*del)(void*));
 int         is_point_dir(char *path, int flag_nb, int display);
@@ -222,6 +220,13 @@ int         diplay_xattr_acl(t_file *file);
 int         list_xattr(char *path, char *list);
 int         check_lst_acl(t_list *lst);
 int         check_acl(t_file *file);
+//-------------------------------
+//      manage_perm.c           //
+//-------------------------------
+char        *perm_to_string(mode_t mode, char type);
+t_int8      is_full_perm(mode_t mode);
+t_int8      is_executable_file(mode_t mode);
+
 //-------------------------------
 //    Basic flag gestion.c     //
 //-------------------------------

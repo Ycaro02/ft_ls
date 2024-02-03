@@ -79,7 +79,8 @@ static int write_nb_link(long long nb_link, int space)
     return (0);
 }
 
-void display_symlink(struct stat *sb, int flag_nb, char *new, int sym_bool)
+/*START SYMLINK HERE*/
+static void display_symlink(struct stat *sb, int flag_nb, char *new, int sym_bool)
 {
     t_file *file = fill_file_struct(sb, new, NULL, sym_bool);
     if (file) {
@@ -178,27 +179,14 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb, int space)
     }
     return (0);
 }
-
-
-static int is_full_perm(mode_t mode)
-{
-    // return ((mode & S_IRWXO) == S_IRWXO && (mode & S_IRWXG) == S_IRWXG && (mode & S_IRWXU) == S_IRWXU);
-    return (has_flag(mode, S_IRWXO) && has_flag(mode, S_IRWXG) && has_flag(mode, S_IRWXU));
-}
-
-static int is_executable_file(mode_t mode)
-{
-    return ((mode & S_IXOTH || mode & S_IXGRP || mode & S_IXUSR));
-}
+/*End SYMLINK HERE*/
 
 int write_file_name(t_file file, int flag_nb, int space)
 {
     int perm_color = E_NONE;
 
-    // if (file.perm & S_IXOTH || file.perm & S_IXGRP || file.perm & S_IXUSR)
     if (is_executable_file(file.perm))
         perm_color = E_GREEN;
-
     if (is_full_perm(file.perm))
         perm_color = E_FILL_GREEN;
     else if (file.type == FIFO)

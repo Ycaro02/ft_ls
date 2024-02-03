@@ -27,7 +27,7 @@ static int  check_args
     if (!sb) {
         *found = 1;
         c->error = NA_CMD_LINE_ERR;
-        display_error_phrase(str);
+        ft_printf_fd(2, "ft_ls cannot access '%s", str);
         perror("'");
         return (0);
     }
@@ -63,6 +63,7 @@ t_list  *get_dir_args(char **argv, t_list **simple_file, t_int8 *args_found, t_c
     return (new);
 }
 
+
 static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, t_int8 *error, int flag)
 {
     struct stat     *sb;
@@ -74,14 +75,15 @@ static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *f
         return (MALLOC_ERR);
     sb = check_for_stat(full_path, flag, &symlink);
     if (!sb) {
-        update_error(error);
+        update_error(error);    /* Error update here if syscall stat fail */
         return (0);
     }
     free(full_path);
-
     new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink);
-    if (!new_file)
+    if (!new_file) {
+        free(sb);
         return (MALLOC_ERR);
+    }
     ft_lstadd_back(all, ft_lstnew(new_file));
     free(sb);
     return (0);
@@ -99,7 +101,7 @@ t_list* get_all_file_struct(t_file *file, int flag_nb, t_int8 *error)
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 0) == 1) {
             if (check_for_fill_struct(&all, my_dir, file, error, flag_nb) == MALLOC_ERR) {
-                *error = MALLOC_ERR;
+                *error = MALLOC_ERR;    /* Set ptr to malloc error and return NULL */
                 return (NULL);
             }
         }
@@ -108,5 +110,5 @@ t_list* get_all_file_struct(t_file *file, int flag_nb, t_int8 *error)
     if (!all)
         return (NULL);
     sort_lst(all, flag_nb);
-    return(all); 
+    return(all);    /* Default return, if NULL just can't stat file or empty file */
 }

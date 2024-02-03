@@ -1,10 +1,8 @@
 #include "../include/ft_ls.h"
 
-void display_error_phrase(char *str)
-{
-    ft_printf_fd(2, "ft_ls cannot access '%s", str);
-}
-
+/** ft_strlen_word
+ * Count until ' ' (space) reached
+*/
 int ft_strlen_word(char *s)
 {
 	int i =0;
@@ -13,21 +11,14 @@ int ft_strlen_word(char *s)
 	return (i);
 }
 
+/** Update_error
+ * Update command line exit code, protected NA_CMD_LINE_ERR > NO_ACCESS_ERR
+ * if NA_CMD_LINE_ERR is set do nothing else set error to NO_ACCESS_ERR
+*/
 void update_error(t_int8 *error)
 {
      if (*error != NA_CMD_LINE_ERR)
         *error = NO_ACCESS_ERR;
-}
-
-int print_error(char *msg, char* str, int error_type, int use_perror)
-{
-    if (str)
-        ft_putstr_fd(str, 2);
-    if (use_perror == 0)
-        perror(msg);
-    else
-        ft_putstr_fd(msg, 2);
-    return (error_type);
 }
 
 int is_point_dir(char *path, int flag_nb, int display)

@@ -41,7 +41,7 @@ static int display_dir_header(t_file file, t_file_context *file_c, int l_flag)
     return (0);
 }
 
-long long get_total_size(t_list *lst)
+static long long get_total_size(t_list *lst)
 {
     t_list *current = lst;
     long long total = 0;
@@ -63,16 +63,15 @@ int ls_only_file_L(t_list *lst, int flag_nb)
 }
 
 
-// int ls_l_one_dir(t_file *file, int flag_nb, int lst_len, t_int8 *error, int call_flag, int index)
 int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
     t_list *lst = NULL;
-    int r_flag = has_flag(c->flag_nb, R_OPTION); /* bool r_flag enable */
+    int r_flag = has_flag(c->flag_nb, R_OPTION);        /* bool r_flag enable */
 
     if (file_c->call_flag != 0 && file->type != DIRECTORY)
         return (0);
     lst = get_all_file_struct(file, c->flag_nb, &c->error);
-    if (!lst && c->error == MALLOC_ERR) // one of case where int pointer error is mandatory
+    if (!lst && c->error == MALLOC_ERR)                 /* One case where int pointer error is mandatory */
         return (MALLOC_ERR);
     else if (!lst) {
         multiple_fill_buff("\nft_ls: cannot open directory '", file->name, "': Permission denied", NULL);
