@@ -15,10 +15,10 @@
 # include <sys/sysmacros.h> // major minor macro for C file
 # include <sys/ioctl.h>  // ioctl for manage_column
 # include <sys/xattr.h>  // extended attr 
-# include "../acl/acl.h" // classic <sys/acl.h> not present on 42 computer, same for -lacl
+# include "../rsc/acl/acl.h" // classic <sys/acl.h> not present on 42 computer, same for -lacl
 # include "basic_define.h"
 # include "../libft/libft.h"
-# include "../list/linked_list.h"
+# include "../libft/list/linked_list.h"
 
 # include "define_enum.h"
 // # include <sys/acl.h> 

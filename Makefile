@@ -41,9 +41,9 @@ RM	= rm -f
 
 LIBFT = libft/libft.a
 
-LIB_LIST = list/linked_list.a
+LIB_LIST = libft/list/linked_list.a
 
-LIBACL = acl/libacl.a
+LIBACL = rsc/acl/libacl.a
 
 all:		${NAME}
 
@@ -53,7 +53,7 @@ all:		${NAME}
 ${NAME}:	$(OBJ)
 			@echo " \033[5;36m ----- Compiling lib...  ----- \033[0m\n"
 			@make -s -C libft
-			@make -s -C list
+			@make -s -C libft/list
 			@echo "\033[7;32m -----  Compiling lib done  ----- \033[0m\n"
 			@echo " \033[5;36m ----- Compiling ft_ls project...  ----- \033[0m\n"
 			@${CC} $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) $(LIBACL) $(LIB_LIST)
@@ -62,7 +62,7 @@ ${NAME}:	$(OBJ)
 clean:
 			@echo "\033[7;31m\n -----  Cleaning all objects...  ----- \033[0m\n"
 			@make -s -C libft clean
-			@make -s -C list clean
+			@make -s -C libft/list clean
 			@${RM} ${OBJ}
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
@@ -76,7 +76,7 @@ vtest:		${NAME}
 
 fclean:		clean
 			@make -s -C libft fclean
-			@make -s -C list fclean
+			@make -s -C libft/list fclean
 			@${RM} ${NAME} real_ls_out myls_out
 
 re:			fclean all

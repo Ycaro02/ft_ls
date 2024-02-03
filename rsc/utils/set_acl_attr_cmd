@@ -1,0 +1,9 @@
+// extended attribut
+touch attr_test.txt
+setfattr -n user.comment -v "This is a comment" attr_test.txt
+getfattr -d attr_test.txt
+
+//ACL (Acces Control List)
+touch acl_test.txt
+setfacl -m u:root:rwx,u:nfour:r-- acl_test.txt
+getfacl acl_test.txt

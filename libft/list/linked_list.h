@@ -1,8 +1,8 @@
 #ifndef DEFINE_LINKED_LIST_H
 # define DEFINE_LINKED_LIST_H
 
-# include "../libft/libft.h"
-# include "../include/basic_define.h"
+# include "../libft.h"
+# include "../../include/basic_define.h"
 
  /********************************************************************
  *                        DATA STRUCTURES                           *
