@@ -63,12 +63,12 @@ static void display_dir_header(t_file file, t_file_context *file_c, int flag)
     }
 }
 
-static long long get_total_size(t_list *lst)
+static t_int64 get_total_size(t_list *lst)
 {
     t_list *current = lst;
-    long long total = 0;
-    while (current)
-    {
+    t_int64 total = 0;
+
+    while (current) {
         t_file *file = current->content;
         total += (file->nb_block / 2);
         current = current->next;
@@ -178,24 +178,3 @@ void display_quote(int quote)
     else
         fill_buffer_char(' ');
 }
-
-
-/* OLD ugly header display 'logic' */
-// if ((file_c->call_flag > 1 || file_c->idx != 0) || (file_c->call_flag >= 1 && file_c->lst_len > 1))
-// {
-//     if (file_c->idx == 0 && file_c->call_flag > 1 && l_flag != 1) // && L + R_OPTION
-//         fill_buffer("\n\n");
-//     else if (file_c->idx == 0 && file_c->call_flag > 1)
-//         fill_buffer_char('\n');
-        
-//     if (file_c->idx != 0)
-//         fill_buffer("\n\n");
-
-//     if (quote > NOEFFECT_CHAR)
-//         display_quote(quote);
-//     fill_buffer(file.name);
-//     if (quote > NOEFFECT_CHAR)
-//         display_quote(quote);
-
-//     fill_buffer(":\n");
-// }

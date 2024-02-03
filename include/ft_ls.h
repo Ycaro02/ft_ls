@@ -74,13 +74,13 @@ typedef enum e_flag t_eflag;
 */
 typedef struct s_file 
 {
-    char        type;
+    t_int8      type;
     mode_t      perm;
     nlink_t     nb_link;
     uid_t       user_id;
     gid_t       group_id;
-    long        size;
-    long        total_size;
+    t_int64     size;
+    t_int64     total_size;
     blkcnt_t    nb_block;
     dev_t       rdev;
     t_timespec  last_status_change;
@@ -88,7 +88,7 @@ typedef struct s_file
     t_timespec  last_change;
     char        *name;
     char        *parrent;
-    int         quote;
+    t_int8      quote;
 } t_file;
 
 
