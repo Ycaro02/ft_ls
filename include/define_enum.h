@@ -43,11 +43,12 @@ Exit code:"RESET"\n\
 "CYAN"-t"RESET" : Sort by last file modification\n\
 "CYAN"-u"RESET" : Sort by last access time\n\
 "CYAN"-c"RESET" : Sort by last status change\n\
-"CYAN"-f"RESET" : Don't sort, enable -a option\n\
-"CYAN"-z"RESET" : List extended attr and acccess control list\n\
+"CYAN"-f"RESET" : Don't sort, enable -a option, disable color\n\
+"CYAN"-z"RESET" : List extended attribut and access control list, enable -l option\n\
 "CYAN"-g"RESET" : Like -l but don't list owner \n\
 "CYAN"-d"RESET" : List only directory, no content\n\
-"CYAN"-n"RESET" : Like -l but list id instead of name\n"
+"CYAN"-n"RESET" : Like -l but list id instead of name\n\
+"CYAN"-G"RESET" : Enable color\n"
 
 //-------------------------------
 //     TIME                     // (after or before 6month ago)

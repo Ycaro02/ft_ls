@@ -13,6 +13,8 @@ static int manage_bonus_flag(int nb)
         if (has_flag(nb, COLOR_OPTION))
             unset_flag(&nb, COLOR_OPTION);
     }
+    if (has_flag(nb, Z_OPTION) && !has_flag(nb, L_OPTION))
+        set_flag(&nb, L_OPTION);
     return (nb);
 }
 

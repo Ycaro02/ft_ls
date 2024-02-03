@@ -220,7 +220,6 @@ int         **create_column_array (t_list *lst, int nb_column_max, int nb_line);
 //      list_xattr.c           //
 //-------------------------------
 int         diplay_xattr_acl(t_file *file);
-char        *get_new_path(t_file *file);
 int         list_xattr(char *path, char *list);
 int         check_lst_acl(t_list *lst);
 int         check_acl(t_file *file);

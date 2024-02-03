@@ -1,6 +1,8 @@
 #include "../include/ft_ls.h"
 
-
+/* listxattr: List attributes of the file pointed to by PATH into the user-supplied
+   buffer LIST (which is SIZE bytes big).  Return 0 on success, -1 for
+   errors.  */
 int list_xattr(char *path, char *list)
 {
     ft_bzero(list, BUFSIZ);
@@ -35,10 +37,8 @@ static int fill_acl_attr(t_file *file, char *str, char *value, char *tmp)
     ft_bzero(value, BUFSIZ);
     if (ft_strncmp(str, "system.posix_acl_", 17) == 0)
         display_acl(*file, str, tmp);
-    else
-    {
-        if (getxattr(tmp, str, value, BUFSIZ) == -1)
-        {
+    else {
+        if (getxattr(tmp, str, value, BUFSIZ) == -1) {
             ft_printf_fd(2, "Erorr getxattr for %s\n", tmp);
             free(tmp);
             return (-1);
@@ -49,7 +49,7 @@ static int fill_acl_attr(t_file *file, char *str, char *value, char *tmp)
     return (0);
 }
 
-char *get_new_path(t_file *file)
+static char *get_new_path(t_file *file)
 {
     char *tmp;
 
