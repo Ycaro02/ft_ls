@@ -13,7 +13,7 @@ int ft_strlen_word(char *s)
 	return (i);
 }
 
-void update_error(int *error)
+void update_error(t_int8 *error)
 {
      if (*error != NA_CMD_LINE_ERR)
         *error = NO_ACCESS_ERR;

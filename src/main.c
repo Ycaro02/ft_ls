@@ -2,34 +2,34 @@
 
 t_buff g_buff;
 
-int ls(t_list *lst, int flag_nb,  int (*ls_function)(t_file*, int, int, int*, int, int), int* error, int call_flag)
+// int ls(t_list *lst, int flag_nb,  int (*ls_function)(t_file*, int, int, t_int8*, int, int), t_int8* error, int call_flag)
+int ls(t_list *lst, t_context *c, int (*ls_function)(t_file*, t_context*, t_file_context*), int call_flag)
 {
     if (!lst)
         return (42);
     t_list *current = lst;
-    int idx = 0;
-    int lst_len = ft_lstsize(lst);
     int err = 0;
+    t_file_context file_c;
+    file_c.idx = 0;
+    file_c.lst_len = ft_lstsize(lst);
+    file_c.call_flag = call_flag;
+    
     while (current) {
-        err = ls_function(current->content, flag_nb, lst_len, error, call_flag, idx);
-        ++idx;
-        // ++call_flag;
+        err = ls_function(current->content, c, &file_c);
+        ++(file_c.idx);
         if (err == MALLOC_ERR)
             break ;
         current = current->next;
     }
-    // if (has_flag(flag_nb, D_OPTION) && !has_flag(flag_nb, L_OPTION))
-        // fill_buffer_char('\n');
     return (err);
 }
 
 static int ls_only_dir(t_list *dir_lst, int flag_nb)
 {
-    t_list *current = dir_lst;
-    int lst_len = ft_lstsize(dir_lst), i = 0;
+    t_list  *current = dir_lst;
+    int     *space = get_all_space(dir_lst, flag_nb), err = 0;
+    int     lst_len = ft_lstsize(dir_lst), i = 0;
 
-    int *space = get_all_space(dir_lst, flag_nb);
-    int err = 0;
     while (current) {
         err = fill_buffer_l_option(*(t_file *)current->content, space, flag_nb);
         if (err == MALLOC_ERR) {
@@ -45,20 +45,23 @@ static int ls_only_dir(t_list *dir_lst, int flag_nb)
 }
 
 
-void call_ls(t_list *dir_lst, int flag_nb, int *error, int call_flag)
+// static void call_ls(t_list *dir_lst, int flag_nb, t_int8 *error, int call_flag)
+static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
 {
     int err = 0;
 
-    if (call_flag != 0 && has_flag(flag_nb, R_OPTION) && !has_flag(flag_nb, D_OPTION))
-        err = search_recurcive_dir(dir_lst, flag_nb, error, call_flag);
-    else if (call_flag != 0 && has_flag(flag_nb, L_OPTION) && has_flag(flag_nb, D_OPTION))
-        err = ls_only_dir(dir_lst, flag_nb);
-    else if (has_flag(flag_nb, L_OPTION) && call_flag != 0)
-        err = ls(dir_lst, flag_nb, ls_l_one_dir, error, call_flag);
-    else if (has_flag(flag_nb, L_OPTION) && call_flag == 0)
-        err = ls_only_file_L(dir_lst, flag_nb);
+    if (call_flag != 0 && has_flag(c->flag_nb, R_OPTION) && !has_flag(c->flag_nb, D_OPTION))
+        err = search_recurcive_dir(dir_lst, c, call_flag);
+    
+    
+    else if (call_flag != 0 && has_flag(c->flag_nb, L_OPTION) && has_flag(c->flag_nb, D_OPTION))
+        err = ls_only_dir(dir_lst, c->flag_nb);
+    else if (has_flag(c->flag_nb, L_OPTION) && call_flag != 0)
+        err = ls(dir_lst, c, ls_l_one_dir, call_flag); /* HERE */
+    else if (has_flag(c->flag_nb, L_OPTION) && call_flag == 0)
+        err = ls_only_file_L(dir_lst, c->flag_nb);
     else
-        err = ls(dir_lst, flag_nb, ls_one_dir, error, call_flag);
+        err = ls(dir_lst, c, ls_one_dir, call_flag); /* HERE */
 
     new_lstclear(&dir_lst, free);
     if (err == MALLOC_ERR) {
@@ -67,7 +70,7 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error, int call_flag)
     }
 }
 
-inline static void basic_sort_lst(t_list **lst, int flag, int *error)
+inline static void basic_sort_lst(t_list **lst, int flag, t_int8 *error)
 {
     sort_lst(*lst, flag);
     if (has_flag(flag , REVERSE_OPTION))
@@ -86,40 +89,42 @@ t_list *lst_join(t_list *first, t_list *second)
     return (first);
 }
 
-int ft_ls(char **argv, int flag_nb, int* error, int special_err)
+// static int ft_ls(char **argv, int flag_nb, t_int8* error, t_int8 special_err)
+static int ft_ls(char **argv, t_context *c)
 {
-    t_list *dir_lst, *simple_file = NULL;
-    int call_value = 0, args_found = special_err;
+    t_list  *dir_lst, *simple_file = NULL;
+    int     call_value = 0;
+    t_int8  args_found = c->special_error;
     
-    dir_lst = get_dir_args(&argv[1], error, flag_nb, &simple_file, &args_found);
+    // dir_lst = get_dir_args(&argv[1], &c->error, c->flag_nb, &simple_file, &args_found);
+    dir_lst = get_dir_args(&argv[1], &simple_file, &args_found, c);
     
     /* Error management */
-    if (!dir_lst && *error == MALLOC_ERR) {
+    if (!dir_lst && c->error == MALLOC_ERR) {
         ft_printf_fd (2, "Malloc Error ft_ls\n");
         return (MALLOC_ERR);
     }
 
     if (dir_lst) {
-        if (has_flag(flag_nb, D_OPTION)) {
+        if (has_flag(c->flag_nb, D_OPTION)) {
             t_list *new = NULL;
             new = lst_join(dir_lst, simple_file);
             if (new) {
-                basic_sort_lst(&new, flag_nb, error);
-                call_ls(new, flag_nb, error, call_value);
-                return (*error);
+                basic_sort_lst(&new, c->flag_nb, &c->error);
+                call_ls(new, c, call_value);
+                return (c->error);
             }
         }
-        basic_sort_lst(&dir_lst, flag_nb, error);
+        basic_sort_lst(&dir_lst, c->flag_nb, &c->error);
     }
 
     if (simple_file){
-        basic_sort_lst(&simple_file, flag_nb, error);
-        call_ls(simple_file, flag_nb, error, call_value);
+        basic_sort_lst(&simple_file, c->flag_nb, &c->error);
+        call_ls(simple_file, c, call_value);
         ++call_value;
-        if (has_flag(flag_nb, L_OPTION) && dir_lst)
+        if (has_flag(c->flag_nb, L_OPTION) && dir_lst)
             fill_buffer("\n");
     }
-    
 
     /*  display new band before ls call if:
         args found (invalid args),
@@ -136,13 +141,13 @@ int ft_ls(char **argv, int flag_nb, int* error, int special_err)
                 display_quote(quote);
             fill_buffer(":\n");
         }
-        call_ls(dir_lst, flag_nb, error, call_value + 1);
+        call_ls(dir_lst, c, call_value + 1);
     }
 
-    if (special_err == 1) /* set return cmd value for special err */
-        *error = 2;
+    if (c->special_error == 1) /* set return cmd value for special err */
+        c->error = 2;
     
-    return (*error);
+    return (c->error);
 }
 
 static int check_display_help(int argc, char**argv)
@@ -156,28 +161,37 @@ static int check_display_help(int argc, char**argv)
     return (1);
 }
 
+t_context init_context(){
+    t_context context;
+
+    context.error = 0;
+    context.special_error = 0;
+    context.flag_nb = 0;
+    return (context);
+}
+
 int main (int argc, char **argv)
 {
-    /* special error fir only '-' manage case:
+    /* special error for only '-' manage case:
          exit code -2, 
          don't active default search in current dir (".")
          display if another args found (dir or file) 
     */
-    int error = 0, special_error = 0;
-    int flag_nb;
+    // int error = 0, special_error = 0, flag_nb = 0;
+    t_context c = init_context();
 
-    error = 0;
     if (check_display_help(argc, argv) == 0)
         return (0);
     ft_bzero(g_buff.buffer, BUFFER_LEN - 1);
 
-    flag_nb = parse_flag(argc, argv, &special_error);
-    if (flag_nb == -1)
+    c.flag_nb = parse_flag(argc, argv, &c.special_error);
+    if (c.flag_nb == -1)
         return (2);
-    error = ft_ls(argv, flag_nb, &error, special_error);
+    // c.error = ft_ls(argv, c.flag_nb, &c.error, c.special_error);
+    c.error = ft_ls(argv, &c);
     finish_print_buffer();
 
-    return (error);
+    return (c.error);
 }
 
 int quotes_required(char *str)

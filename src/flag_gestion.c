@@ -33,7 +33,7 @@ static int get_flag_value(char c)
 
 /* PUBLIC MAIN */
 
-int parse_flag(int argc, char **argv, int *special_err)
+int parse_flag(int argc, char **argv, t_int8 *special_err)
 {
     int i = 1, flags = 0, tmp_value = 0;
 

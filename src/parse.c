@@ -18,15 +18,15 @@ static t_file   *default_file_struct(int flag)
 }
 
 static int  check_args
-(char *str, t_list **new, t_list **simple_file, int *found, int *error, int flag_nb)
+(char *str, t_list **new, t_list **simple_file, t_int8 *found, t_context *c)
 {
     int         symlink = 0;
-    struct stat *sb = check_for_stat(str, flag_nb, &symlink);
+    struct stat *sb = check_for_stat(str, c->flag_nb, &symlink);
     t_file      *file = NULL;
 
     if (!sb) {
         *found = 1;
-        *error = NA_CMD_LINE_ERR;
+        c->error = NA_CMD_LINE_ERR;
         display_error_phrase(str);
         perror("'");
         return (0);
@@ -44,26 +44,26 @@ static int  check_args
     return (0);
 }
 
-t_list  *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file, int* args_found)
+t_list  *get_dir_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c)
 {
-    int i = 0;
-    t_list *new = NULL;
+    int     i = 0;
+    t_list  *new = NULL;
 
     while (argv && argv[i]) {
         if (argv[i][0] != '-') {
-            if (check_args(argv[i], &new,  simple_file, args_found, error, flag_nb) == MALLOC_ERR) {
-                *error = MALLOC_ERR;
+            if (check_args(argv[i], &new,  simple_file, args_found, c) == MALLOC_ERR) {
+                c->error = MALLOC_ERR;
                 return (NULL);
             }
         }
         i++;
     }
     if (!new && *args_found == 0) /* default search if nothing found */
-        ft_lstadd_back(&new, ft_lstnew(default_file_struct(flag_nb)));
+        ft_lstadd_back(&new, ft_lstnew(default_file_struct(c->flag_nb)));
     return (new);
 }
 
-static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, int *error, int flag)
+static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, t_int8 *error, int flag)
 {
     struct stat     *sb;
     t_file          *new_file;
@@ -87,7 +87,7 @@ static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *f
     return (0);
 }
 
-t_list* get_all_file_struct(t_file *file, int flag_nb, int *error)
+t_list* get_all_file_struct(t_file *file, int flag_nb, t_int8 *error)
 {
     t_list *all = NULL;
     struct dirent *my_dir;

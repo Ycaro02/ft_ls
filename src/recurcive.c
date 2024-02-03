@@ -63,7 +63,7 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
     return (ret);
 }
 
-t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
+static t_list *get_recurcive_dir(t_file *file, int flag_nb, t_int8 *error)
 {
     t_list  *new = NULL;
 
@@ -83,49 +83,54 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
     return (new);
 }
 
-static int recurcive_ls(t_list *dir_lst, int flag_nb ,int* error, int lst_len, int idx, int *call_flag)
+// static int recurcive_ls(t_list *dir_lst, t_context *c, int lst_len, int idx, int *call_flag)
+static int recurcive_ls(t_list *dir_lst, t_context *c, t_file_context *file_c)
 {
     int err = 0;
 
-    if (has_flag(flag_nb, L_OPTION))
-        err = ls_l_one_dir(dir_lst->content, flag_nb, lst_len, error, *call_flag, idx);
+    if (has_flag(c->flag_nb, L_OPTION))
+        err = ls_l_one_dir(dir_lst->content, c, file_c);
     else {
-        err = ls_one_dir(dir_lst->content, flag_nb, lst_len, error, *call_flag, idx);
+        err = ls_one_dir(dir_lst->content, c, file_c);
     }
-    if (*call_flag == 1)
-        *call_flag = 2;
+    if (file_c->call_flag == 1)
+        file_c->call_flag = 2;
     if (err == MALLOC_ERR)
         return (err);
     return (err);
 } 
 
-int safe_recurcive(t_list *local_list, int flag_nb, int* error, int call_flag)
+static int safe_recurcive(t_list *local_list, t_context *c, int call_flag)
 {
     int err = 0;
 
     if (local_list)
-        err = search_recurcive_dir(local_list, flag_nb, error, call_flag);
+        err = search_recurcive_dir(local_list, c, call_flag);
     if (err == MALLOC_ERR)
         return (err);
     return (err);
 }
 
-int search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error, int call_flag)
+int search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag)
 {
     t_list *local_list = NULL;
-    int     err = 0, index = 0, lst_len = get_lst_len(dir_lst);
+    int     err = 0;
+    t_file_context file_c;
+    file_c.idx = 0;
+    file_c.lst_len = get_lst_len(dir_lst);
+    file_c.call_flag = call_flag;
 
     while(dir_lst) {
         /* nned to take call flag, 0 for first time and increment it */
-        err = recurcive_ls(dir_lst, flag_nb, error, lst_len, index, &call_flag);
+        err = recurcive_ls(dir_lst, c, &file_c);
         if (err == MALLOC_ERR)
             break ;
-        local_list = get_recurcive_dir(dir_lst->content, flag_nb, error);
-        err = safe_recurcive(local_list, flag_nb, error, call_flag);
-        if (*error == MALLOC_ERR || err == MALLOC_ERR)
+        local_list = get_recurcive_dir(dir_lst->content, c->flag_nb, &c->error);
+        err = safe_recurcive(local_list, c, call_flag);
+        if (c->error == MALLOC_ERR || err == MALLOC_ERR)
             break ;
         new_lstclear(&local_list, free);
-        ++index;
+        ++(file_c.idx);
         dir_lst = dir_lst->next;
     }
     new_lstclear(&local_list, free);

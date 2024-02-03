@@ -50,7 +50,6 @@ Double quote add simple quotes
 DIEZE_CHAR :
     - simple quote only when at idx 0
 */
-
 enum special_char_e {
     NORMAL_CHAR,                // all other char
     NOEFFECT_CHAR,              // @ % - _ + . , : 
@@ -69,6 +68,9 @@ enum special_char_e {
 typedef struct timespec t_timespec;
 typedef enum e_flag t_eflag;
 
+/**
+ * File structure, contain lot of struct stat field
+*/
 typedef struct s_file 
 {
     char        type;
@@ -88,6 +90,27 @@ typedef struct s_file
     int         quote;
 } t_file;
 
+/**
+ * Ls context execution
+*/
+typedef struct s_context {
+    t_int8      error;              /* Exit error code */
+    t_int8      special_error;      /* special error to manage -- and special display */
+    int         flag_nb;            /* flags value (ls option) */
+} t_context;
+
+/**
+ * File context
+*/
+typedef struct s_file_context {
+    int         call_flag;          /* Call flag used in hub ls function */
+    int         idx;                /* Index of file in lst */
+    int         lst_len;            /* File's list len */
+} t_file_context;
+
+/**
+ * Buffer to avoid multiple useless call of write
+*/
 typedef struct s_buff
 {
 	char		buffer[BUFFER_LEN];
@@ -114,7 +137,7 @@ int check_for_quote(char *str);
 void    display_error_phrase(char *str);
 int     ft_strlen_word(char *s);
 int     get_stdout_width();
-void    update_error(int *error);
+void    update_error(t_int8 *error);
 int     print_error(char *msg, char* str, int error_type, int use_perror);
 int     get_lst_len(t_list *lst);
 int     last_char_is_slash(char *str);
@@ -125,31 +148,32 @@ void    display_file_lst(t_list *lst);
 //-------------------------------
 //      flag_gestion.c          //
 //-------------------------------
-int     get_flag(enum e_flag *flag);
-/* refactor in progress */
-// t_eflag *check_for_flag(int argc, char **argv);
+int parse_flag(int argc, char **argv, t_int8 *special_err);
 //-------------------------------
 //      parse.c                //
 //-------------------------------
-t_list  *get_all_file_struct(t_file *file, int flag_nb, int* error);
-t_list *get_dir_args(char **argv, int *error, int flag_nb, t_list **simple_file, int* args_found);
+t_list* get_all_file_struct(t_file *file, int flag_nb, t_int8 *error);
+t_list  *get_dir_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c);
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------
+// int     ls_one_dir(t_file *file, int flag_nb, int lst_len, t_int8 *error, int call_flag, int index);
+// int     ls_l_one_dir(t_file *file, int flag_nb, int lst_len, t_int8 *error, int call_flag, int index);
 int     ls_only_file_L(t_list *lst, int flag_nb);
-int     ls_l_one_dir(t_file *file, int flag_nb, int lst_len, int* error, int call_flag, int index);
-int     ls_one_dir(t_file *file, int flag_nb, int lst_len, int* error, int call_flag, int index);
 void    display_quote(int quote);
+
+int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c);
+int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c);
 //-------------------------------
 //      recurcive.c            //
 //-------------------------------
-int search_recurcive_dir(t_list *dir_lst, int flag_nb, int *error, int call_flag);
+int     search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag);
 //-------------------------------
 //      l_options.c            //
 //-------------------------------
 void    insert_space(int nb);
 int     fill_buffer_l_option(t_file file, int* space, int nb_flag);
-int write_file_name(t_file file, int flag_nb, int space);
+int     write_file_name(t_file file, int flag_nb, int space);
 void    write_user_name(long user_id, int space, int flag_nb);
 void    write_group_name(long group_id, int space, int flag_nb);
 //-------------------------------
@@ -172,7 +196,7 @@ char    **get_printable_date(t_timespec last_change);
 //-------------------------------
 void    sort_lst(t_list *lst, int flag_nb);
 void    free_node_ptr(t_list **lst);
-int     safe_reverse_lst(t_list **lst,  int* error, int flag_nb);
+int     safe_reverse_lst(t_list **lst,  t_int8 *error, int flag_nb);
 int     is_special_char(char c);
 //-------------------------------
 //      buffer.c                //
@@ -215,8 +239,6 @@ void        set_flag(int *flags, int flag_val);
 void        unset_flag(int *flags, int flag_val);
 t_int8      has_flag(int flags, int flag_val);
 t_int8      flag_already_present(int flags, int flag_val);
-// flag gestion
-int         parse_flag(int argc, char **argv, int *special_err);
 // main.c to move
 struct stat *check_for_stat(char* name, int flag, int *save);
 int         quotes_required(char *str);
