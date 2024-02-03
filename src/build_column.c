@@ -248,7 +248,7 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
 int manage_basic_column(t_list *lst, int space_quote, int flag)
 {
     int     **array = NULL; 
-    int     stdout_width = get_stdout_width(), nb_line = 0, nb_column = 1, lst_len = get_lst_len(lst);
+    int     stdout_width = get_stdout_width(), nb_line = 0, nb_column = 1, lst_len = ft_lstsize(lst);
     int     *tab_max_unit = NULL, *all_len = get_all_len(lst, lst_len);
 
     if (!all_len) {
@@ -262,7 +262,7 @@ int manage_basic_column(t_list *lst, int space_quote, int flag)
     tab_max_unit = get_max_by_column(lst, nb_column, nb_line);
     if (!tab_max_unit) {
         free(all_len);
-        new_lstclear(&lst, free);
+        file_lstclear(&lst, free);
         return (MALLOC_ERR);
     }
     array = create_column_array(lst, nb_column, nb_line);
@@ -270,7 +270,7 @@ int manage_basic_column(t_list *lst, int space_quote, int flag)
         display_column(lst, array, tab_max_unit, flag, space_quote);
     free_incomplete_array((void **)array, nb_line);
     free(tab_max_unit);
-    new_lstclear(&lst, free);
+    file_lstclear(&lst, free);
     free(all_len);
     return (0);
 }

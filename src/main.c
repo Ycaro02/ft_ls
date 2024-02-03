@@ -63,7 +63,7 @@ static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
     else
         err = ls(dir_lst, c, ls_one_dir, call_flag); /* HERE */
 
-    new_lstclear(&dir_lst, free);
+    file_lstclear(&dir_lst, free);
     if (err == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error exit\n");
         exit(MALLOC_ERR);
@@ -75,18 +75,6 @@ inline static void basic_sort_lst(t_list **lst, int flag, t_int8 *error)
     sort_lst(*lst, flag);
     if (has_flag(flag , REVERSE_OPTION))
         safe_reverse_lst(lst, error, flag);
-}
-
-
-t_list *lst_join(t_list *first, t_list *second)
-{
-    t_list *current = second;
-    while (current) {
-        ft_lstadd_back(&first, ft_lstnew(current->content));
-        current = current->next;
-    }
-    free_node_ptr(&second);
-    return (first);
 }
 
 // static int ft_ls(char **argv, int flag_nb, t_int8* error, t_int8 special_err)
@@ -108,7 +96,7 @@ static int ft_ls(char **argv, t_context *c)
     if (dir_lst) {
         if (has_flag(c->flag_nb, D_OPTION)) {
             t_list *new = NULL;
-            new = lst_join(dir_lst, simple_file);
+            new = ft_lstjoin(dir_lst, simple_file);
             if (new) {
                 basic_sort_lst(&new, c->flag_nb, &c->error);
                 call_ls(new, c, call_value);

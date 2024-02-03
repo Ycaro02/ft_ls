@@ -1,22 +1,5 @@
 #include "../include/ft_ls.h"
 
-void free_node_ptr(t_list **lst)
-{
-	t_list	*tmp;
-	t_list	*current;
-
-	if (lst == NULL || *lst == NULL)
-		return ;
-	current = *lst;
-	tmp = current;
-	while (tmp != NULL) {
-		tmp = current->next;
-		free(current);
-		current = tmp;
-	}
-	*lst = NULL;
-}
-
 // static void reverse_lst(t_list *lst, t_list **new)
 // {
 //     t_list *current;
@@ -39,7 +22,7 @@ void free_node_ptr(t_list **lst)
 //             *error = MALLOC_ERR;
 //         return (MALLOC_ERR);
 //     }
-//     free_node_ptr(lst);
+//     ft_lstclear_nodeptr_ptr(lst);
 //     *lst = reverse;
 //     return (0);
 // }

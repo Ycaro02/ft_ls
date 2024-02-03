@@ -117,7 +117,7 @@ int search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag)
     int     err = 0;
     t_file_context file_c;
     file_c.idx = 0;
-    file_c.lst_len = get_lst_len(dir_lst);
+    file_c.lst_len = ft_lstsize(dir_lst);
     file_c.call_flag = call_flag;
 
     while(dir_lst) {
@@ -129,10 +129,10 @@ int search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag)
         err = safe_recurcive(local_list, c, call_flag);
         if (c->error == MALLOC_ERR || err == MALLOC_ERR)
             break ;
-        new_lstclear(&local_list, free);
+        file_lstclear(&local_list, free);
         ++(file_c.idx);
         dir_lst = dir_lst->next;
     }
-    new_lstclear(&local_list, free);
+    file_lstclear(&local_list, free);
     return (err);
 }

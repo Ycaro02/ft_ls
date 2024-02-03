@@ -1,4 +1,5 @@
 NAME = libft.a
+
 SRC =	ft_memset.c \
 		ft_atoi.c \
 		ft_bzero.c \
@@ -43,30 +44,13 @@ SRC =	ft_memset.c \
 		printf_fd/ft_printf.c \
 		printf_fd/ft_put_and_count.c \
 
-BONUS = ft_lstnew.c \
-		ft_lstadd_front.c \
-		ft_lstsize.c \
-		ft_lstlast.c \
-		ft_lstadd_back.c \
-		ft_lstdelone.c \
-		ft_lstclear.c \
-		ft_lstiter.c \
-		ft_lstmap.c \
-
-BOBJ = $(BONUS:.c=.o)
-
 OBJ = $(SRC:.c=.o)
+
 CC = gcc
+
 CFLAGS = -Wall -Wextra -Werror -g
 
 all : $(NAME)
-
-bonus : $(BOBJ) $(OBJ)
-	ar rcs $(NAME) $^
-
-so:
-	$(CC) -nostartfiles -fPIC $(CFLAGS) $(SRC)
-	gcc -nostartfiles -shared -o libft.so $(OBJ) $(BOBJ)
 
 %.o : %.c
 	$(CC) ${CFLAGS} -c $< -o $@
@@ -75,12 +59,12 @@ $(NAME): $(OBJ)
 	ar rcs -o $(NAME) $(OBJ)
 
 clean :
-	rm -f $(OBJ) $(BOBJ)
+	rm -f $(OBJ)
 
 fclean : clean
 	rm -f $(NAME)
 
 re : fclean all
 
-.PHONY: clean fclean all re bonus
+.PHONY: clean fclean all re
 

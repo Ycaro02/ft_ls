@@ -67,7 +67,7 @@
 // (t_list *lst, int *max_unit_len, int max_per_line, int nb_line, int space_quote)
 // {
 //     int current_line = 0, current_colum = 0, i = 0, j = 0;
-//     char **tab = alloc_tab(nb_line, max_unit_len, max_per_line, get_lst_len(lst));
+//     char **tab = alloc_tab(nb_line, max_unit_len, max_per_line, ft_lstsize(lst));
 //     if (!tab)
 //         return (NULL);
 //     while (lst)
@@ -212,7 +212,7 @@
 //     for (int i = 0; i < nb_line + 1; i++)
 //         free(tab[i]);
 //     free(tab);
-//     new_lstclear(lst, free);
+//     file_lstclear(lst, free);
 //     // fill_buffer("\n");
 //     return (0);
 // }

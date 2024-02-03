@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfour <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 18:09:23 by nfour             #+#    #+#             */
-/*   Updated: 2022/10/01 18:42:36 by nfour            ###   ########.fr       */
+/*   Created: 2022/10/01 16:35:28 by nfour             #+#    #+#             */
+/*   Updated: 2022/10/12 11:24:40 by nfour            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "linked_list.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void*))
+int	ft_lstsize(t_list *lst)
 {
-	t_list	*tmp;
-	t_list	*current;
+	int		count;
 
-	if (del == NULL || lst == NULL || *lst == NULL)
-		return ;
-	current = *lst;
-	tmp = current;
-	while (tmp != NULL)
+	count = 0;
+	while (lst != NULL)
 	{
-		tmp = current->next;
-		del(current->content);
-		free(current);
-		current = tmp;
+		lst = lst->next;
+		count++;
 	}
-	*lst = NULL;
+	return (count);
 }

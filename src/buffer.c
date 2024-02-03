@@ -41,7 +41,7 @@ int fill_l_buffer(t_list *lst, int flag_nb, int call_flag)
     }
     free(space);
     if (call_flag != 0)
-        new_lstclear(&lst, free);
+        file_lstclear(&lst, free);
     return (0);
 }
 
@@ -140,7 +140,7 @@ int store_in_buffer(t_list *lst, int flag_nb)
     int quote_space = get_nb_space(lst, get_len_name_quote); 
     err = manage_basic_column(lst, quote_space, flag_nb);
     if (err == MALLOC_ERR) {
-        new_lstclear(&lst, free);
+        file_lstclear(&lst, free);
         return (MALLOC_ERR);
     }
     return (err);

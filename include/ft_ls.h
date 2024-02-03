@@ -16,10 +16,11 @@
 # include <sys/ioctl.h>  // ioctl for manage_column
 # include <sys/xattr.h>  // extended attr 
 # include "../acl/acl.h" // classic <sys/acl.h> not present on 42 computer, same for -lacl
+# include "basic_define.h"
 # include "../libft/libft.h"
+# include "../list/linked_list.h"
 
 # include "define_enum.h"
-# include "basic_define.h"
 // # include <sys/acl.h> 
 
 
@@ -139,9 +140,8 @@ int         ft_strlen_word(char *s);
 int         get_stdout_width();
 void        update_error(t_int8 *error);
 int         print_error(char *msg, char* str, int error_type, int use_perror);
-int         get_lst_len(t_list *lst);
 int         last_char_is_slash(char *str);
-void        new_lstclear(t_list **lst, void (*del)(void*));
+void        file_lstclear(t_list **lst, void (*del)(void*));
 int         is_point_dir(char *path, int flag_nb, int display);
 char        *join_parent_name(char* parent_name, char* path);
 void        display_file_lst(t_list *lst);
@@ -192,7 +192,6 @@ char        **get_printable_date(t_timespec last_change);
 //      sort.c                  //
 //-------------------------------
 void        sort_lst(t_list *lst, int flag_nb);
-void        free_node_ptr(t_list **lst);
 int         safe_reverse_lst(t_list **lst,  t_int8 *error, int flag_nb);
 int         is_special_char(char c);
 //-------------------------------

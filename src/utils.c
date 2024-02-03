@@ -30,19 +30,6 @@ int print_error(char *msg, char* str, int error_type, int use_perror)
     return (error_type);
 }
 
-int get_lst_len(t_list *lst)
-{
-    int i;
-
-    i = 0;
-    while(lst)
-    {
-        lst = lst->next;
-        i++;
-    }
-    return (i);
-}
-
 int is_point_dir(char *path, int flag_nb, int display)
 {
     if (display == 0) {
@@ -92,8 +79,7 @@ int last_char_is_slash(char *str)
     return (1);
 }
 
-
-void	new_lstclear(t_list **lst, void (*del)(void*))
+void	file_lstclear(t_list **lst, void (*del)(void*))
 {
 	t_list	*tmp = NULL, *current = NULL;
     t_file  *file = NULL;

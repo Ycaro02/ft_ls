@@ -185,7 +185,7 @@ int *get_all_space(t_list *lst, int flag_nb)
     int *array = NULL;
     array = ft_calloc(sizeof(int), S_MAX);
     if (!array) {
-        new_lstclear(&lst, free);
+        file_lstclear(&lst, free);
         ft_printf_fd(2, "Malloc error get all space\n");
         return (NULL);
     }

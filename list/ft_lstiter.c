@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize.c                                       :+:      :+:    :+:   */
+/*   ft_lstiter.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfour <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 16:35:28 by nfour             #+#    #+#             */
-/*   Updated: 2022/10/12 11:24:40 by nfour            ###   ########.fr       */
+/*   Created: 2022/10/01 18:47:31 by nfour             #+#    #+#             */
+/*   Updated: 2022/10/01 18:57:30 by nfour            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "linked_list.h"
 
-int	ft_lstsize(t_list *lst)
+void	ft_lstiter(t_list *lst, void (*f)(void *))
 {
-	int		count;
+	t_list	*current;
 
-	count = 0;
-	while (lst != NULL)
+	if (lst == NULL || f == NULL )
+		return ;
+	current = lst;
+	while (current != NULL)
 	{
-		lst = lst->next;
-		count++;
+		f(current->content);
+		current = current->next;
 	}
-	return (count);
 }
