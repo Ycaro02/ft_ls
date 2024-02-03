@@ -28,15 +28,17 @@ static int hard_display_d(t_file *file)
 /** Display dir header
  * args: file, lst_len, call, index, flag
  *      file: t_file obj to display
- *      lst_len: file's lst_len
- *      call: call deep,    0 for only file
- *                          1 for first call without file/error before
- *                          2 for every next call
- *      index: index of file in lst
+ *      file_c: t_file context struct:
+ *          - lst_len: file's lst_len
+ *          - call: call deep,    
+ *                          - 0 for only file
+ *                          - 1 for first call without file/error before
+ *                          - 2 for every next call
+ *          - idx: index of file in lst
  *      flag : flag option
- * bool flag for l and R option: option 0 for no, 1 for l, 2 for l + r (just display total) 
+ *      no_file: bool no_file
 */
-static void display_dir_header(t_file file, t_file_context *file_c, int flag)
+static void display_dir_header(t_file file, t_file_context *file_c, int flag, t_int8 no_file)
 {
     int quote = quotes_required(file.name);
     // display_fcontext_flag(file_c, file.name, flag);
@@ -59,14 +61,16 @@ static void display_dir_header(t_file file, t_file_context *file_c, int flag)
         fill_buffer(file.name);
         if (quote > NOEFFECT_CHAR)
             display_quote(quote);
-        fill_buffer(":\n");
+        fill_buffer_char(':');
+        if (!no_file)
+            fill_buffer_char('\n');
     }
 }
 
 static t_int64 get_total_size(t_list *lst)
 {
-    t_list *current = lst;
-    t_int64 total = 0;
+    t_list      *current = lst;
+    t_int64     total = 0;
 
     while (current) {
         t_file *file = current->content;
@@ -76,12 +80,15 @@ static t_int64 get_total_size(t_list *lst)
     return (total);
 }
 
-static int display_total_size(t_file *file)
+static int display_total_size(t_file *file, t_int8 no_file)
 {
-    char *total_str = ft_ltoa(file->total_size);
+    char        *total_str = ft_ltoa(file->total_size);
+    
     if (!total_str)
         return (MALLOC_ERR);
-    multiple_fill_buff("total ", total_str, "\n", NULL);
+    multiple_fill_buff("total ", total_str, NULL, NULL);
+    if (!no_file)
+        fill_buffer_char(' ');
     free(total_str);
     return (0);
 }
@@ -98,32 +105,33 @@ int ls_only_file_L(t_list *lst, int flag_nb)
 int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
     t_list *lst = NULL;
+    t_int8 local_err = 0;
     // int r_flag = has_flag(c->flag_nb, R_OPTION); /* bool r_flag enable */
 
     if (file_c->call_flag != 0 && file->type != DIRECTORY)
         return (0);
-    lst = get_all_file_struct(file, c->flag_nb, &c->error);
-    if (!lst && c->error == MALLOC_ERR) /* One case where int pointer error is mandatory */
+    lst = get_all_file_struct(file, c->flag_nb, &local_err);
+    if (!lst && local_err == MALLOC_ERR) /* One case where int pointer error is mandatory */
         return (MALLOC_ERR);
     else if (!lst) { /* Here we use NULL return to check if directory can't be read or empty */
-        multiple_fill_buff("\nft_ls: cannot open directory '"\
-            , file->name, "': Permission denied", NULL);
-        if (!has_flag(c->flag_nb, R_OPTION))
-            return (NA_CMD_LINE_ERR); /* CMD LINE ERROR */
-        update_error(&c->error);
-        return (c->error); /* classic denie error */
+        if (local_err == 1) {
+            multiple_fill_buff("\nft_ls: cannot open directory '"\
+                , file->name, "': Permission denied", NULL);
+            if (!has_flag(c->flag_nb, R_OPTION)){
+                c->error = NA_CMD_LINE_ERR;
+                return (0); /* CMD LINE ERROR */
+            }
+            update_error(&c->error);
+            return (0); /* classic denie error */
+        }
     }
     file->total_size = get_total_size(lst);
-    /* Call display dir with flag 1 for -l option and r_flag * 2 for R*/
-    display_dir_header(*file, file_c, c->flag_nb);
-    
-    if (display_total_size(file) == MALLOC_ERR)
-        return (MALLOC_ERR);
-    
-    if (fill_l_buffer(lst, c->flag_nb, file_c->call_flag) == MALLOC_ERR)
+    display_dir_header(*file, file_c, c->flag_nb, 0);
+    if (display_total_size(file, (lst == NULL)) == MALLOC_ERR)
         return (MALLOC_ERR);
 
-    
+    if (lst && fill_l_buffer(lst, c->flag_nb, file_c->call_flag) == MALLOC_ERR)
+            return (MALLOC_ERR);
     if (file_c->call_flag == 1)
         ++(file_c->call_flag);
     return (0);
@@ -134,6 +142,7 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
     // int     r_flag = has_flag(c->flag_nb, R_OPTION); /* bool r_flag enable */
     t_list  *lst = NULL;
+    t_int8  local_err = 0;
 
     if (has_flag(c->flag_nb, D_OPTION))
         return (hard_display_d(file));
@@ -152,16 +161,20 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     if (!lst && c->error == MALLOC_ERR)
         return (MALLOC_ERR);
     else if (!lst) {
-        multiple_fill_buff("\nft_ls: cannot open directory '", file->name, "': Permission denied", NULL);
-        if (!has_flag(c->flag_nb, R_OPTION))
-            return (NA_CMD_LINE_ERR); /* CMD LINE ERROR */
-        update_error(&c->error);
-        return (c->error); /* classic denie error need to check before ? call update error instead */
+        if (local_err == 1) {
+            multiple_fill_buff("\nft_ls: cannot open directory '"\
+                , file->name, "': Permission denied", NULL);
+            if (!has_flag(c->flag_nb, R_OPTION)){
+                c->error = NA_CMD_LINE_ERR;
+                return (0); /* CMD LINE ERROR */
+            }
+            update_error(&c->error);
+            return (0); /* classic denie error */
+        }
     }
 
-    display_dir_header(*file, file_c, c->flag_nb);
-
-    if (store_in_buffer(lst, c->flag_nb) == MALLOC_ERR)
+    display_dir_header(*file, file_c, c->flag_nb, (lst == NULL));
+    if (lst && store_in_buffer(lst, c->flag_nb) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);
 }

@@ -95,8 +95,10 @@ t_list* get_all_file_struct(t_file *file, int flag_nb, t_int8 *error)
     struct dirent *my_dir;
     DIR *dir = opendir(file->name);
     
-    if (!dir)
+    if (!dir) {
+        update_error(error); /* try to set error to 1 */
         return (NULL);
+    }
     do  {
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 0) == 1) {
@@ -110,5 +112,5 @@ t_list* get_all_file_struct(t_file *file, int flag_nb, t_int8 *error)
     if (!all)
         return (NULL);
     sort_lst(&all, flag_nb);
-    return(all);    /* Default return, if NULL just can't stat file or empty file */
+    return(all);    /* Default return, if NULL just can't open file or empty file */
 }

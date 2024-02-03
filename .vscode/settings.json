@@ -60,7 +60,9 @@
         "stdarg.h": "c",
         "stdlib.h": "c",
         "stddef.h": "c",
-        "cstddef": "c"
+        "cstddef": "c",
+        "acl.h": "c",
+        "features.h": "c"
     },
 
     "highlight.regexes": {

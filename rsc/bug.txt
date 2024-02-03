@@ -16,11 +16,7 @@ need to fix this regulat file mixed with dir with d OPTION ... {
 
 - owerflow on itoa get size in manage column for -l need to change it-> DONE ?
 
-
-Acces denie gestion, stop displaying perror(opendir)
-
-
-make && mls -Rl: work on this-> no \n before libft/list
+Acces denie gestion, stop displaying perror(opendir) -> DONE
 
 
 mkdir koala

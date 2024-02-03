@@ -218,6 +218,7 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
         }
         if(array[i + 1])
             fill_buffer_char('\n');
+
     }
 }
 
