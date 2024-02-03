@@ -18,7 +18,9 @@ need to fix this regulat file mixed with dir with d OPTION ... {
 
 Acces denie gestion, stop displaying perror(opendir) -> DONE
 
-
 mkdir koala
-mls -R koala -> permission denie
+mls -R koala -> permission denie  -> DONE check test/empty
 need to do nothing
+
+EVERYTHINK still be ok need to replace hard display in ft_ls.c:
+ls_one_dir for call_flag == 0 ~ line 156/157

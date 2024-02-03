@@ -159,6 +159,7 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
         display_quote(quote);
         fill_buffer(file->name);
         display_quote(quote);
+        // store_in_buffer(lst, c->flag_nb); // maybe just that
         return (0);
     }
 
