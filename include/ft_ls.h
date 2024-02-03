@@ -128,109 +128,102 @@ extern t_buff g_buff; // GLOBAL VARIABLE buffer
 //-------------------------------
 //      t_file.c               //
 //-------------------------------
-t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink_bool);
-char *perm_to_string(mode_t mode, char type);
-int check_for_quote(char *str);
+t_file      *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink_bool);
+char        *perm_to_string(mode_t mode, char type);
+int         check_for_quote(char *str);
 //-------------------------------
 //      utils.c                 //
 //-------------------------------
-void    display_error_phrase(char *str);
-int     ft_strlen_word(char *s);
-int     get_stdout_width();
-void    update_error(t_int8 *error);
-int     print_error(char *msg, char* str, int error_type, int use_perror);
-int     get_lst_len(t_list *lst);
-int     last_char_is_slash(char *str);
-void    new_lstclear(t_list **lst, void (*del)(void*));
-int     is_point_dir(char *path, int flag_nb, int display);
-char    *join_parent_name(char* parent_name, char* path);
-void    display_file_lst(t_list *lst);
+void        display_error_phrase(char *str);
+int         ft_strlen_word(char *s);
+int         get_stdout_width();
+void        update_error(t_int8 *error);
+int         print_error(char *msg, char* str, int error_type, int use_perror);
+int         get_lst_len(t_list *lst);
+int         last_char_is_slash(char *str);
+void        new_lstclear(t_list **lst, void (*del)(void*));
+int         is_point_dir(char *path, int flag_nb, int display);
+char        *join_parent_name(char* parent_name, char* path);
+void        display_file_lst(t_list *lst);
 //-------------------------------
 //      flag_gestion.c          //
 //-------------------------------
-int parse_flag(int argc, char **argv, t_int8 *special_err);
+int         parse_flag(int argc, char **argv, t_int8 *special_err);
 //-------------------------------
 //      parse.c                //
 //-------------------------------
-t_list* get_all_file_struct(t_file *file, int flag_nb, t_int8 *error);
-t_list  *get_dir_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c);
+t_list      *get_all_file_struct(t_file *file, int flag_nb, t_int8 *error);
+t_list      *get_dir_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c);
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------
-// int     ls_one_dir(t_file *file, int flag_nb, int lst_len, t_int8 *error, int call_flag, int index);
-// int     ls_l_one_dir(t_file *file, int flag_nb, int lst_len, t_int8 *error, int call_flag, int index);
-int     ls_only_file_L(t_list *lst, int flag_nb);
-void    display_quote(int quote);
-
-int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c);
-int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c);
+int         ls_only_file_L(t_list *lst, int flag_nb);
+void        display_quote(int quote);
+int         ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c);
+int         ls_one_dir(t_file *file, t_context *c, t_file_context *file_c);
 //-------------------------------
 //      recurcive.c            //
 //-------------------------------
-int     search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag);
+int         search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag);
 //-------------------------------
 //      l_options.c            //
 //-------------------------------
-void    insert_space(int nb);
-int     fill_buffer_l_option(t_file file, int* space, int nb_flag);
-int     write_file_name(t_file file, int flag_nb, int space);
-void    write_user_name(long user_id, int space, int flag_nb);
-void    write_group_name(long group_id, int space, int flag_nb);
+void        insert_space(int nb);
+int         fill_buffer_l_option(t_file file, int* space, int nb_flag);
+int         write_file_name(t_file file, int flag_nb, int space);
+void        write_user_name(long user_id, int space, int flag_nb);
+void        write_group_name(long group_id, int space, int flag_nb);
 //-------------------------------
 //      l_option_utils.c       //
 //-------------------------------
-void    fill_buffer_perm(char c, int *is_exec, int display_flag);
-char    get_type(struct stat sb);
+void        fill_buffer_perm(char c, int *is_exec, int display_flag);
+char        get_type(struct stat sb);
 //-------------------------------
 //      manage_space.c          //
 //-------------------------------
-int get_nb_space(t_list *lst, int(*get_len_by_info)(t_file));
-int get_len_name_quote(t_file file);
-int		*get_all_space(t_list *lst, int flag_nb);
+int         get_nb_space(t_list *lst, int(*get_len_by_info)(t_file));
+int         get_len_name_quote(t_file file);
+int		    *get_all_space(t_list *lst, int flag_nb);
 //-------------------------------
 //      time_gestion.c          //
 //-------------------------------
-char    **get_printable_date(t_timespec last_change);
+char        **get_printable_date(t_timespec last_change);
 //-------------------------------
 //      sort.c                  //
 //-------------------------------
-void    sort_lst(t_list *lst, int flag_nb);
-void    free_node_ptr(t_list **lst);
-int     safe_reverse_lst(t_list **lst,  t_int8 *error, int flag_nb);
-int     is_special_char(char c);
+void        sort_lst(t_list *lst, int flag_nb);
+void        free_node_ptr(t_list **lst);
+int         safe_reverse_lst(t_list **lst,  t_int8 *error, int flag_nb);
+int         is_special_char(char c);
 //-------------------------------
 //      buffer.c                //
 //-------------------------------
-void    fill_buffer(char *str);
-int     fill_l_buffer(t_list *lst, int flag_nb, int call_flag);
-void    fill_buffer_char(char c);
-void    fill_buffer_color(char *str, enum e_color color, int flag_nb, int space, int quote);
-int     store_in_buffer(t_list *lst, int flag_nb);
-void    print_and_clear();
-void    finish_print_buffer();
-void    multiple_fill_buff(char *s1, char*s2, char *s3, char *s4);
-void    fill_color(enum e_color color);
+void        fill_buffer(char *str);
+int         fill_l_buffer(t_list *lst, int flag_nb, int call_flag);
+void        fill_buffer_char(char c);
+void        fill_buffer_color(char *str, enum e_color color, int flag_nb, int space, int quote);
+int         store_in_buffer(t_list *lst, int flag_nb);
+void        print_and_clear();
+void        finish_print_buffer();
+void        multiple_fill_buff(char *s1, char*s2, char *s3, char *s4);
+void        fill_color(enum e_color color);
 //-------------------------------
 //      build_coloumn.c         //
 //-------------------------------
-int manage_basic_column(t_list *lst, int space_quote, int flag);
+int         manage_basic_column(t_list *lst, int space_quote, int flag);
 //-------------------------------
 //      manage_column.c         //
 //-------------------------------
-int    fill_buffer_with_column(char **tab, int nb_line, t_list **lst, int flag_nb, int quote_space);
-char **manage_column(t_list *lst, int *max_unit_len, int max_per_line, int nb_line, int space_quote);
-int *get_max_by_column(t_list *lst, int nb_column, int nb_line);
-
-int **create_column_array (t_list *lst, int nb_column_max, int nb_line);
+int         *get_max_by_column(t_list *lst, int nb_column, int nb_line);
+int         **create_column_array (t_list *lst, int nb_column_max, int nb_line);
 //-------------------------------
 //      list_xattr.c           //
 //-------------------------------
-int    diplay_xattr_acl(t_file *file);
-char   *get_new_path(t_file *file);
-int     list_xattr(char *path, char *list);
-int     check_lst_acl(t_list *lst);
-int     check_acl(t_file *file);
-
+int         diplay_xattr_acl(t_file *file);
+char        *get_new_path(t_file *file);
+int         list_xattr(char *path, char *list);
+int         check_lst_acl(t_list *lst);
+int         check_acl(t_file *file);
 //-------------------------------
 //    Basic flag gestion.c     //
 //-------------------------------
