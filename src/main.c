@@ -65,23 +65,28 @@ static void special_display_header(t_list *dir_lst, int args_found, int call_val
 }
 
 /** call_ls
- * Ls hub to choice which ls version call
+ * ls HUB to choice which ls version call
 */
 static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
 {
-    int err = 0;
+    int     err = 0;
+    t_int8  recursive_flag = has_flag(c->flag_nb, R_OPTION);
+    t_int8  l_flag = has_flag(c->flag_nb, L_OPTION);
+    t_int8  onlydir_flag = has_flag(c->flag_nb, D_OPTION); 
 
-    if (call_flag != 0 && has_flag(c->flag_nb, R_OPTION) && !has_flag(c->flag_nb, D_OPTION))
+    if (call_flag != 0 && recursive_flag && !onlydir_flag)
         err = search_recurcive_dir(dir_lst, c, call_flag); /* Call recurcive */
-    else if (call_flag != 0 && has_flag(c->flag_nb, L_OPTION) && has_flag(c->flag_nb, D_OPTION))
-        err = ls_only_dir(dir_lst, c->flag_nb); /* Call ls D option*/
-    else if (has_flag(c->flag_nb, L_OPTION) && call_flag != 0)
+    else if (call_flag != 0 && l_flag && onlydir_flag)
+        err = ls_only_dir(dir_lst, c->flag_nb); /* Call ls D + L option*/
+    else if (l_flag && call_flag != 0)
         err = ls(dir_lst, c, ls_l_one_dir, call_flag); /* Call ls L option */
-    else if (has_flag(c->flag_nb, L_OPTION) && call_flag == 0)
+    else if (l_flag && call_flag == 0)
         err = ls_only_file_L(dir_lst, c->flag_nb);  /* For mixed argument in cmd line */
     else
         err = ls(dir_lst, c, ls_one_dir, call_flag); /* Call classic ls option */
-
+ 
+ 
+   
     file_lstclear(&dir_lst, free);
     if (err == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error exit\n");
@@ -138,7 +143,6 @@ static int ft_ls(char **argv, t_context *c)
 
     if (c->special_error == 1) /* set return cmd value for special err */
         c->error = NA_CMD_LINE_ERR;
-    finish_print_buffer();
     return (c->error);
 }
 
@@ -173,6 +177,7 @@ int main (int argc, char **argv)
     if (c.flag_nb == -1)
         return (2);
     c.error = ft_ls(argv, &c);
+    finish_print_buffer();
     return (c.error);
 }
 
@@ -219,3 +224,15 @@ struct stat *check_for_stat(char* name, int flag, int *save_symlink)
         }
     return (sb);
 }
+
+/* old call ls manage */
+// if (call_flag != 0 && has_flag(c->flag_nb, R_OPTION) && !has_flag(c->flag_nb, D_OPTION))
+//     err = search_recurcive_dir(dir_lst, c, call_flag); /* Call recurcive */
+// else if (call_flag != 0 && has_flag(c->flag_nb, L_OPTION) && has_flag(c->flag_nb, D_OPTION))
+//     err = ls_only_dir(dir_lst, c->flag_nb); /* Call ls D + L option*/
+// else if (has_flag(c->flag_nb, L_OPTION) && call_flag != 0)
+//     err = ls(dir_lst, c, ls_l_one_dir, call_flag); /* Call ls L option */
+// else if (has_flag(c->flag_nb, L_OPTION) && call_flag == 0)
+//     err = ls_only_file_L(dir_lst, c->flag_nb);  /* For mixed argument in cmd line */
+// else
+//     err = ls(dir_lst, c, ls_one_dir, call_flag); /* Call classic ls option */

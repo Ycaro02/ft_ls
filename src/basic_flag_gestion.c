@@ -35,6 +35,7 @@ void unset_flag(int *flags, int flag_val)
 * check if flag_val enable in flags
 // __always_inline int has_flag(int flags, int flag_val)
 */
+
 t_int8 has_flag(int flags, int flag_val) {
    return ((flags & flag_val) == flag_val);
 }

@@ -80,6 +80,9 @@ static t_int64 get_total_size(t_list *lst)
     return (total);
 }
 
+/**
+ * Display total directort size, take no_file boolean to display \n or not
+*/
 static int display_total_size(t_file *file, t_int8 no_file)
 {
     char        *total_str = ft_ltoa(file->total_size);
@@ -88,7 +91,7 @@ static int display_total_size(t_file *file, t_int8 no_file)
         return (MALLOC_ERR);
     multiple_fill_buff("total ", total_str, NULL, NULL);
     if (!no_file)
-        fill_buffer_char(' ');
+        fill_buffer_char('\n');
     free(total_str);
     return (0);
 }
