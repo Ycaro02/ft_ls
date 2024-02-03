@@ -12,14 +12,7 @@
 # include <sys/stat.h>
 
 
-
-// # define MINORBITS 8
-// # define MINORMASK ((1U << MINORBITS) - 1)
-// # define MAJOR(dev) ((unsigned int)(dev >> MINORBITS))
-// # define MINOR(dev) ((unsigned int)(dev & MINORMASK))
-// # define MINOR(dev) (dev & ) 
-#include <sys/sysmacros.h> // major minor macro for C file
-
+# include <sys/sysmacros.h> // major minor macro for C file
 # include <sys/ioctl.h>  // ioctl for manage_column
 # include <sys/xattr.h>  // extended attr 
 # include "../acl/acl.h" // classic <sys/acl.h> not present on 42 computer, same for -lacl

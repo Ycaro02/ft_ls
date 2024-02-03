@@ -11,7 +11,7 @@ static t_file *default_file_struct(int flag)
 
     file = fill_file_struct(sb, ".", "..", symlink);
     if (!file || !(file->name)) {
-        perror("Malloc");
+        ft_printf_fd(2, "Malloc error default file struct\n");
         return (NULL);
     }
     free(sb);

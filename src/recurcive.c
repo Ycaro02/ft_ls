@@ -75,11 +75,8 @@ t_list *get_recurcive_dir(t_file *file, int flag_nb, int *error)
     if (ret != 0) {
         if (ret == MALLOC_ERR)
             *error = MALLOC_ERR;
-        else {
-            // ft_putstr_fd("ft_ls: cannot open directory : ", 2);
-            // perror(file->name);
+        else
             update_error(error);
-        }
         return (NULL);
     }
     sort_lst(new, flag_nb);

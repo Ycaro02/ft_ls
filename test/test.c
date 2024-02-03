@@ -6,8 +6,7 @@
 int main(int argc, char *argv[])
 {
     acl_t acl = acl_get_file(argv[1], ACL_TYPE_ACCESS);
-    if (acl == NULL)
-    {
+    if (acl == NULL) {
         perror("acl_get_file");
         exit(EXIT_FAILURE);
     }

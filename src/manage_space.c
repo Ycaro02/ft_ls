@@ -134,10 +134,8 @@ static int check_malloc_err(int *array)
 {
     int i = 0;
 
-    while (i <= S_HOUR)
-    {
-        if (array[i] == MALLOC_ERR)
-        {
+    while (i <= S_HOUR) {
+        if (array[i] == MALLOC_ERR) {
             free(array);
             return (MALLOC_ERR);
         }
@@ -186,11 +184,10 @@ int *get_all_space(t_list *lst, int flag_nb)
 {
     int *array = NULL;
     array = ft_calloc(sizeof(int), S_MAX);
-    if (!array)
-    {
+    if (!array) {
         new_lstclear(&lst, free);
-        perror("Malloc");
-        exit(1);
+        ft_printf_fd(2, "Malloc error get all space\n");
+        return (NULL);
     }
     array[S_PERM] = 10;
     int ret = check_lst_acl(lst);

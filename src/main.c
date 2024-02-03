@@ -67,14 +67,11 @@ void call_ls(t_list *dir_lst, int flag_nb, int *error, int call_flag)
     }
 }
 
-static int basic_sort_lst(t_list **lst, int flag, int *error)
+inline static void basic_sort_lst(t_list **lst, int flag, int *error)
 {
     sort_lst(*lst, flag);
-    if (!lst)
-        return (print_error("Malloc error\n", NULL, MALLOC_ERR, 1));
     if (has_flag(flag , REVERSE_OPTION))
         safe_reverse_lst(lst, error, flag);
-    return (0);
 }
 
 
@@ -105,21 +102,16 @@ int ft_ls(char **argv, int flag_nb, int* error, int special_err)
             t_list *new = NULL;
             new = lst_join(dir_lst, simple_file);
             if (new) {
-                if (basic_sort_lst(&new, flag_nb, error) == 1)
-                    return (1);
+                basic_sort_lst(&new, flag_nb, error);
                 call_ls(new, flag_nb, error, call_value);
                 return (*error);
             }
         }
-        if (basic_sort_lst(&dir_lst, flag_nb, error) == 1)
-            return (1);
+        basic_sort_lst(&dir_lst, flag_nb, error);
     }
 
     if (simple_file){
-        if (basic_sort_lst(&simple_file, flag_nb, error) == 1) {
-            new_lstclear(&simple_file, free);
-            return (1);
-        }
+        basic_sort_lst(&simple_file, flag_nb, error);
         call_ls(simple_file, flag_nb, error, call_value);
         ++call_value;
         if (has_flag(flag_nb, L_OPTION) && dir_lst)
@@ -216,7 +208,6 @@ struct stat *check_for_stat(char* name, int flag, int *save_symlink)
 
     if (lstat(name, sb) == -1) {
         // printf("%sName: %s%s\n",RED, name, RESET);
-        // perror("lstat");
         free(sb);
         return (NULL);
     }

@@ -166,8 +166,10 @@ static int write_symlink(char *path, char *parrent_path, int flag_nb, int space)
             fill_buffer_char(' ');
         fill_buffer("->");
         int ret = readlink(tmp, buff, 199);
-        if (ret == -1)
-            perror("readlink");
+        if (ret == -1) {
+            printf("For tmp: %s:", tmp);
+            perror(" readlink");
+        }
         else {
             buff[ret] = '\0';
             stat_symlink(buff, parrent_path, path, flag_nb);
