@@ -166,11 +166,13 @@ int         search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag);
 //-------------------------------
 //      l_options.c            //
 //-------------------------------
-void        insert_space(int nb);
 int         fill_buffer_l_option(t_file file, int* space, int nb_flag);
-int         write_file_name(t_file file, int flag_nb, int space);
 void        write_user_name(long user_id, int space, int flag_nb);
 void        write_group_name(long group_id, int space, int flag_nb);
+//-------------------------------
+//      write_file_name.c      //
+//-------------------------------
+int         write_file_name(t_file file, int flag_nb, int space);
 //-------------------------------
 //      l_option_utils.c       //
 //-------------------------------
@@ -207,7 +209,7 @@ void        fill_color(enum e_color color);
 //-------------------------------
 //      build_coloumn.c         //
 //-------------------------------
-int         manage_basic_column(t_list *lst, int space_quote, int flag);
+int         manage_column(t_list *lst, int space_quote, int flag);
 //-------------------------------
 //      manage_column.c         //
 //-------------------------------

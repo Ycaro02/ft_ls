@@ -138,7 +138,7 @@ int store_in_buffer(t_list *lst, int flag_nb)
 
     /* check for quote in lst and give bool */
     int quote_space = get_nb_space(lst, get_len_name_quote); 
-    err = manage_basic_column(lst, quote_space, flag_nb);
+    err = manage_column(lst, quote_space, flag_nb);
     if (err == MALLOC_ERR) {
         file_lstclear(&lst, free);
         return (MALLOC_ERR);

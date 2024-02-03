@@ -11,7 +11,8 @@ SRC =	ft_lstadd_back.c\
 		ft_lstnew.c\
 		ft_lstjoin.c\
 		ft_lstclear_nodeptr.c\
-		ft_lst_remove_if.c
+		ft_lst_remove_if.c\
+		get_lst_idx_content.c
 
 OBJ = $(SRC:.c=.o)
 

@@ -33,6 +33,7 @@ t_list			*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 t_list 			*ft_lstjoin(t_list *first, t_list *second);
 void 			ft_lstclear_nodeptr(t_list **lst);
 void			ft_lst_remove_if(t_list **list, void (*del)(void*), int (*condition)(void *));
+void 			*get_lst_index_content(t_list *lst, int index);
 
 
  # endif /* DEFINE_LINKED_LIST_H */

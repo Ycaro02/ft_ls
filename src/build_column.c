@@ -1,26 +1,6 @@
 #include "../include/ft_ls.h"
 
 /**
- * Basic get file lst content
- * Args:    lst: linked list pointer
- *          index: wanted node index
- * return:  Ptr on wanted lst->content if found, otherwise NULL
-*/
-void *get_lst_index_content(t_list *lst, int index)
-{
-    int i = 0;
-    t_list *current = lst;
-
-    while (current) {
-        if (i == index)
-            return (current->content);
-        ++i;
-        current = current->next;
-    }
-    return (NULL);
-}
-
-/**
  * Compute total len of lst file
  * Args:    lst: ptr target lst
  * ret : total file len + (2 * len) for space: maybe can adapt with bool quote +1 or +2
@@ -104,7 +84,7 @@ static int get_max_len_by_index(int start, int test ,int max, int* tab)
 */
 static int brut_test(int i, int test, int *all_len, int nb_file, int *local_space, int bool_quote)
 {
-    /* basic space is 2, 4 for bool quote*/
+    /* basic space is 2, 4 for with quote, 2 + bool_quote * 2*/
     int column = 1, ret = -1, space = 2 + (bool_quote + bool_quote);
 
     local_space[0] = get_max_len_by_index(i, test, nb_file, all_len);
@@ -183,15 +163,14 @@ static int get_nb_line(int stdout_w, int *all_len, int len, int bool_quote)
 int *get_max_by_column(t_list *lst, int nb_column, int nb_line)
 {
     int *tab = ft_calloc(sizeof(int), nb_column);
-    int column = 0;
-    int i = 0;
-    int max = 0;
+    int column = 0, max = 0, i = 0;
+
     while (lst) {
         t_file *file = lst->content;
         int tmp = ft_strlen(file->name);
         if (tmp > max)
             max = tmp;
-        i++;
+        ++i;
         if (i == nb_line ) {
             tab[column] = max;
             max = 0;
@@ -245,7 +224,7 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
 /**
  * Entry point, compute and return double char ** (bad just need to return index tab/lst -> int**)
 */
-int manage_basic_column(t_list *lst, int space_quote, int flag)
+int manage_column(t_list *lst, int space_quote, int flag)
 {
     int     **array = NULL; 
     int     stdout_width = get_stdout_width(), nb_line = 0, nb_column = 1, lst_len = ft_lstsize(lst);
