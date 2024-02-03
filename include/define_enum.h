@@ -54,6 +54,8 @@ Exit code:"RESET"\n\
 //-------------------------------
 # define    NEW 0
 # define    OLD 1
+/* Default width for manage column if ioctl call faill */
+# define BASIC_WIDTH 80
 //-------------------------------
 //      FLAG                   //
 //-------------------------------

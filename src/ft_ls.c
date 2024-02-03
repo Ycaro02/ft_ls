@@ -1,5 +1,21 @@
 #include "../include/ft_ls.h"
 
+/**
+ * Hardcode display for -d need to refact (use manage Column)
+*/
+static int hard_display_d(t_file *file)
+{
+    if (file->type == DIRECTORY)
+        fill_buffer(BLUE);
+    display_quote(file->quote);
+    fill_buffer(file->name);
+    display_quote(file->quote);
+    if (file->type == DIRECTORY)
+        fill_buffer(RESET);
+    fill_buffer_char(' ');
+    return (0);
+}
+
 /** Display dir header
  * args: file, lst_len, call, index, l_flag
  *      file: t_file obj to display
@@ -92,33 +108,7 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     return (0);
 }
 
-void display_quote(int quote)
-{
-    if (quote == ADD_SIMPLE_QUOTE_CHAR)
-        fill_buffer_char('\'');
-    else if (quote == ADD_DOUBLE_QUOTE_CHAR)
-        fill_buffer_char('\"');
-    else
-        fill_buffer_char(' ');
-}
 
-static int hard_display_d(t_file *file)
-{
-    if (file->type == DIRECTORY)
-        fill_buffer(BLUE);
-    display_quote(file->quote);
-    fill_buffer(file->name);
-    display_quote(file->quote);
-    if (file->type == DIRECTORY)
-        fill_buffer(RESET);
-    fill_buffer_char(' ');
-    return (0);
-}
-/*  
-    call_flag:  0 for file display
-                1 for dir without file before
-                2 for dir with file or another dir before
-*/
 int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
     t_list *lst = NULL;
@@ -136,26 +126,34 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
         return (0);
     }
 
-    // if (display_dir_header(*file, lst_len, file_c->call_flag, index, 0) == MALLOC_ERR)
-    //     return (MALLOC_ERR);
-
     lst = get_all_file_struct(file, c->flag_nb, &c->error);
     if (!lst && c->error == MALLOC_ERR)
         return (MALLOC_ERR);
     else if (!lst) {
         multiple_fill_buff("\nft_ls: cannot open directory '", file->name, "': Permission denied", NULL);
         if (!has_flag(c->flag_nb, R_OPTION))
-            return (2); /* CMD LINE ERROR */
-        return (1); /* classic denie error */
+            return (NA_CMD_LINE_ERR); /* CMD LINE ERROR */
+        update_error(&c->error);
+        return (c->error); /* classic denie error need to check before ? call update error instead */
     }
 
-    /* ALL FILE CONTEXT HERE */
     if (display_dir_header(*file, file_c, 0) == MALLOC_ERR)
         return (MALLOC_ERR);
-
-
 
     if (store_in_buffer(lst, c->flag_nb) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);
+}
+
+/**
+ * Basic display quote
+*/
+void display_quote(int quote)
+{
+    if (quote == ADD_SIMPLE_QUOTE_CHAR)
+        fill_buffer_char('\'');
+    else if (quote == ADD_DOUBLE_QUOTE_CHAR)
+        fill_buffer_char('\"');
+    else
+        fill_buffer_char(' ');
 }

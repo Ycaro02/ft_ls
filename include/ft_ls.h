@@ -92,7 +92,13 @@ typedef struct s_file
 } t_file;
 
 /**
- * Ls context execution
+ * Execution context
+ * error : Exit code error 
+ *  - 0 for nothing
+ *  - 1 for for subdirectory access error
+ *  - 2 commande line file access error
+ * special_error: Store if special error found in cmd line to adapt display
+ * flag_nb: Flag enable (ls OPTION) see e_flag in define_enum.h
 */
 typedef struct s_context {
     t_int8      error;              /* Exit error code */
@@ -100,13 +106,19 @@ typedef struct s_context {
     int         flag_nb;            /* flags value (ls option) */
 } t_context;
 
-/**
+/** 
  * File context
+ * call_flag: Call flag used in hub ls function
+ *  - 0 for file display
+ *  - 1 for dir without file before
+ *  - 2 for dir with file or another dir before
+ * idx: Index of file in lst
+ * lst_len: File's list len
 */
 typedef struct s_file_context {
-    int         call_flag;          /* Call flag used in hub ls function */
-    int         idx;                /* Index of file in lst */
-    int         lst_len;            /* File's list len */
+    int         call_flag;
+    int         idx;
+    int         lst_len;
 } t_file_context;
 
 /**
@@ -135,14 +147,12 @@ int         check_for_quote(char *str);
 //-------------------------------
 //      utils.c                 //
 //-------------------------------
+void        file_lstclear(t_list **lst, void (*del)(void*)); /* can be remove with create free file */
 int         ft_strlen_word(char *s);
 int         get_stdout_width();
 void        update_error(t_int8 *error);
-int         last_char_is_slash(char *str);
-void        file_lstclear(t_list **lst, void (*del)(void*));
 int         is_point_dir(char *path, int flag_nb, int display);
 char        *join_parent_name(char* parent_name, char* path);
-void        display_file_lst(t_list *lst);
 //-------------------------------
 //      flag_gestion.c          //
 //-------------------------------

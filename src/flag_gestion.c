@@ -1,5 +1,8 @@
 #include "../include/ft_ls.h"
 
+/** manage_bonus_flag
+ * Special enable/disable flag for bonus option
+*/
 static int manage_bonus_flag(int nb)
 {
     /* if g || n option need to enable L too*/
@@ -18,6 +21,9 @@ static int manage_bonus_flag(int nb)
     return (nb);
 }
 
+/** get_flag_value
+ * Convert char to flag value see ALL_FLAG and e_flag, define_enum.c
+*/
 static int get_flag_value(char c) 
 {
     int i = 0;
@@ -33,8 +39,9 @@ static int get_flag_value(char c)
     return (flag);
 }
 
-/* PUBLIC MAIN */
-
+/** parse_flag
+ * Parse user input to get flag
+*/
 int parse_flag(int argc, char **argv, t_int8 *special_err)
 {
     int i = 1, flags = 0, tmp_value = 0;

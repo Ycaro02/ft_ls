@@ -1,5 +1,37 @@
 #include "../include/ft_ls.h"
 
+/** last_char_is_slash
+ * Basic check if last char is '/'
+*/
+static int last_char_is_slash(char *str)
+{
+    if (!str)
+        return (-1);
+    int i = 0;
+    while (str[i])
+        i++;
+    if (i == 1 && str[0] == '/')
+        return (0);
+    if (str[i - 1] == '/')
+        return (0);
+    return (1);
+}
+
+/** join_parent_name
+ * Join parent name with check to avoid double '/'
+*/
+char *join_parent_name(char* parent_name, char* path)
+{
+    char *str = NULL;
+    if (last_char_is_slash(parent_name) == 0)
+        str = ft_strjoin(parent_name, path);
+    else {
+        str = ft_strjoin(parent_name, "/");
+        str = ft_strjoin_free(str, path, 'f');
+    }
+    return (str);
+}
+
 /** ft_strlen_word
  * Count until ' ' (space) reached
 */
@@ -44,32 +76,10 @@ int is_point_dir(char *path, int flag_nb, int display)
     return (1);
 }
 
-char *join_parent_name(char* parent_name, char* path)
-{
-    char *str = NULL;
-    if (last_char_is_slash(parent_name) == 0)
-        str = ft_strjoin(parent_name, path);
-    else {
-        str = ft_strjoin(parent_name, "/");
-        str = ft_strjoin_free(str, path, 'f');
-    }
-    return (str);
-}
-
-int last_char_is_slash(char *str)
-{
-    if (!str)
-        return (-1);
-    int i = 0;
-    while (str[i])
-        i++;
-    if (i == 1 && str[0] == '/')
-        return (0);
-    if (str[i - 1] == '/')
-        return (0);
-    return (1);
-}
-
+/** file_lstclear
+ * Clear t_file lst
+ * Can be removed to create void destroy_tfile(void *) and give it to ft_lstclear
+*/
 void	file_lstclear(t_list **lst, void (*del)(void*))
 {
 	t_list	*tmp = NULL, *current = NULL;
@@ -95,24 +105,17 @@ void	file_lstclear(t_list **lst, void (*del)(void*))
 	*lst = NULL;
 }
 
+/** get_stdout_width
+ * Get stdout width for manage column
+ * if fail ( for example with redirection ) set it to 80
+*/
 int get_stdout_width()
 {
     struct winsize win;
     int width;
     
     if (ioctl(1, TIOCGWINSZ, &win) != 0)
-        return (80); /* default width for redir need to move this */
+        return (BASIC_WIDTH); /* default width for redir need to move this */
     width = win.ws_col; 
     return (width);
-}
-
-void display_file_lst(t_list *lst)
-{
-    ft_printf_fd(1, "\nDisplay file lst\n");
-    while (lst)
-    {
-        t_file *file = lst->content;
-        ft_printf_fd(1, "%s\n", file->name);
-        lst = lst->next;
-    }
 }
