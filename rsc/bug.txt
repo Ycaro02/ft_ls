@@ -21,3 +21,8 @@ Acces denie gestion, stop displaying perror(opendir)
 
 
 make && mls -Rl: work on this-> no \n before libft/list
+
+
+mkdir koala
+mls -R koala -> permission denie
+need to do nothing

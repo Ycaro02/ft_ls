@@ -20,7 +20,9 @@ static int hard_display_d(t_file *file)
  * args: file, lst_len, call, index, l_flag
  *      file: t_file obj to display
  *      lst_len: file's lst_len
- *      call: call deep, 0 for only file, 1 for first call, 2 for next
+ *      call: call deep,    0 for only file
+ *                          1 for first call without file/error before
+ *                          2 for every next call
  *      index: index of file in lst
  *      l_flag: bool flag for l option 0 for no, 1 for l, 2 for l + r (just display total) 
 */
@@ -28,25 +30,29 @@ static int display_dir_header(t_file file, t_file_context *file_c, int l_flag)
 {
     int quote = quotes_required(file.name);
 
-    // printf("%sCall: [%d] idx: [%d] l_flag: [%d] for |%s|%s\n", CYAN, file_c->call_flag, file_c->index, l_flag, file.name, RESET);
-    if ((file_c->call_flag > 1 || file_c->idx != 0) || (file_c->call_flag >= 1 && file_c->lst_len > 1))
-    {
-        if (file_c->idx == 0 && file_c->call_flag > 1 && l_flag != 1) // && L + R_OPTION
-            fill_buffer("\n\n");
-        else if (file_c->idx == 0 && file_c->call_flag > 1)
-            fill_buffer_char('\n');
-            
-        if (file_c->idx != 0)
+    // printf("%sCall: [%d] idx: [%d] l_flag: [%d] for |%s|%s\n", CYAN, file_c->call_flag, file_c->idx, l_flag, file.name, RESET);
+
+
+    if (file_c->call_flag != 0) { /* if not only file call */
+
+        if (file_c->idx == 0 && file_c->call_flag > 1)
             fill_buffer("\n\n");
 
-        if (quote > NOEFFECT_CHAR)
-            display_quote(quote);
-        fill_buffer(file.name);
-        if (quote > NOEFFECT_CHAR)
-            display_quote(quote);
-
-        fill_buffer(":\n");
+        if (file_c->idx != 0) /* if not first file in lst */
+            fill_buffer("\n\n");
+    
+        if (file_c->call_flag > 1 || l_flag == 2) {
+            if (quote > NOEFFECT_CHAR)
+                display_quote(quote);
+            fill_buffer(file.name);
+            if (quote > NOEFFECT_CHAR)
+                display_quote(quote);
+            fill_buffer(":\n");
+        }
     }
+    // si call > 1 ou idx != 0
+
+
     if (l_flag >= 1) {
         char *total_str = ft_ltoa(file.total_size);
         if (!total_str)
@@ -99,12 +105,9 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     }
     file->total_size = get_total_size(lst);
 
-    // printf("forL file: %s call %d idx %d\n", file->name, call_flag, index);
     if (display_dir_header(*file, file_c, 1 + r_flag) == MALLOC_ERR)
         return (MALLOC_ERR);
     
-    // if (has_flag(c->flag_nb, REVERSE_OPTION))
-    //     safe_reverse_lst(&lst, &c->error, c->flag_nb);
     if (fill_l_buffer(lst, c->flag_nb, file_c->call_flag) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);
@@ -162,3 +165,24 @@ void display_quote(int quote)
     else
         fill_buffer_char(' ');
 }
+
+
+/* OLD ugly header display 'logic' */
+// if ((file_c->call_flag > 1 || file_c->idx != 0) || (file_c->call_flag >= 1 && file_c->lst_len > 1))
+// {
+//     if (file_c->idx == 0 && file_c->call_flag > 1 && l_flag != 1) // && L + R_OPTION
+//         fill_buffer("\n\n");
+//     else if (file_c->idx == 0 && file_c->call_flag > 1)
+//         fill_buffer_char('\n');
+        
+//     if (file_c->idx != 0)
+//         fill_buffer("\n\n");
+
+//     if (quote > NOEFFECT_CHAR)
+//         display_quote(quote);
+//     fill_buffer(file.name);
+//     if (quote > NOEFFECT_CHAR)
+//         display_quote(quote);
+
+//     fill_buffer(":\n");
+// }

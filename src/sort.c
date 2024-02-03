@@ -58,7 +58,7 @@ int special_strcmp(char *s1, char *s2, int flag)
     while (s2[j] && is_special_char(s2[j]) != NORMAL_CHAR)
         j++;
     /* compare all 'count' char */
-    while (s1[i] || s2[j]) {
+    while (s1[i] && s2[j]) {
         if (is_special_char(s1[i]) != NORMAL_CHAR)
             i++;
         else if (is_special_char(s2[j]) != NORMAL_CHAR)
@@ -70,8 +70,10 @@ int special_strcmp(char *s1, char *s2, int flag)
                 first = ft_tolower(s1[i]);
                 second = ft_tolower(s2[j]);
             }
-            if (first != second)
+            if (first != second) {
+                // printf("CMP s1|%s%s%s|->char[%c][%d], s2|%s%s%s|->char[%c][%d]\n", GREEN, s1, RESET, s1[i], i, RED, s2, RESET,s2[j], j);
                 return (first - second);
+            }
             if (s1[i])
                 i++;
             if (s2[j])
@@ -83,7 +85,11 @@ int special_strcmp(char *s1, char *s2, int flag)
         i++;
     while (s2[j] && is_special_char(s2[j]) != NORMAL_CHAR)
         j++;
-    return (first - second);
+
+    // printf("CMP s1|%s%s%s|->char[%c][%d], s2|%s%s%s|->char[%c][%d]\n", GREEN, s1, RESET, s1[i], i, RED, s2, RESET,s2[j], j);
+    if (flag == TOKEN_NO_CASE_SENSITIVE)
+        return (ft_tolower(s1[i]) - ft_tolower(s2[j]));
+    return (s1[i] - s2[j]);
 }
 
 int special_char_gestion(char *current, char* min)

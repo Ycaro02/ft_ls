@@ -122,7 +122,9 @@ int search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag)
         if (err == MALLOC_ERR)
             break ;
         local_list = get_recurcive_dir(dir_lst->content, c->flag_nb, &c->error);
-        err = safe_recurcive(local_list, c, call_flag);
+        err = safe_recurcive(local_list, c, file_c.call_flag);
+        if (file_c.call_flag == 1)
+            ++(file_c.call_flag);
         if (c->error == MALLOC_ERR || err == MALLOC_ERR)
             break ;
         file_lstclear(&local_list, free);
