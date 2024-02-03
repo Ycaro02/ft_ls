@@ -5,9 +5,10 @@
 */
 static int last_char_is_slash(char *str)
 {
+    int i = 0;
+    
     if (!str)
         return (-1);
-    int i = 0;
     while (str[i])
         i++;
     if (i == 1 && str[0] == '/')
@@ -23,6 +24,7 @@ static int last_char_is_slash(char *str)
 char *join_parent_name(char* parent_name, char* path)
 {
     char *str = NULL;
+
     if (last_char_is_slash(parent_name) == 0)
         str = ft_strjoin(parent_name, path);
     else {
@@ -37,7 +39,8 @@ char *join_parent_name(char* parent_name, char* path)
 */
 int ft_strlen_word(char *s)
 {
-	int i =0;
+	int i = 0;
+
 	while (s && s[i] && s[i] != ' ')
 		i++;
 	return (i);
@@ -53,6 +56,9 @@ void update_error(t_int8 *error)
         *error = NO_ACCESS_ERR;
 }
 
+/** is_point_dir
+ * check if path is starting by '.' return accordate value with flag_nb
+*/
 int is_point_dir(char *path, int flag_nb, int display)
 {
     if (display == 0) {

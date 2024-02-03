@@ -130,14 +130,9 @@ void fill_buffer_char(char c)
 int store_in_buffer(t_list *lst, int flag_nb)
 {
     int     err = 0;
-    // int     nb_raw = 0;
-    
-    if (has_flag(flag_nb, REVERSE_OPTION))
-        if (safe_reverse_lst(&lst, NULL, flag_nb) == MALLOC_ERR)
-            return (MALLOC_ERR);
-
     /* check for quote in lst and give bool */
     int quote_space = get_nb_space(lst, get_len_name_quote); 
+
     err = manage_column(lst, quote_space, flag_nb);
     if (err == MALLOC_ERR) {
         file_lstclear(&lst, free);
@@ -146,6 +141,9 @@ int store_in_buffer(t_list *lst, int flag_nb)
     return (err);
 }
 
+/** finish_print_buffer
+ * Function to empty the buffer before exiting the program
+*/
 void finish_print_buffer()
 {
     if (g_buff.i != 0) {

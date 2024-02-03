@@ -77,13 +77,10 @@ static t_list *get_recurcive_dir(t_file *file, int flag_nb, t_int8 *error)
             update_error(error);
         return (NULL);
     }
-    sort_lst(new, flag_nb);
-    if (new && has_flag(flag_nb, REVERSE_OPTION))
-        safe_reverse_lst(&new, error, flag_nb);
+    sort_lst(&new, flag_nb);
     return (new);
 }
 
-// static int recurcive_ls(t_list *dir_lst, t_context *c, int lst_len, int idx, int *call_flag)
 static int recurcive_ls(t_list *dir_lst, t_context *c, t_file_context *file_c)
 {
     int err = 0;
@@ -121,7 +118,6 @@ int search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag)
     file_c.call_flag = call_flag;
 
     while(dir_lst) {
-        /* nned to take call flag, 0 for first time and increment it */
         err = recurcive_ls(dir_lst, c, &file_c);
         if (err == MALLOC_ERR)
             break ;

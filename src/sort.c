@@ -1,55 +1,25 @@
 #include "../include/ft_ls.h"
 
-// static void reverse_lst(t_list *lst, t_list **new)
-// {
-//     t_list *current;
-
-//     current = lst;
-//     while (current) {
-//         ft_lstadd_front(new, ft_lstnew(current->content));
-//         current = current->next; 
-//     }
-// }
-
-// int safe_reverse_lst(t_list **lst,  int* error, int flag_nb)
-// {
-//     t_list *reverse = NULL;
-//     if (has_flag(flag_nb, F_OPTION))
-//         return (0);
-//     reverse_lst(*lst, &reverse);
-//     if (!reverse) {
-//         if (error)
-//             *error = MALLOC_ERR;
-//         return (MALLOC_ERR);
-//     }
-//     ft_lstclear_nodeptr_ptr(lst);
-//     *lst = reverse;
-//     return (0);
-// }
-
-/* nned to be void function */
-int safe_reverse_lst(t_list **lst,  t_int8 *error, int flag_nb)
+/** safe_reverse_lst
+ * Classic reverse lst content
+ * MOVE TO LIST LIB
+*/
+void safe_reverse_lst(t_list **lst, int flag_nb)
 {
     t_list *prev = NULL, *next = NULL, *current = *lst;
     
-    (void)error;
     if (has_flag(flag_nb, F_OPTION))
-        return (0);
+        return ;
     while (current) {
-        /* save next */
-        next = current->next;
-        /* reverse */
-        current->next = prev;
-
+        next = current->next; /* save next ptr */
+        current->next = prev; /* reverse */
         /* move ptr */
         prev = current;
         current = next;
     }    
     *lst = prev;
-
-    return (0);
+    return ;
 }
-
 
 /**
 * parse special char
@@ -207,28 +177,31 @@ void sort_by_time(t_list *lst, int flag_nb, char option)
 }
 
 
-void sort_lst(t_list *lst, int flag_nb)
+void sort_lst(t_list **lst, int flag_nb)
 {
     if (has_flag(flag_nb, F_OPTION))
         return ;
     if (has_flag(flag_nb, L_OPTION)) {
         if (has_flag(flag_nb, T_OPTION)) {
             if (has_flag(flag_nb, U_OPTION))
-                sort_by_time(lst, flag_nb, U_FLAG_CHAR);
+                sort_by_time(*lst, flag_nb, U_FLAG_CHAR);
             else if (has_flag(flag_nb, C_OPTION))
-                sort_by_time(lst, flag_nb, C_FLAG_CHAR);
+                sort_by_time(*lst, flag_nb, C_FLAG_CHAR);
             else
-                sort_by_time(lst, flag_nb, T_FLAG_CHAR);
+                sort_by_time(*lst, flag_nb, T_FLAG_CHAR);
         }
         else
-            sort_by_name(lst, flag_nb);
+            sort_by_name(*lst, flag_nb);
     }
     else if (has_flag(flag_nb, U_OPTION))
-            sort_by_time(lst, flag_nb, U_FLAG_CHAR); // u -u take priotiry
+            sort_by_time(*lst, flag_nb, U_FLAG_CHAR); // u -u take priotiry
     else if (has_flag(flag_nb, C_OPTION))
-            sort_by_time(lst, flag_nb, C_FLAG_CHAR); // c
+            sort_by_time(*lst, flag_nb, C_FLAG_CHAR); // c
     else if (has_flag(flag_nb, T_OPTION))
-            sort_by_time(lst, flag_nb, T_FLAG_CHAR); // c
+            sort_by_time(*lst, flag_nb, T_FLAG_CHAR); // c
     else
-        sort_by_name(lst, flag_nb);
+        sort_by_name(*lst, flag_nb);
+
+    if (has_flag(flag_nb , REVERSE_OPTION))
+        safe_reverse_lst(lst, flag_nb);
 }

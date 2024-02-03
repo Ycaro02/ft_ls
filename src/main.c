@@ -2,7 +2,6 @@
 
 t_buff g_buff;
 
-// int ls(t_list *lst, int flag_nb,  int (*ls_function)(t_file*, int, int, t_int8*, int, int), t_int8* error, int call_flag)
 int ls(t_list *lst, t_context *c, int (*ls_function)(t_file*, t_context*, t_file_context*), int call_flag)
 {
     if (!lst)
@@ -45,7 +44,26 @@ static int ls_only_dir(t_list *dir_lst, int flag_nb)
 }
 
 
-// static void call_ls(t_list *dir_lst, int flag_nb, t_int8 *error, int call_flag)
+/** special_display_header
+ *  display new band before ls call if:
+ *      - args found (invalid args),
+ *      - no simple file found (call value == 0)
+ *      - lst_size != 1 
+*/
+static void special_display_header(t_list *dir_lst, int args_found, int call_value)
+{
+    if (args_found && call_value == 0 && ft_lstsize(dir_lst) == 1) {
+        t_file *file = dir_lst->content;
+        int quote = quotes_required(file->name);
+        if (quote > NOEFFECT_CHAR)
+            display_quote(quote);
+        fill_buffer(file->name);
+        if (quote > NOEFFECT_CHAR)
+            display_quote(quote);
+        fill_buffer(":\n");
+    }
+}
+
 static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
 {
     int err = 0;
@@ -70,71 +88,49 @@ static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
     }
 }
 
-inline static void basic_sort_lst(t_list **lst, int flag, t_int8 *error)
-{
-    sort_lst(*lst, flag);
-    if (has_flag(flag , REVERSE_OPTION))
-        safe_reverse_lst(lst, error, flag);
-}
-
 // static int ft_ls(char **argv, int flag_nb, t_int8* error, t_int8 special_err)
 static int ft_ls(char **argv, t_context *c)
 {
     t_list  *dir_lst, *simple_file = NULL;
-    int     call_value = 0;
     t_int8  args_found = c->special_error;
+    int     call_value = 0;
     
-    // dir_lst = get_dir_args(&argv[1], &c->error, c->flag_nb, &simple_file, &args_found);
     dir_lst = get_dir_args(&argv[1], &simple_file, &args_found, c);
-    
     /* Error management */
     if (!dir_lst && c->error == MALLOC_ERR) {
         ft_printf_fd (2, "Malloc Error ft_ls\n");
         return (MALLOC_ERR);
     }
-
     if (dir_lst) {
         if (has_flag(c->flag_nb, D_OPTION)) {
             t_list *new = NULL;
             new = ft_lstjoin(dir_lst, simple_file);
             if (new) {
-                basic_sort_lst(&new, c->flag_nb, &c->error);
+                sort_lst(&new, c->flag_nb);
                 call_ls(new, c, call_value);
                 return (c->error);
             }
         }
-        basic_sort_lst(&dir_lst, c->flag_nb, &c->error);
+        sort_lst(&dir_lst, c->flag_nb);
     }
 
     if (simple_file){
-        basic_sort_lst(&simple_file, c->flag_nb, &c->error);
+        sort_lst(&simple_file, c->flag_nb);
         call_ls(simple_file, c, call_value);
         ++call_value;
         if (has_flag(c->flag_nb, L_OPTION) && dir_lst)
             fill_buffer("\n");
     }
 
-    /*  display new band before ls call if:
-        args found (invalid args),
-        no simple file found (call value == 0)
-        lst_size != 1 */
+
     if (dir_lst){
-        if (args_found && call_value == 0 && ft_lstsize(dir_lst) == 1) {
-            t_file *file = dir_lst->content;
-            int quote = quotes_required(file->name);
-            if (quote > NOEFFECT_CHAR)
-                display_quote(quote);
-            fill_buffer(file->name);
-            if (quote > NOEFFECT_CHAR)
-                display_quote(quote);
-            fill_buffer(":\n");
-        }
+        special_display_header(dir_lst, args_found, call_value);
         call_ls(dir_lst, c, call_value + 1);
     }
 
     if (c->special_error == 1) /* set return cmd value for special err */
-        c->error = 2;
-    
+        c->error = NA_CMD_LINE_ERR;
+    finish_print_buffer();
     return (c->error);
 }
 
@@ -160,25 +156,15 @@ t_context init_context(){
 
 int main (int argc, char **argv)
 {
-    /* special error for only '-' manage case:
-         exit code -2, 
-         don't active default search in current dir (".")
-         display if another args found (dir or file) 
-    */
-    // int error = 0, special_error = 0, flag_nb = 0;
     t_context c = init_context();
 
     if (check_display_help(argc, argv) == 0)
         return (0);
     ft_bzero(g_buff.buffer, BUFFER_LEN - 1);
-
     c.flag_nb = parse_flag(argc, argv, &c.special_error);
     if (c.flag_nb == -1)
         return (2);
-    // c.error = ft_ls(argv, c.flag_nb, &c.error, c.special_error);
     c.error = ft_ls(argv, &c);
-    finish_print_buffer();
-
     return (c.error);
 }
 

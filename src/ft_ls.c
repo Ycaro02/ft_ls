@@ -82,18 +82,20 @@ int ls_only_file_L(t_list *lst, int flag_nb)
 int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
     t_list *lst = NULL;
-    int r_flag = has_flag(c->flag_nb, R_OPTION);        /* bool r_flag enable */
+    int r_flag = has_flag(c->flag_nb, R_OPTION); /* bool r_flag enable */
 
     if (file_c->call_flag != 0 && file->type != DIRECTORY)
         return (0);
     lst = get_all_file_struct(file, c->flag_nb, &c->error);
-    if (!lst && c->error == MALLOC_ERR)                 /* One case where int pointer error is mandatory */
+    if (!lst && c->error == MALLOC_ERR) /* One case where int pointer error is mandatory */
         return (MALLOC_ERR);
     else if (!lst) {
-        multiple_fill_buff("\nft_ls: cannot open directory '", file->name, "': Permission denied", NULL);
+        multiple_fill_buff("\nft_ls: cannot open directory '"\
+            , file->name, "': Permission denied", NULL);
         if (!has_flag(c->flag_nb, R_OPTION))
-            return (2); /* CMD LINE ERROR */
-        return (1); /* classic denie error */
+            return (NA_CMD_LINE_ERR); /* CMD LINE ERROR */
+        update_error(&c->error);
+        return (c->error); /* classic denie error */
     }
     file->total_size = get_total_size(lst);
 
@@ -101,8 +103,8 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     if (display_dir_header(*file, file_c, 1 + r_flag) == MALLOC_ERR)
         return (MALLOC_ERR);
     
-    if (has_flag(c->flag_nb, REVERSE_OPTION))
-        safe_reverse_lst(&lst, &c->error, c->flag_nb);
+    // if (has_flag(c->flag_nb, REVERSE_OPTION))
+    //     safe_reverse_lst(&lst, &c->error, c->flag_nb);
     if (fill_l_buffer(lst, c->flag_nb, file_c->call_flag) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);
@@ -139,6 +141,9 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 
     if (display_dir_header(*file, file_c, 0) == MALLOC_ERR)
         return (MALLOC_ERR);
+
+    // if (has_flag(c->flag_nb, REVERSE_OPTION))
+    //     safe_reverse_lst(&lst, NULL, c->flag_nb);
 
     if (store_in_buffer(lst, c->flag_nb) == MALLOC_ERR)
         return (MALLOC_ERR);

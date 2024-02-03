@@ -91,6 +91,13 @@ typedef struct s_file
     int         quote;
 } t_file;
 
+
+
+    /* special error for only '-' manage case:
+         exit code -2, 
+         don't active default search in current dir (".")
+         display if another args found (dir or file) 
+    */
 /**
  * Execution context
  * error : Exit code error 
@@ -98,6 +105,9 @@ typedef struct s_file
  *  - 1 for for subdirectory access error
  *  - 2 commande line file access error
  * special_error: Store if special error found in cmd line to adapt display
+ *  - for only '-' manage case: 
+ *      - if no valid args -> exit code -2, don't active default search in current dir (".")
+ *      - else display error and another args normaly
  * flag_nb: Flag enable (ls OPTION) see e_flag in define_enum.h
 */
 typedef struct s_context {
@@ -201,8 +211,8 @@ char        **get_printable_date(t_timespec last_change);
 //-------------------------------
 //      sort.c                  //
 //-------------------------------
-void        sort_lst(t_list *lst, int flag_nb);
-int         safe_reverse_lst(t_list **lst,  t_int8 *error, int flag_nb);
+void        sort_lst(t_list **lst, int flag_nb);
+void        safe_reverse_lst(t_list **lst, int flag_nb);
 int         is_special_char(char c);
 //-------------------------------
 //      buffer.c                //

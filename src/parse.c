@@ -109,6 +109,6 @@ t_list* get_all_file_struct(t_file *file, int flag_nb, t_int8 *error)
     closedir(dir);
     if (!all)
         return (NULL);
-    sort_lst(all, flag_nb);
+    sort_lst(&all, flag_nb);
     return(all);    /* Default return, if NULL just can't stat file or empty file */
 }
