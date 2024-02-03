@@ -15,6 +15,7 @@ CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror -g
 
 SRCS	=	src/main.c\
+			src/basic_flag_gestion.c\
 			src/utils.c\
 			src/recurcive.c\
 			src/flag_gestion.c\

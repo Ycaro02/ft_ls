@@ -214,15 +214,18 @@ int     list_xattr(char *path, char *list);
 int     check_lst_acl(t_list *lst);
 int     check_acl(t_file *file);
 
-
-// Basic flag gestion
-void set_flag(int *flags, int flag_val);
-void unset_flag(int *flags, int flag_val);
-int  has_flag(int flags, int flag_val);
+//-------------------------------
+//    Basic flag gestion.c     //
+//-------------------------------
+void        display_flags(int flags);
+void        set_flag(int *flags, int flag_val);
+void        unset_flag(int *flags, int flag_val);
+t_int8      has_flag(int flags, int flag_val);
+t_int8      flag_already_present(int flags, int flag_val);
 // flag gestion
-int parse_flag(int argc, char **argv, int *special_err);
+int         parse_flag(int argc, char **argv, int *special_err);
 // main.c to move
 struct stat *check_for_stat(char* name, int flag, int *save);
-int quotes_required(char *str);
+int         quotes_required(char *str);
 
 #endif /* FT_LS_H */
