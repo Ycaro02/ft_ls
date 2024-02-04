@@ -71,10 +71,10 @@ int check_for_quote(char *str)
  *          create_new_file(recurcive routine) -> like cmd args create
  *          display_symlink -> np for this 
 */
-t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
+t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink, t_file_context *file_c)
 {
     t_file *file;
-
+ 
     file = ft_calloc(sizeof(t_file), 1);
     if (!file)
         return (NULL);
@@ -93,12 +93,17 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
     file->group_id = sb->st_gid;
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
-    /*
-        if (l_option) ??
-        update_max_len_by_field();
-    */
-    // if (size type > space[type])
-        // update
+     if (file_c) {
+        printf("%sGot file_c for %s manage space here%s\n",GREEN, path, RESET);
+        // file->line = build_file_line(file, c, file_c);
+        // build file->line with write l_option logi: so we need flag
+            // in build line if (get_size_bytype > space[type]):
+                // update space[type]
+                // like manage_space but don't need to realloc all string 
+                // or iter x time on lst, use build line before to store it to avoid iteration after store
+
+    }
+
 
     if (fill_name_and_parent(file, path, parent) == MALLOC_ERR)
         return (NULL);

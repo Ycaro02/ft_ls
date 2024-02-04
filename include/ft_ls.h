@@ -40,7 +40,7 @@ int ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_f
 //-------------------------------
 //      t_file.c               //
 //-------------------------------
-t_file      *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink_bool);
+t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink, t_file_context *file_c);
 char        *perm_to_string(mode_t mode, char type);
 int         check_for_quote(char *str);
 //-------------------------------

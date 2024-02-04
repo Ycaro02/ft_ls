@@ -8,9 +8,10 @@ static t_file   *default_file_struct(int flag, t_file_context *file_c)
 
     if (!sb)
         return (NULL);
-    (void)file_c;
-    // file = fill_file_struct(sb, ".", "..", symlink, file_c);
-    file = fill_file_struct(sb, ".", "..", symlink);
+    if (has_flag(flag, L_OPTION))    
+        file = fill_file_struct(sb, ".", "..", symlink, file_c);
+    else
+        file = fill_file_struct(sb, ".", "..", symlink, NULL);
     if (!file || !(file->name)) {
         ft_printf_fd(2, "Malloc error default file struct\n");
         return (NULL);
@@ -45,11 +46,10 @@ static int  check_args
         perror("'");
         return (0);
     }
-    // if (has_flag(arg->c.flag_nb, L_OPTION))
-    //     file = fill_file_struct(sb, path, path, symlink, &arg->file_c);
-    // else
-    //     file = fill_file_struct(sb, path, path, symlink, NULL);
-    file = fill_file_struct(sb, path, path, symlink);
+    if (has_flag(arg->c.flag_nb, L_OPTION))
+        file = fill_file_struct(sb, path, path, symlink, &arg->file_c);
+    else
+        file = fill_file_struct(sb, path, path, symlink, NULL);
     if (!file)
         return (MALLOC_ERR);
     if (get_type(*sb) == DIRECTORY)
@@ -98,8 +98,6 @@ static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *f
     int             symlink = 0;
     char            *full_path = join_parent_name(file->name, my_dir->d_name);
     
-    (void)file_c;
-
     if (!full_path)
         return (MALLOC_ERR);
     sb = check_for_stat(full_path, c->flag_nb, &symlink);
@@ -108,11 +106,10 @@ static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *f
         return (0);
     }
     free(full_path);
-    new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink);
-    // if (has_flag(c->flag_nb, L_OPTION))
-        // new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, file_c);
-    // else
-        // new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, NULL);
+    if (has_flag(c->flag_nb, L_OPTION))
+        new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, file_c);
+    else
+        new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, NULL);
     if (!new_file) {
         free(sb);
         return (MALLOC_ERR);
@@ -130,7 +127,6 @@ t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c)
     (void)file_c;
     /* New call version check fir fill here */
     
-            // if (check_for_fill_struct(&all, my_dir, file, &c->error, c->flag_nb) == MALLOC_ERR) { /*call to fill_file_struct is inside*/
     if (!dir) {
         update_error(&c->error); /* try to set error to 1 */
         return (NULL);
@@ -138,7 +134,7 @@ t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c)
     do  {
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, c->flag_nb, 0) == 1) {
-            if (check_for_fill_struct(&all, my_dir, file, c, file_c) == MALLOC_ERR) { /*call to fill_file_struct is inside*/
+            if (check_for_fill_struct(&all, my_dir, file, c, file_c) == MALLOC_ERR) {
                 c->error = MALLOC_ERR;    /* Set ptr to malloc error and return NULL */
                 return (NULL);
             }

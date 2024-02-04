@@ -37,11 +37,11 @@ typedef struct s_file_context { /* File context for each ls call*/
     int         *space;     /* int array of max column/space for l option else NULL */
 } t_file_context;
 
-/* File line structure for l option */
-typedef struct s_file_line { /* File info store/build in t_file */
-    char **buff; /* alloc of S_HOUR + 1, string idx matching with e_space enum*/
-    char quote; /* quote if needed, '\0' for default value */
-} t_file_line;
+// /* File line structure for l option */
+// typedef struct s_file_line { /* File info store/build in t_file */
+//     char **buff; /* alloc of S_HOUR + 1, string idx matching with e_space enum*/
+//     char quote; /* quote if needed, '\0' for default value */
+// } t_file_line;
 
 /**
  * File structure, contain lot of struct stat field
@@ -64,7 +64,7 @@ typedef struct s_file
     char        *name;
     char        *parrent;
     t_int8      quote;
-    t_file_line *line;
+    char        **line; /* alloc of S_HOUR + 1, string idx matching with e_space enum, only for L_OPTION */
 } t_file;
 
 /**

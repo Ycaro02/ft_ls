@@ -14,11 +14,10 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
     if (!sb)
         return (0);
     if (get_type(*sb) == DIRECTORY) {
-            // if (has_flag(c->flag_nb, L_OPTION))
-                // new_file = fill_file_struct(sb, str, NULL, symlink, file_c);
-            // else
-                // new_file = fill_file_struct(sb, str, NULL, symlink, NULL);
-            new_file = fill_file_struct(sb, str, NULL, symlink);
+            if (has_flag(c->flag_nb, L_OPTION))
+                new_file = fill_file_struct(sb, str, NULL, symlink, file_c);
+            else
+                new_file = fill_file_struct(sb, str, NULL, symlink, NULL);
             if (!new_file) {
                 free(str);
                 return (MALLOC_ERR);
