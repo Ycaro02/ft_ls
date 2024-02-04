@@ -1,19 +1,5 @@
 #include "../include/ft_ls.h"
 
-// static int try_add_list(struct stat *sb, t_list **new, char *str, int symlink)
-// {
-//     t_file *new_file;
-    
-//     new_file = fill_file_struct(&sb, str, NULL, symlink);
-//     if (!new_file) {
-//         ft_printf_fd(2, "Malloc error\n");
-//         return (MALLOC_ERR);
-//     }
-//     ft_lstadd_back(new, ft_lstnew(new_file));
-//     return (0);
-// }
-
-
 // static int parse_directory(char *str, t_list **new, int flag)
 static int parse_directory(char *str, t_list **new, t_context *c, t_file_context *file_c)
 {
@@ -38,8 +24,6 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
                 return (MALLOC_ERR);
             }
             ft_lstadd_back(new, ft_lstnew(new_file));
-        // if (try_add_list(sb, new, str, symlink) == MALLOC_ERR)
-            // error = (MALLOC_ERR);
     }
     else
         free(sb); /* if not dir free sb */
