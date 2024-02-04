@@ -59,8 +59,7 @@ int         parse_flag(int argc, char **argv, t_int8 *special_err);
 //-------------------------------
 //      parse.c                //
 //-------------------------------
-t_list      *get_all_file_struct(t_file *file, int flag_nb, t_int8 *error);
-// t_list      *parse_cmd_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c, t_file_context *file_c);
+t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c);
 t_int8 parse_cmd_args(char **argv, t_args *arg);
 //-------------------------------
 //      ft_ls.c                //

@@ -115,7 +115,9 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 
     if (file_c->call_flag != 0 && file->type != DIRECTORY)
         return (0);
-    lst = get_all_file_struct(file, c->flag_nb, &local_err); /* NEED TO GIVE PTR TO FILE_C HERE */
+
+    lst = get_all_file_struct(file, c, file_c); /* NEED TO GIVE PTR TO FILE_C HERE */
+
     if (!lst && local_err == MALLOC_ERR) /* One case where int pointer error is mandatory */
         return (MALLOC_ERR);
     else if (!lst) { /* Here we use NULL return to check if directory can't be read or empty */
@@ -159,11 +161,12 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
         display_quote(quote);
         fill_buffer(file->name);
         display_quote(quote);
-        // store_in_buffer(lst, c->flag_nb); // maybe just that
+        if (file_c->idx == file_c->lst_len - 1)
+            fill_buffer("\n\n");
         return (0);
     }
 
-    lst = get_all_file_struct(file, c->flag_nb, &local_err);
+    lst = get_all_file_struct(file, c, file_c);
     if (!lst && local_err == MALLOC_ERR)
         return (MALLOC_ERR);
     else if (!lst) {

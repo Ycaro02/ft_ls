@@ -34,8 +34,8 @@ static int  check_args
 // (char *path, t_list **new, t_list **simple_lst, t_int8 *found, t_context *c)
 (char *path, t_args *arg, t_int8 *found)
 {
-    int         symlink = 0;
-    t_file      *file = NULL;
+    int             symlink = 0;
+    t_file          *file = NULL;
     struct stat *sb = check_for_stat(path, arg->c.flag_nb, &symlink);
 
     if (!sb) {
@@ -45,7 +45,10 @@ static int  check_args
         perror("'");
         return (0);
     }
-    // file = fill_file_struct(sb, path, path, symlink, c);
+    // if (has_flag(arg->c.flag_nb, L_OPTION))
+    //     file = fill_file_struct(sb, path, path, symlink, &arg->file_c);
+    // else
+    //     file = fill_file_struct(sb, path, path, symlink, NULL);
     file = fill_file_struct(sb, path, path, symlink);
     if (!file)
         return (MALLOC_ERR);
@@ -71,9 +74,6 @@ static int  check_args
 */
 t_int8 parse_cmd_args(char **argv, t_args *arg)
 {
-    /*  ISSUE : 
-    Possible not a issue we never need to display a list of dir together, 
-    we just call ls function on all of them */
     t_int8      file_found = 0; /*default ret value update if args found or malloc error */
     int         i = 0;
 
@@ -86,11 +86,11 @@ t_int8 parse_cmd_args(char **argv, t_args *arg)
     }
     if (!arg->dir_lst && file_found == 0) /* default search if nothing found */
         ft_lstadd_back(&arg->dir_lst, ft_lstnew(default_file_struct(arg->c.flag_nb, &arg->file_c)));
-    // return (arg->dir_lst);
     return (file_found);
 }
 
 
+// static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, t_context *c, t_file_context *file_c)
 static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, t_int8 *error, int flag)
 {
     struct stat     *sb;
@@ -107,7 +107,7 @@ static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *f
     }
     free(full_path);
     new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink);
-    // new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, c);
+    // new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, file_c);
     if (!new_file) {
         free(sb);
         return (MALLOC_ERR);
@@ -117,21 +117,24 @@ static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *f
     return (0);
 }
 
-t_list* get_all_file_struct(t_file *file, int flag_nb, t_int8 *error)
+t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c)
 {
     t_list *all = NULL;
     struct dirent *my_dir;
     DIR *dir = opendir(file->name);
+    (void)file_c;
+    /* New call version check fir fill here */
+    // if (check_for_fill_struct(&all, my_dir, file, c, file_c) == MALLOC_ERR) { /*call to fill_file_struct is inside*/
     
     if (!dir) {
-        update_error(error); /* try to set error to 1 */
+        update_error(&c->error); /* try to set error to 1 */
         return (NULL);
     }
     do  {
         my_dir = readdir(dir);
-        if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 0) == 1) {
-            if (check_for_fill_struct(&all, my_dir, file, error, flag_nb) == MALLOC_ERR) { /*call to fill_file_struct is inside*/
-                *error = MALLOC_ERR;    /* Set ptr to malloc error and return NULL */
+        if (my_dir && is_point_dir(my_dir->d_name, c->flag_nb, 0) == 1) {
+            if (check_for_fill_struct(&all, my_dir, file, &c->error, c->flag_nb) == MALLOC_ERR) { /*call to fill_file_struct is inside*/
+                c->error = MALLOC_ERR;    /* Set ptr to malloc error and return NULL */
                 return (NULL);
             }
         }
@@ -139,6 +142,6 @@ t_list* get_all_file_struct(t_file *file, int flag_nb, t_int8 *error)
     closedir(dir);
     if (!all)
         return (NULL);
-    sort_lst(&all, flag_nb);
+    sort_lst(&all, c->flag_nb);
     return(all);    /* Default return, if NULL just can't open file or empty file */
 }
