@@ -9,10 +9,9 @@ static int **alloc_array(int nb_line, int max_per_line)
     int **array = ft_calloc(sizeof(int *), nb_line + 1); /* +1 for NULL*/
     if (!array)
         return (NULL);
-    for (int i = 0; i < nb_line; i++)
-    {
+    for (int i = 0; i < nb_line; i++) {
         array[i] = ft_calloc(sizeof(int), max_per_line + 1);
-        if (!array[i]){
+        if (!array[i]) {
             free_incomplete_array((void **)array, i);
             return (NULL);
         }

@@ -16,7 +16,6 @@ typedef unsigned short		t_uint16;
 typedef unsigned int 		t_uint32;
 typedef unsigned long 		t_uint64;
 
-
 /********************************************************************
  *                        DEFINE		                            *
  ********************************************************************/

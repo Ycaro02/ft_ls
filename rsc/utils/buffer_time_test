@@ -1,4 +1,8 @@
+
 8000 size 2000 print: ./ft_ls -G .. ../.. -R 2.58s user 0.87s system 99% cpu 3.450 total
+
 10000 size 5000 print: ./ft_ls -G .. ../.. -R 2.56s user 0.66s system 99% cpu 3.223 total
+
 20000 size 10000 print: ./ft_ls -G .. ../.. -R 2.73s user 0.84s system 99% cpu 3.567 total
+
 2000 size 400 print: ./ft_ls -G .. ../.. -R 2.64s user 1.31s system 99% cpu 3.952 total

@@ -113,6 +113,7 @@ static int ft_ls(char **argv, t_context *c)
         ft_printf_fd (2, "Malloc Error ft_ls\n");
         return (MALLOC_ERR);
     }
+    
     if (dir_lst) {
         if (has_flag(c->flag_nb, D_OPTION)) {
             t_list *new = NULL;

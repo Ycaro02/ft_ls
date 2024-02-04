@@ -39,7 +39,36 @@ int check_for_quote(char *str)
     return (quote > NOEFFECT_CHAR ? quote : NORMAL_CHAR);
 }
 
+/** 
+ * 
+*/
+// static int update_space_max(int idx, int test_value)
+// {
 
+// }
+
+// static void store_maximum_len(t_file *file, int *space, int flag)
+// {
+//     if (has_flag(flag_nb, N_OPTION)) {
+//          get_user_id_len;
+//          get_group_id_len;
+//     } 
+//     else {
+//          get_user_name_len;
+//          get_group_name_len;
+//     }
+//      get_len_size;
+//      get_len_nb_link;
+//      get_len_date_month;
+//      get_len_date_day;
+//      get_len_date_hour;
+
+//      get_minor_size;
+//      get_major_size;
+//      get_len_name_quote;
+// }
+
+/* int * space */
 t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
 {
     t_file *file;
@@ -59,6 +88,13 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
     file->group_id = sb->st_gid;
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
+    /*
+        if (l_option) ??
+        store_maximum_len();
+    */
+    // if (size type > space[type])
+        // update
+
     if (fill_name_and_parent(file, path, parent) == MALLOC_ERR)
         return (NULL);
     file->quote = check_for_quote(file->name);

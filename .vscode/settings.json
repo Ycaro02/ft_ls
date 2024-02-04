@@ -62,7 +62,11 @@
         "stddef.h": "c",
         "cstddef": "c",
         "acl.h": "c",
-        "features.h": "c"
+        "features.h": "c",
+        "struct_stat.h": "c",
+        "features-time64.h": "c",
+        "timesize.h": "c",
+        "wordsize.h": "c"
     },
 
     "highlight.regexes": {

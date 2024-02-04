@@ -31,6 +31,10 @@ static char* remove_last_word(char *str, char sep)
     return (new);
 }
 
+
+/* check got namne for local directory
+   check for absolute path (begin by slash or add it)
+   or remove last word to go to .. */
 static void stat_symlink(char* buff, char *parrent_path, char* path, int flag_nb)
 {
     int         sym_bool = 0;

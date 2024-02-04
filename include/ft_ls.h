@@ -129,6 +129,7 @@ typedef struct s_file_context {
     int         call_flag;
     int         idx;
     int         lst_len;
+    // int *space;
 } t_file_context;
 
 /**
