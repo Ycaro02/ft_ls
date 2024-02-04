@@ -90,24 +90,29 @@ t_int8 parse_cmd_args(char **argv, t_args *arg)
 }
 
 
-// static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, t_context *c, t_file_context *file_c)
-static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, t_int8 *error, int flag)
+// static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, t_int8 *error, int flag)
+static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *file, t_context *c, t_file_context *file_c)
 {
     struct stat     *sb;
     t_file          *new_file;
     int             symlink = 0;
     char            *full_path = join_parent_name(file->name, my_dir->d_name);
     
+    (void)file_c;
+
     if (!full_path)
         return (MALLOC_ERR);
-    sb = check_for_stat(full_path, flag, &symlink);
+    sb = check_for_stat(full_path, c->flag_nb, &symlink);
     if (!sb) {
-        update_error(error);    /* Error update here if syscall stat fail */
+        update_error(&c->error);    /* Error update here if syscall stat fail */
         return (0);
     }
     free(full_path);
     new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink);
-    // new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, file_c);
+    // if (has_flag(c->flag_nb, L_OPTION))
+        // new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, file_c);
+    // else
+        // new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, NULL);
     if (!new_file) {
         free(sb);
         return (MALLOC_ERR);
@@ -124,8 +129,8 @@ t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c)
     DIR *dir = opendir(file->name);
     (void)file_c;
     /* New call version check fir fill here */
-    // if (check_for_fill_struct(&all, my_dir, file, c, file_c) == MALLOC_ERR) { /*call to fill_file_struct is inside*/
     
+            // if (check_for_fill_struct(&all, my_dir, file, &c->error, c->flag_nb) == MALLOC_ERR) { /*call to fill_file_struct is inside*/
     if (!dir) {
         update_error(&c->error); /* try to set error to 1 */
         return (NULL);
@@ -133,7 +138,7 @@ t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c)
     do  {
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, c->flag_nb, 0) == 1) {
-            if (check_for_fill_struct(&all, my_dir, file, &c->error, c->flag_nb) == MALLOC_ERR) { /*call to fill_file_struct is inside*/
+            if (check_for_fill_struct(&all, my_dir, file, c, file_c) == MALLOC_ERR) { /*call to fill_file_struct is inside*/
                 c->error = MALLOC_ERR;    /* Set ptr to malloc error and return NULL */
                 return (NULL);
             }
