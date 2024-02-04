@@ -1,20 +1,5 @@
 #include "../include/ft_ls.h"
 
-/* for last x perm (other) S_IXOTH, STICKY
-        if just exec:   x
-        if just sticky: T
-        if sticky + x:  t
-        
-        for second x perm (group) S_IXGRP, GID
-        if just exec:   x
-        if just GID: S
-        if GID + x:  s
-
-        for first x perm (group) S_IXGRP, SUID
-        if just exec:   x
-        if just GID: S
-        if GID + x:  s
-    */
 
 static int fill_name_and_parent(t_file *file, char *path, char *parent)
 {
@@ -77,6 +62,15 @@ int check_for_quote(char *str)
     like getpwuid ...
 */
 /* int * space */
+
+/**
+ * Call in: 
+ *          default_file_struct -> check_args -> np
+ *          check_args -> np
+ *          check_for_fill_struct in main ls function one -> np
+ *          create_new_file(recurcive routine) -> like cmd args create
+ *          display_symlink -> np for this 
+*/
 t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
 {
     t_file *file;
@@ -86,6 +80,9 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
         return (NULL);
     file->total_size = -1;
     file->type = symlink == TRUE ? SYMLINK : get_type(*sb);
+
+    // file->sb = sb; /* STOP FREE SB */
+
     file->perm = sb->st_mode;
     file->size = sb->st_size;
     file->nb_link = sb->st_nlink;
@@ -108,7 +105,3 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
     file->quote = check_for_quote(file->name);
     return (file);
 }
-
-// #if defined __USE_MISC || defined __USE_XOPEN
-    // S_ISVTX /* sticky bits*/
-// #endif

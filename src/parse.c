@@ -1,6 +1,6 @@
 #include "../include/ft_ls.h"
 
-static t_file   *default_file_struct(int flag)
+static t_file   *default_file_struct(int flag, t_file_context *file_c)
 {
     t_file          *file = NULL;
     int             symlink = 0;
@@ -8,6 +8,8 @@ static t_file   *default_file_struct(int flag)
 
     if (!sb)
         return (NULL);
+    (void)file_c;
+    // file = fill_file_struct(sb, ".", "..", symlink, file_c);
     file = fill_file_struct(sb, ".", "..", symlink);
     if (!file || !(file->name)) {
         ft_printf_fd(2, "Malloc error default file struct\n");
@@ -25,6 +27,7 @@ static t_file   *default_file_struct(int flag)
  *          - found: pointer on bool, update to 1 if file found
  *          - c: ptr on t_context up
  *              - update c->error to NA_CMD_LINE_ERR if can't access file
+ *              - update c->space in fill_file
  * Ret: MALLOC_ERR for malloc error otherwise 0
 */
 static int  check_args
@@ -41,6 +44,7 @@ static int  check_args
         perror("'");
         return (0);
     }
+    // file = fill_file_struct(sb, path, path, symlink, c);
     file = fill_file_struct(sb, path, path, symlink);
     if (!file)
         return (MALLOC_ERR);
@@ -64,8 +68,26 @@ static int  check_args
  * Update value: fill c->error with MALLOC_ERR for distingue no dir to malloc error
  * Ret: ptr on list contain t_file, or NULL if no directory founs
 */
-t_list  *parse_cmd_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c)
+t_list  *parse_cmd_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c, t_file_context *file_c)
 {
+    /*  ISSUE file_c can't reprendre simple_file + dir lst*/
+    /* Potential fast solution file_c just represent dir_lst and we recompute for simple after buiding lst 
+    ?? maybe find another solution, split this shit taking 6 args for example but how 
+        - 2 list are mandatory
+        - argv is the data to parse
+        - args_found can be removed but realy a pain i mean
+        - c and file_c are mandatory and can't be merge
+            - c  is global app context
+            - file_c is file_list context
+        Probably not ugly to do a parse structure taking all of this
+        char**data
+        t_list **dir
+        t_list **simple_file
+        t_context* context
+        t_file_context *dir_context
+        t_file_context *simple_file_context
+        and just give args_found to second args
+         */
     int     i = 0;
     t_list  *new = NULL;
 
@@ -79,7 +101,7 @@ t_list  *parse_cmd_args(char **argv, t_list **simple_file, t_int8 *args_found, t
         i++;
     }
     if (!new && *args_found == 0) /* default search if nothing found */
-        ft_lstadd_back(&new, ft_lstnew(default_file_struct(c->flag_nb)));
+        ft_lstadd_back(&new, ft_lstnew(default_file_struct(c->flag_nb, file_c)));
     return (new);
 }
 
@@ -100,6 +122,7 @@ static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *f
     }
     free(full_path);
     new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink);
+    // new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, c);
     if (!new_file) {
         free(sb);
         return (MALLOC_ERR);

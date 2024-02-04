@@ -2,20 +2,22 @@
 
 t_buff g_buff;
 
-int ls(t_list *lst, t_context *c, int (*ls_function)(t_file*, t_context*, t_file_context*), int call_flag)
+// int ls(t_list *lst, t_context *c, int (*ls_function)(t_file*, t_context*, t_file_context*), int call_flag)
+int ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_file*, t_context*, t_file_context*))
 {
-    if (!lst)
-        return (42);
     t_list *current = lst;
     int err = 0;
-    t_file_context file_c;
-    file_c.idx = 0;
-    file_c.lst_len = ft_lstsize(lst);
-    file_c.call_flag = call_flag;
+
+    if (!lst)
+        return (err);
+    file_c->idx = 0;
+    file_c->lst_len = ft_lstsize(lst);
+    // t_file_context file_c;
+    // file_c->call_flag = call_flag;
 
     while (current) {
-        err = ls_function(current->content, c, &file_c);
-        ++(file_c.idx);
+        err = ls_function(current->content, c, file_c);
+        ++(file_c->idx);
         if (err == MALLOC_ERR)
             break ;
         current = current->next;
@@ -67,23 +69,23 @@ static void special_display_header(t_list *dir_lst, int args_found, int call_val
 /** call_ls
  * ls HUB to choice which ls version call
 */
-static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
+static void call_ls(t_list *dir_lst, t_context *c, t_file_context *file_c)
 {
     int     err = 0;
     t_int8  recursive_flag = has_flag(c->flag_nb, R_OPTION);
     t_int8  l_flag = has_flag(c->flag_nb, L_OPTION);
     t_int8  onlydir_flag = has_flag(c->flag_nb, D_OPTION); 
 
-    if (call_flag != 0 && recursive_flag && !onlydir_flag)
-        err = search_recurcive_dir(dir_lst, c, call_flag); /* Call recurcive */
-    else if (call_flag != 0 && l_flag && onlydir_flag)
+    if (file_c->call_flag != 0 && recursive_flag && !onlydir_flag)
+        err = search_recurcive_dir(dir_lst, c, file_c->call_flag); /* Call recurcive */
+    else if (file_c->call_flag != 0 && l_flag && onlydir_flag)
         err = ls_only_dir(dir_lst, c->flag_nb); /* Call ls D + L option*/
-    else if (l_flag && call_flag != 0)
-        err = ls(dir_lst, c, ls_l_one_dir, call_flag); /* Call ls L option */
-    else if (l_flag && call_flag == 0)
+    else if (l_flag && file_c->call_flag != 0)
+        err = ls(dir_lst, c, file_c, ls_l_one_dir); /* Call ls L option */
+    else if (l_flag && file_c->call_flag == 0)
         err = ls_only_file_L(dir_lst, c->flag_nb);  /* For mixed argument in cmd line */
     else
-        err = ls(dir_lst, c, ls_one_dir, call_flag); /* Call classic ls option */
+        err = ls(dir_lst, c, file_c, ls_one_dir); /* Call classic ls option */
    
     file_lstclear(&dir_lst, free);
     if (err == MALLOC_ERR) {
@@ -102,6 +104,8 @@ static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
 static int ft_ls(char **argv, t_context *c)
 {
     t_list  *dir_lst, *simple_file = NULL;
+    t_file_context file_c; /* file_context */
+    ft_bzero(&file_c, sizeof(t_file_context));
     t_int8  args_found = c->special_error;
     int     call_value = 0;
     
@@ -118,7 +122,7 @@ static int ft_ls(char **argv, t_context *c)
             new = ft_lstjoin(dir_lst, simple_file);
             if (new) {
                 sort_lst(&new, c->flag_nb);
-                call_ls(new, c, call_value);
+                call_ls(new, c, &file_c);
                 return (c->error);
             }
         }
@@ -127,7 +131,7 @@ static int ft_ls(char **argv, t_context *c)
 
     if (simple_file) { /* if other file found */
         sort_lst(&simple_file, c->flag_nb);
-        call_ls(simple_file, c, call_value);
+        call_ls(simple_file, c, &file_c);
         ++call_value;
         if (has_flag(c->flag_nb, L_OPTION) && dir_lst)
             fill_buffer("\n");
@@ -137,7 +141,9 @@ static int ft_ls(char **argv, t_context *c)
     if (dir_lst) {
         if (!has_flag(c->flag_nb, R_OPTION))
             special_display_header(dir_lst, args_found, call_value);
-        call_ls(dir_lst, c, call_value + 1);
+        file_c.call_flag += 1;
+        call_ls(dir_lst, c, &file_c);
+        // call_ls(dir_lst, c, &file_c, call_value + 1);
     }
 
     if (c->special_error == 1) /* set return cmd value for special err */
@@ -178,27 +184,6 @@ int main (int argc, char **argv)
     c.error = ft_ls(argv, &c);
     finish_print_buffer();
     return (c.error);
-}
-
-int quotes_required(char *str)
-{
-    int i = 0;
-    int ret = NORMAL_CHAR;
-    int tmp = NORMAL_CHAR;
-
-    while (str && str[i]) {
-        tmp = is_special_char(str[i]);
-        if (tmp == DIEZE_CHAR)
-            tmp = i == 0 ? ADD_SIMPLE_QUOTE_CHAR : NORMAL_CHAR;
-        else if (tmp == BRACKET_CHAR) 
-            tmp = (ft_strlen(str) == 1 ? ADD_SIMPLE_QUOTE_CHAR : NORMAL_CHAR);
-        if (tmp != NORMAL_CHAR) {
-            if (ret < ADD_DOUBLE_QUOTE_CHAR)
-                ret = tmp;
-        }
-        ++i;
-    }
-    return (ret);
 }
 
 struct stat *check_for_stat(char* name, int flag, int *save_symlink)

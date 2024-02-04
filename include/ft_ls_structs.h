@@ -3,6 +3,8 @@
 
 # include "basic_define.h"
 # include "define_enum.h"
+# include <sys/stat.h>
+# include <sys/types.h>
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
@@ -37,7 +39,7 @@ typedef struct s_file_context { /* File context for each ls call*/
 
 /* File line structure for l option */
 typedef struct s_file_line { /* File info store/build in t_file */
-    char **line; /* alloc of S_HOUR + 1, string idx matching with e_space enum*/
+    char **buff; /* alloc of S_HOUR + 1, string idx matching with e_space enum*/
     char quote; /* quote if needed, '\0' for default value */
 } t_file_line;
 
@@ -58,9 +60,11 @@ typedef struct s_file
     t_timespec  last_status_change;
     t_timespec  last_access;
     t_timespec  last_change;
+    // struct stat *sb;
     char        *name;
     char        *parrent;
     t_int8      quote;
+    t_file_line *line;
 } t_file;
 
 /**
@@ -72,7 +76,7 @@ typedef struct s_buff {
 }	t_buff;
 
 
-/* t_file_line line content: */
+/* t_file_line buff content: */
 /* Permision string */
 /* User owner string or id */
 /* Group owner string or id */

@@ -185,15 +185,3 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     return (0);
 }
 
-/**
- * Basic display quote
-*/
-void display_quote(int quote)
-{
-    if (quote == ADD_SIMPLE_QUOTE_CHAR)
-        fill_buffer_char('\'');
-    else if (quote == ADD_DOUBLE_QUOTE_CHAR)
-        fill_buffer_char('\"');
-    else
-        fill_buffer_char(' ');
-}

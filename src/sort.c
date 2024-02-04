@@ -21,29 +21,6 @@ void safe_reverse_lst(t_list **lst, int flag_nb)
     return ;
 }
 
-/**
-* parse special char
-*/
-int is_special_char(char c)
-{
-    /* all no care char */
-    if (c == '@' || c == '%' || c == '-'\
-        || c == '_' || c == '+' || c == '.' || c == ',' || c == ':')
-        return (NOEFFECT_CHAR);
-    /* special rule */
-    if ( c == '{' || c == '}')
-        return (BRACKET_CHAR);
-    if (c == '#')
-        return (DIEZE_CHAR);
-    if (c == '\'')
-        return (ADD_DOUBLE_QUOTE_CHAR);
-    /* alway add quote. special rule for ' or "*/
-    if (c == '!' || c == '$' || c == '^' || c == '&' || c == '*' || c == '('\
-        || c == ')' || c == '=' || c == '<' || c == '>' || c == '?' || c == ';'\
-        || c == '[' || c == ']' || c == '`' || c == '~' || c == '\"')
-            return (ADD_SIMPLE_QUOTE_CHAR);
-    return (NORMAL_CHAR);
-}
 
 
 int special_strcmp(char *s1, char *s2, int flag)

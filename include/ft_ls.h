@@ -35,6 +35,8 @@
 
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
 
+/* LS FUN */
+int ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_file*, t_context*, t_file_context*));
 //-------------------------------
 //      t_file.c               //
 //-------------------------------
@@ -63,7 +65,6 @@ t_list      *parse_cmd_args(char **argv, t_list **simple_file, t_int8 *args_foun
 //      ft_ls.c                //
 //-------------------------------
 int         ls_only_file_L(t_list *lst, int flag_nb);
-void        display_quote(int quote);
 int         ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c);
 int         ls_one_dir(t_file *file, t_context *c, t_file_context *file_c);
 //-------------------------------
@@ -100,7 +101,6 @@ char        **get_printable_date(t_timespec last_change);
 //-------------------------------
 void        sort_lst(t_list **lst, int flag_nb);
 void        safe_reverse_lst(t_list **lst, int flag_nb);
-int         is_special_char(char c);
 //-------------------------------
 //      buffer.c                //
 //-------------------------------
@@ -144,8 +144,14 @@ void        set_flag(int *flags, int flag_val);
 void        unset_flag(int *flags, int flag_val);
 t_int8      has_flag(int flags, int flag_val);
 t_int8      flag_already_present(int flags, int flag_val);
-// main.c to move
-struct stat *check_for_stat(char* name, int flag, int *save);
+
+//-------------------------------
+//    quote_gestion.c     //
+//-------------------------------
 int         quotes_required(char *str);
+int         is_special_char(char c);
+void        display_quote(int quote);
+/*main*/
+struct stat *check_for_stat(char* name, int flag, int *save);
 
 #endif /* FT_LS_H */
