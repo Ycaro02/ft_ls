@@ -94,6 +94,19 @@ static void call_ls(t_list *dir_lst, t_context *c, t_file_context *file_c)
     }
 }
 
+t_args *init_args(t_context *c)
+{
+    t_args *arg = ft_calloc(sizeof(t_args), 1);
+    if (!arg) {
+        ft_printf_fd(2, "Malloc error init args\n");
+        return (NULL);
+    }
+    arg->c.error = c->error;
+    arg->c.special_error = c->special_error;
+    arg->c.flag_nb = c->flag_nb;
+    return (arg);
+}
+
 /** ft_ls: start ls called in main
  * Parse command line argument and store directory and simple_file in separate linked list
  * Args:    - argv: argv from main
@@ -103,46 +116,52 @@ static void call_ls(t_list *dir_lst, t_context *c, t_file_context *file_c)
 */
 static int ft_ls(char **argv, t_context *c)
 {
-    t_list  *dir_lst, *simple_file = NULL;
-    t_file_context file_c; /* file_context */
-    ft_bzero(&file_c, sizeof(t_file_context));
+    // BUILD args here 
+    t_args *arg = init_args(c);
+    // t_list  *dir_lst, *simple_file = NULL;
+    // t_file_context file_c; /* first file_context */
+    // ft_bzero(&file_c, sizeof(t_file_context));
     t_int8  args_found = c->special_error;
     int     call_value = 0;
     
-    dir_lst = parse_cmd_args(&argv[1], &simple_file, &args_found, c);
+    args_found = parse_cmd_args(&argv[1], arg);
+    if (args_found == MALLOC_ERR)
+        return (MALLOC_ERR);
+
+    // dir_lst = parse_cmd_args(&argv[1], &simple_file, &args_found, c, &file_c);
     /* Error management */
-    if (!dir_lst && c->error == MALLOC_ERR) {
+    if (!(arg->dir_lst) && c->error == MALLOC_ERR) {
         ft_printf_fd (2, "Malloc Error ft_ls\n");
         return (MALLOC_ERR);
     }
     
-    if (dir_lst) {  /* if directory found */
+    if (arg->dir_lst) {  /* if directory found */
         if (has_flag(c->flag_nb, D_OPTION)) {
             t_list *new = NULL;
-            new = ft_lstjoin(dir_lst, simple_file);
+            new = ft_lstjoin(arg->dir_lst, arg->simple_file);
             if (new) {
                 sort_lst(&new, c->flag_nb);
-                call_ls(new, c, &file_c);
+                call_ls(new, c, &arg->file_c);
                 return (c->error);
             }
         }
-        sort_lst(&dir_lst, c->flag_nb);
+        sort_lst(&arg->dir_lst, c->flag_nb);
     }
 
-    if (simple_file) { /* if other file found */
-        sort_lst(&simple_file, c->flag_nb);
-        call_ls(simple_file, c, &file_c);
+    if (arg->simple_file) { /* if other file found */
+        sort_lst(&arg->simple_file, c->flag_nb);
+        call_ls(arg->simple_file, c, &arg->file_c);
         ++call_value;
-        if (has_flag(c->flag_nb, L_OPTION) && dir_lst)
+        if (has_flag(c->flag_nb, L_OPTION) && arg->dir_lst)
             fill_buffer("\n");
     }
 
 
-    if (dir_lst) {
+    if (arg->dir_lst) {
         if (!has_flag(c->flag_nb, R_OPTION))
-            special_display_header(dir_lst, args_found, call_value);
-        file_c.call_flag += 1;
-        call_ls(dir_lst, c, &file_c);
+            special_display_header(arg->dir_lst, args_found, call_value);
+        arg->file_c.call_flag += 1;
+        call_ls(arg->dir_lst, c, &arg->file_c);
         // call_ls(dir_lst, c, &file_c, call_value + 1);
     }
 

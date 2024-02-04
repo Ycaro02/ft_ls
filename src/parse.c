@@ -31,15 +31,16 @@ static t_file   *default_file_struct(int flag, t_file_context *file_c)
  * Ret: MALLOC_ERR for malloc error otherwise 0
 */
 static int  check_args
-(char *path, t_list **new, t_list **simple_lst, t_int8 *found, t_context *c)
+// (char *path, t_list **new, t_list **simple_lst, t_int8 *found, t_context *c)
+(char *path, t_args *arg, t_int8 *found)
 {
     int         symlink = 0;
     t_file      *file = NULL;
-    struct stat *sb = check_for_stat(path, c->flag_nb, &symlink);
+    struct stat *sb = check_for_stat(path, arg->c.flag_nb, &symlink);
 
     if (!sb) {
         *found = 1; /* signal we found another file but can't  be acces*/
-        c->error = NA_CMD_LINE_ERR;
+        arg->c.error = NA_CMD_LINE_ERR;
         ft_printf_fd(2, "ft_ls cannot access '%s", path);
         perror("'");
         return (0);
@@ -49,60 +50,44 @@ static int  check_args
     if (!file)
         return (MALLOC_ERR);
     if (get_type(*sb) == DIRECTORY)
-        ft_lstadd_back(new, ft_lstnew(file));
+        ft_lstadd_back(&arg->dir_lst, ft_lstnew(file));
     else {
         *found = 1; /* signal we found another file not directory */
-        ft_lstadd_back(simple_lst, ft_lstnew(file));
+        ft_lstadd_back(&arg->simple_file, ft_lstnew(file));
     }
     free(sb);
     return (0);
 }
 
-
 /** parse_cmd_args
  *  Parse commande line argument call in:cv ft_ls
  * Args:    - argv from main
- *          - simple_list: ptr on t_list ptr declare in ft_ls, push no directory file here
- *          - args_found: pointer on bool, argument found before can be uptate in check args
- *          - c: ptr on t_context 
- * Update value: fill c->error with MALLOC_ERR for distingue no dir to malloc error
- * Ret: ptr on list contain t_file, or NULL if no directory founs
+ *          - arg: t_args structure ptr containing
+ *              - simple_list: ptr on t_list ptr declare in ft_ls, push no directory file here
+ *              - dir_ls: ptr on t_list ptr declare in ft_ls, push directory here
+ *              - c: ptr on t_context 
+ *              - file_c: ptr on t_file_context for simple_list 
+ * Ret: replace args_found: found value 0 for nothing, 1 for yes or MALLOC_ERR
 */
-t_list  *parse_cmd_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c, t_file_context *file_c)
+t_int8 parse_cmd_args(char **argv, t_args *arg)
 {
-    /*  ISSUE file_c can't reprendre simple_file + dir lst*/
-    /* Potential fast solution file_c just represent dir_lst and we recompute for simple after buiding lst 
-    ?? maybe find another solution, split this shit taking 6 args for example but how 
-        - 2 list are mandatory
-        - argv is the data to parse
-        - args_found can be removed but realy a pain i mean
-        - c and file_c are mandatory and can't be merge
-            - c  is global app context
-            - file_c is file_list context
-        Probably not ugly to do a parse structure taking all of this
-        char**data
-        t_list **dir
-        t_list **simple_file
-        t_context* context
-        t_file_context *dir_context
-        t_file_context *simple_file_context
-        and just give args_found to second args
-         */
-    int     i = 0;
-    t_list  *new = NULL;
+    /*  ISSUE : 
+    Possible not a issue we never need to display a list of dir together, 
+    we just call ls function on all of them */
+    t_int8      file_found = 0; /*default ret value update if args found or malloc error */
+    int         i = 0;
 
     while (argv && argv[i]) {
         if (argv[i][0] != '-') {
-            if (check_args(argv[i], &new,  simple_file, args_found, c) == MALLOC_ERR) {
-                c->error = MALLOC_ERR;
-                return (NULL);
-            }
+            if (check_args(argv[i], arg, &file_found) == MALLOC_ERR)
+                return (MALLOC_ERR);
         }
-        i++;
+        ++i;
     }
-    if (!new && *args_found == 0) /* default search if nothing found */
-        ft_lstadd_back(&new, ft_lstnew(default_file_struct(c->flag_nb, file_c)));
-    return (new);
+    if (!arg->dir_lst && file_found == 0) /* default search if nothing found */
+        ft_lstadd_back(&arg->dir_lst, ft_lstnew(default_file_struct(arg->c.flag_nb, &arg->file_c)));
+    // return (arg->dir_lst);
+    return (file_found);
 }
 
 

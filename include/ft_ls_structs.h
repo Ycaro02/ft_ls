@@ -76,6 +76,14 @@ typedef struct s_buff {
 }	t_buff;
 
 
+
+typedef struct s_args {
+    t_list          *simple_file;   /* lst of no directory file */
+    t_list          *dir_lst;       /* lst of dir file */
+    t_context       c;              /* ls application context */
+    t_file_context file_c;         /* file lst context for simple_fie */
+} t_args;
+
 /* t_file_line buff content: */
 /* Permision string */
 /* User owner string or id */

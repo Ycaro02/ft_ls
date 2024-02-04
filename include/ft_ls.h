@@ -60,7 +60,8 @@ int         parse_flag(int argc, char **argv, t_int8 *special_err);
 //      parse.c                //
 //-------------------------------
 t_list      *get_all_file_struct(t_file *file, int flag_nb, t_int8 *error);
-t_list      *parse_cmd_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c);
+// t_list      *parse_cmd_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c, t_file_context *file_c);
+t_int8 parse_cmd_args(char **argv, t_args *arg);
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------
@@ -150,7 +151,7 @@ t_int8      flag_already_present(int flags, int flag_val);
 //-------------------------------
 int         quotes_required(char *str);
 int         is_special_char(char c);
-void        display_quote(int quote);
+void        display_quote(t_int8 quote);
 /*main*/
 struct stat *check_for_stat(char* name, int flag, int *save);
 
