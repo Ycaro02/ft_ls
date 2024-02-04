@@ -47,7 +47,7 @@ int check_for_quote(char *str)
 
 // }
 
-// static void store_maximum_len(t_file *file, int *space, int flag)
+// static void update_max_len_by_field(t_file *file, int *space, int flag)
 // {
 //     if (has_flag(flag_nb, N_OPTION)) {
 //          get_user_id_len;
@@ -67,7 +67,15 @@ int check_for_quote(char *str)
 //      get_major_size;
 //      get_len_name_quote;
 // }
-
+/*
+    Need to change all l option storage logic, if l_option build line here
+        - create line structure 
+        - fill it with all actual "write info" 
+            - update int Array Space in concequences
+        - just need to fill buffer in new write
+    This change avoid double allocation for all string and special function call
+    like getpwuid ...
+*/
 /* int * space */
 t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
 {
@@ -90,7 +98,7 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
     file->rdev = sb->st_rdev;
     /*
         if (l_option) ??
-        store_maximum_len();
+        update_max_len_by_field();
     */
     // if (size type > space[type])
         // update

@@ -132,6 +132,20 @@ typedef struct s_file_context {
     // int *space;
 } t_file_context;
 
+/* Permision string */
+/* User owner string or id */
+/* Group owner string or id */
+/* File size string, or minor + major for BLOCK and CHARACTER file  */
+/* nb link string */
+/* Month string */
+/* Day string */
+/* Hour string */
+typedef struct s_file_line {
+    char **line; /* alloc of S_HOUR + 1, string idx matching with e_space enum*/
+    char quote; /* quote if needed, '\0' for default value */
+} t_file_line;
+
+
 /**
  * Buffer to avoid multiple useless call of write
 */
