@@ -19,10 +19,19 @@ void    print_and_clear()
     g_buff.i = 0;
 }
 
+/**
+ * fill buffer with long format info
+ * args: lst of t_file to display
+ * flag_nb: flag option
+ * file_c: file_context
+    * call_flag: call flag context
+    * space: int array of space for each column
+*/
 int fill_l_buffer(t_list *lst, int flag_nb, int call_flag)
 {
     t_list  *current = lst;
     int     lst_len = ft_lstsize(lst), i = 0, error = 0;
+    /*CALL get_all_space HERE  */
     int     *space = get_all_space(current, flag_nb);
 
     if (!space)

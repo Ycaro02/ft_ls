@@ -1,6 +1,8 @@
 #ifndef BASIC_DEF_TYPE_HEADER
 # define BASIC_DEF_TYPE_HEADER
 
+# include <sys/types.h>
+
 /********************************************************************
  *                        TYPEDEF		                            *
  ********************************************************************/
@@ -15,6 +17,8 @@ typedef unsigned char 		t_uint8;
 typedef unsigned short		t_uint16; 
 typedef unsigned int 		t_uint32;
 typedef unsigned long 		t_uint64;
+
+typedef struct              timespec t_timespec;
 
 /********************************************************************
  *                        DEFINE		                            *

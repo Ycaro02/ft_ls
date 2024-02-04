@@ -173,6 +173,10 @@ static int write_date(t_file file, int* space, int flag_nb)
     return (0);
 }
 
+/** fill_buffer_l_option
+ * HUB caller for all write functopm for l_option
+ * Need to rework this to jsut display file_line
+*/
 int fill_buffer_l_option(t_file file, int *space, int flag_nb)
 {
     if (write_perm(file, space[S_PERM]) == MALLOC_ERR\

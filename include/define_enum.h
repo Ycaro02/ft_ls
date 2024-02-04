@@ -56,6 +56,9 @@ Exit code:"RESET"\n\
 # define    OLD 1
 /* Default width for manage column if ioctl call faill */
 # define BASIC_WIDTH 1
+/* Special str cmp for sort*/
+# define TOKEN_NO_CASE_SENSITIVE 0
+# define TOKEN_CHECK_SPE_CHAR 1
 //-------------------------------
 //      FLAG                   //
 //-------------------------------
@@ -97,6 +100,35 @@ enum e_flag  {
     D_OPTION=1024,
     N_OPTION=2048,
     COLOR_OPTION=4096,
+};
+/* typedef */
+typedef enum e_flag t_eflag;
+
+/* Special char Parse Rule
+If char in string -> simple quote:
+---------------------------------------
+    ! $ ^ & * ( ) = < > ? ; [ ] ` ~
+---------------------------------------
+ Cant use '/' exclusif for directory
+Special char :
+Simple quote add double quotes
+ ' : add ""
+Double quote add simple quotes
+ " : add ''
+ BRACKET_CHAR :
+    - alway simple quote when alone { || }
+    - remove simple quote whenn add any char include { || }: 
+        - exemple: {{ : no simple quote != ## : simple quote
+DIEZE_CHAR :
+    - simple quote only when at idx 0
+*/
+enum special_char_e {
+    NORMAL_CHAR,                // all other char
+    NOEFFECT_CHAR,              // @ % - _ + . , : 
+    BRACKET_CHAR,               // { }
+    DIEZE_CHAR,                 // #
+    ADD_SIMPLE_QUOTE_CHAR,      // ! $ ^ & * ( ) = < > ? ; [ ] ` ~ "
+    ADD_DOUBLE_QUOTE_CHAR,      // '
 };
 //-------------------------------
 //      SPACE                   // For -l option

@@ -84,8 +84,6 @@ static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
         err = ls_only_file_L(dir_lst, c->flag_nb);  /* For mixed argument in cmd line */
     else
         err = ls(dir_lst, c, ls_one_dir, call_flag); /* Call classic ls option */
- 
- 
    
     file_lstclear(&dir_lst, free);
     if (err == MALLOC_ERR) {
@@ -98,7 +96,7 @@ static void call_ls(t_list *dir_lst, t_context *c, int call_flag)
  * Parse command line argument and store directory and simple_file in separate linked list
  * Args:    - argv: argv from main
  *          - c: Pointer to the context containing flag, special_error, exit_code
- *              - c->error is set in get_dir_args or ls_function (call_ls) 
+ *              - c->error is set in parse_cmd_args or ls_function (call_ls) 
  * Return value: Return the appropriate exit code
 */
 static int ft_ls(char **argv, t_context *c)
@@ -107,14 +105,14 @@ static int ft_ls(char **argv, t_context *c)
     t_int8  args_found = c->special_error;
     int     call_value = 0;
     
-    dir_lst = get_dir_args(&argv[1], &simple_file, &args_found, c);
+    dir_lst = parse_cmd_args(&argv[1], &simple_file, &args_found, c);
     /* Error management */
     if (!dir_lst && c->error == MALLOC_ERR) {
         ft_printf_fd (2, "Malloc Error ft_ls\n");
         return (MALLOC_ERR);
     }
     
-    if (dir_lst) {
+    if (dir_lst) {  /* if directory found */
         if (has_flag(c->flag_nb, D_OPTION)) {
             t_list *new = NULL;
             new = ft_lstjoin(dir_lst, simple_file);
@@ -127,7 +125,7 @@ static int ft_ls(char **argv, t_context *c)
         sort_lst(&dir_lst, c->flag_nb);
     }
 
-    if (simple_file){
+    if (simple_file) { /* if other file found */
         sort_lst(&simple_file, c->flag_nb);
         call_ls(simple_file, c, call_value);
         ++call_value;
@@ -136,7 +134,7 @@ static int ft_ls(char **argv, t_context *c)
     }
 
 
-    if (dir_lst){
+    if (dir_lst) {
         if (!has_flag(c->flag_nb, R_OPTION))
             special_display_header(dir_lst, args_found, call_value);
         call_ls(dir_lst, c, call_value + 1);

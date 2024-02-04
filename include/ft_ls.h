@@ -8,6 +8,7 @@
 # include <grp.h>
 # include <pwd.h>
 # include <time.h>
+
 # include <sys/types.h>
 # include <sys/stat.h>
 
@@ -16,145 +17,16 @@
 # include <sys/ioctl.h>  // ioctl for manage_column
 # include <sys/xattr.h>  // extended attr 
 # include "../rsc/acl/acl.h" // classic <sys/acl.h> not present on 42 computer, same for -lacl
-# include "basic_define.h"
-# include "../libft/libft.h"
-# include "../libft/list/linked_list.h"
-
-# include "define_enum.h"
 // # include <sys/acl.h> 
 
 
-# define TOKEN_NO_CASE_SENSITIVE 0
-# define TOKEN_CHECK_SPE_CHAR 1
 
-/*
-    Parse rule
+# include "basic_define.h"
+# include "../libft/libft.h"
+# include "../libft/list/linked_list.h"
+# include "ft_ls_structs.h" /* include <time.h> */
 
-If char in string -> simple quote:
----------------------------------------
-    ! $ ^ & * ( ) = < > ? ; [ ] ` ~
----------------------------------------
- 
- Cant use '/' exclusif for directory
-Special char :
-
-Simple quote add double quotes
- ' : add ""
-
-Double quote add simple quotes
- " : add ''
-
- BRACKET_CHAR :
-    - alway simple quote when alone { || }
-    - remove simple quote whenn add any char include { || }: 
-        - exemple: {{ : no simple quote != ## : simple quote
-DIEZE_CHAR :
-    - simple quote only when at idx 0
-*/
-enum special_char_e {
-    NORMAL_CHAR,                // all other char
-    NOEFFECT_CHAR,              // @ % - _ + . , : 
-    BRACKET_CHAR,               // { }
-    DIEZE_CHAR,                 // #
-    ADD_SIMPLE_QUOTE_CHAR,      // ! $ ^ & * ( ) = < > ? ; [ ] ` ~ "
-    ADD_DOUBLE_QUOTE_CHAR,      // '
-};
-
-//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//                                                                            //
-//                                  STRUCT                                    //
-//                                                                            //
-//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-typedef struct timespec t_timespec;
-typedef enum e_flag t_eflag;
-
-/**
- * File structure, contain lot of struct stat field
-*/
-typedef struct s_file 
-{
-    t_int8      type;
-    mode_t      perm;
-    nlink_t     nb_link;
-    uid_t       user_id;
-    gid_t       group_id;
-    t_int64     size;
-    t_int64     total_size;
-    blkcnt_t    nb_block;
-    dev_t       rdev;
-    t_timespec  last_status_change;
-    t_timespec  last_access;
-    t_timespec  last_change;
-    char        *name;
-    char        *parrent;
-    t_int8      quote;
-} t_file;
-
-
-
-    /* special error for only '-' manage case:
-         exit code -2, 
-         don't active default search in current dir (".")
-         display if another args found (dir or file) 
-    */
-/**
- * Execution context
- * error : Exit code error 
- *  - 0 for nothing
- *  - 1 for for subdirectory access error
- *  - 2 commande line file access error
- * special_error: Store if special error found in cmd line to adapt display
- *  - for only '-' manage case: 
- *      - if no valid args -> exit code -2, don't active default search in current dir (".")
- *      - else display error and another args normaly
- * flag_nb: Flag enable (ls OPTION) see e_flag in define_enum.h
-*/
-typedef struct s_context {
-    t_int8      error;              /* Exit error code */
-    t_int8      special_error;      /* special error to manage -- and special display */
-    int         flag_nb;            /* flags value (ls option) */
-} t_context;
-
-/** 
- * File context
- * call_flag: Call flag used in hub ls function
- *  - 0 for file display
- *  - 1 for dir without file before
- *  - 2 for dir with file or another dir before
- * idx: Index of file in lst
- * lst_len: File's list len
-*/
-typedef struct s_file_context {
-    int         call_flag;
-    int         idx;
-    int         lst_len;
-    // int *space;
-} t_file_context;
-
-/* Permision string */
-/* User owner string or id */
-/* Group owner string or id */
-/* File size string, or minor + major for BLOCK and CHARACTER file  */
-/* nb link string */
-/* Month string */
-/* Day string */
-/* Hour string */
-typedef struct s_file_line {
-    char **line; /* alloc of S_HOUR + 1, string idx matching with e_space enum*/
-    char quote; /* quote if needed, '\0' for default value */
-} t_file_line;
-
-
-/**
- * Buffer to avoid multiple useless call of write
-*/
-typedef struct s_buff
-{
-	char		buffer[BUFFER_LEN];
-    int	        i;
-}	t_buff;
-
+# include "define_enum.h"
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                                                                            //
 //                                FUNCTION                                    //
@@ -186,7 +58,7 @@ int         parse_flag(int argc, char **argv, t_int8 *special_err);
 //      parse.c                //
 //-------------------------------
 t_list      *get_all_file_struct(t_file *file, int flag_nb, t_int8 *error);
-t_list      *get_dir_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c);
+t_list      *parse_cmd_args(char **argv, t_list **simple_file, t_int8 *args_found, t_context *c);
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------
