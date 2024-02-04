@@ -71,6 +71,8 @@ int check_for_quote(char *str)
  *          create_new_file(recurcive routine) -> like cmd args create
  *          display_symlink -> np for this 
 */
+/* maybe we can remove parent and path and fill it after call, 3 call in parse, one in recurcive and one in write name no realy a pain */
+// t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink, t_context *c, t_file_context *file_c)
 t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink, t_file_context *file_c)
 {
     t_file *file;
