@@ -100,7 +100,7 @@ static int write_size(t_file file, int *space)
 {
     char *size;
     // printf("size: %d minor:%d major: %d\n", space[S_SIZE], space[S_MINOR_SIZE], space[S_MAJOR_SIZE]);
-    if (file.type == CHARACTER) {
+    if (file.type == CHARACTER || file.type == BLOCK) {
         // printf("for %s size :%ld\n", file.name, (space[S_MAJOR_SIZE] - ft_strlen(size)));
         size = ft_ultoa(major(file.rdev));
         char* minor_size = ft_ultoa(minor(file.rdev));
