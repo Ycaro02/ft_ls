@@ -162,18 +162,20 @@ static int check_display_help(int argc, char**argv)
     return (1);
 }
 
-t_context init_context(){
-    t_context context;
+// t_context init_context(){
+//     t_context context;
 
-    context.error = 0;
-    context.special_error = 0;
-    context.flag_nb = 0;
-    return (context);
-}
+//     context.error = 0;
+//     context.special_error = 0;
+//     context.flag_nb = 0;
+//     return (context);
+// }
 
 int main (int argc, char **argv)
 {
-    t_context c = init_context();
+    t_context c;
+
+    ft_bzero(&c, sizeof(t_context));
 
     if (check_display_help(argc, argv) == 0)
         return (0);
