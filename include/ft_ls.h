@@ -35,12 +35,15 @@
 
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
 
+int fill_name_and_quote(t_file *file, char *path, char *parent);
+
 /* LS FUN */
 int ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_file*, t_context*, t_file_context*));
 //-------------------------------
 //      t_file.c               //
 //-------------------------------
-t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink, t_file_context *file_c);
+// t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink, t_file_context *file_c);
+t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_context *file_c);
 char        *perm_to_string(mode_t mode, char type);
 int         check_for_quote(char *str);
 //-------------------------------
@@ -64,7 +67,7 @@ t_int8 parse_cmd_args(char **argv, t_args *arg);
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------
-int         ls_only_file_L(t_list *lst, int flag_nb);
+int         ls_only_file_l(t_list *lst, t_context *c, t_file_context *file_c);
 int         ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c);
 int         ls_one_dir(t_file *file, t_context *c, t_file_context *file_c);
 //-------------------------------
@@ -74,13 +77,13 @@ int         search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag);
 //-------------------------------
 //      l_options.c            //
 //-------------------------------
-int         fill_buffer_l_option(t_file file, int* space, int nb_flag);
+int fill_buffer_l_option(t_file file, int *space, t_context *c, t_file_context *file_c);
 void        write_user_name(long user_id, int space, int flag_nb);
 void        write_group_name(long group_id, int space, int flag_nb);
 //-------------------------------
 //      write_file_name.c      //
 //-------------------------------
-int         write_file_name(t_file file, int flag_nb, int space);
+int write_file_name(t_file *file, t_context *c, t_file_context *file_c, int space);
 //-------------------------------
 //      l_option_utils.c       //
 //-------------------------------
@@ -105,10 +108,10 @@ void        safe_reverse_lst(t_list **lst, int flag_nb);
 //      buffer.c                //
 //-------------------------------
 void        fill_buffer(char *str);
-int         fill_l_buffer(t_list *lst, int flag_nb, int call_flag);
+int         fill_l_buffer(t_list *lst, t_context *c, t_file_context *file_c);
 void        fill_buffer_char(char c);
 void        fill_buffer_color(char *str, enum e_color color, int flag_nb, int space, int quote);
-int         store_in_buffer(t_list *lst, int flag_nb);
+int store_in_buffer(t_list *lst, t_context *c, t_file_context *file_c);
 void        print_and_clear();
 void        finish_print_buffer();
 void        multiple_fill_buff(char *s1, char*s2, char *s3, char *s4);
@@ -116,7 +119,7 @@ void        fill_color(enum e_color color);
 //-------------------------------
 //      build_coloumn.c         //
 //-------------------------------
-int         manage_column(t_list *lst, int space_quote, int flag);
+int manage_column(t_list *lst, int space_quote, t_context *c, t_file_context *file_c);
 //-------------------------------
 //      manage_column.c         //
 //-------------------------------

@@ -13,13 +13,19 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
     sb = check_for_stat(str, c->flag_nb, &symlink);
     if (!sb)
         return (0);
-    if (get_type(*sb) == DIRECTORY) {
+    if (get_type(*sb) == DIRECTORY && !symlink) { /* if is directory and not symlink*/
             if (has_flag(c->flag_nb, L_OPTION))
-                new_file = fill_file_struct(sb, str, NULL, symlink, file_c);
+                new_file = fill_file_struct(sb, symlink, c, file_c);
             else
-                new_file = fill_file_struct(sb, str, NULL, symlink, NULL);
+                new_file = fill_file_struct(sb, symlink, c, NULL);
             if (!new_file) {
                 free(str);
+                free(sb);
+                return (MALLOC_ERR);
+            }
+            if (fill_name_and_quote(new_file, str, NULL) == MALLOC_ERR) {
+                free(str);
+                free(sb);
                 return (MALLOC_ERR);
             }
             ft_lstadd_back(new, ft_lstnew(new_file));

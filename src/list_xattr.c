@@ -81,7 +81,8 @@ int diplay_xattr_acl(t_file *file)
     while (i < listen_len) {
         if (i == 0) {
             fill_buffer("\n\n# file :");
-            write_file_name(*file, COLOR_OPTION, -1);
+            // write_file_name(*file, COLOR_OPTION, -1);
+            (void)file;
             fill_buffer("\n");
             // multiple_fill_buff("\n\n# file : ", file->name, "\n", NULL);
         }

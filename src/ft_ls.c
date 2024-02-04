@@ -97,9 +97,10 @@ static int display_total_size(t_file *file, t_int8 no_file)
 }
 
 
-int ls_only_file_L(t_list *lst, int flag_nb)
+int ls_only_file_l(t_list *lst, t_context *c, t_file_context *file_c)
 {
-    if (fill_l_buffer(lst, flag_nb, 0) == MALLOC_ERR)
+    file_c->call_flag = 0;
+    if (fill_l_buffer(lst, c, file_c) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);
 }
@@ -137,7 +138,7 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     if (display_total_size(file, (lst == NULL)) == MALLOC_ERR)
         return (MALLOC_ERR);
 
-    if (lst && fill_l_buffer(lst, c->flag_nb, file_c->call_flag) == MALLOC_ERR)
+    if (lst && fill_l_buffer(lst, c, file_c) == MALLOC_ERR)
             return (MALLOC_ERR);
     if (file_c->call_flag == 1)
         ++(file_c->call_flag);
@@ -183,7 +184,7 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     }
 
     display_dir_header(*file, file_c, c->flag_nb, (lst == NULL));
-    if (lst && store_in_buffer(lst, c->flag_nb) == MALLOC_ERR)
+    if (lst && store_in_buffer(lst, c, file_c) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);
 }

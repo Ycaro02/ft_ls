@@ -27,17 +27,17 @@ void    print_and_clear()
     * call_flag: call flag context
     * space: int array of space for each column
 */
-int fill_l_buffer(t_list *lst, int flag_nb, int call_flag)
+int fill_l_buffer(t_list *lst, t_context *c, t_file_context *file_c)
 {
     t_list  *current = lst;
     int     lst_len = ft_lstsize(lst), i = 0, error = 0;
     /*CALL get_all_space HERE  */
-    int     *space = get_all_space(current, flag_nb);
+    int     *space = get_all_space(current, c->flag_nb);
 
     if (!space)
         return (MALLOC_ERR);
     while (current) {
-        error = fill_buffer_l_option(*((t_file *)current->content), space, flag_nb); // change to int return for malloc check
+        error = fill_buffer_l_option(*((t_file *)current->content), space, c, file_c); // change to int return for malloc check
         if (error == MALLOC_ERR)
             break ;
         ++i;
@@ -46,7 +46,7 @@ int fill_l_buffer(t_list *lst, int flag_nb, int call_flag)
         current = current->next;
     }
     free(space);
-    if (call_flag != 0)
+    if (file_c->call_flag != 0)
         file_lstclear(&lst, free);
     return (error);
 }
@@ -133,13 +133,13 @@ void fill_buffer_char(char c)
 }
 
 
-int store_in_buffer(t_list *lst, int flag_nb)
+int store_in_buffer(t_list *lst, t_context *c, t_file_context *file_c)
 {
     int     err = 0;
     /* check for quote in lst and give bool */
     int quote_space = get_nb_space(lst, get_len_name_quote); 
 
-    err = manage_column(lst, quote_space, flag_nb);
+    err = manage_column(lst, quote_space, c, file_c);
     if (err == MALLOC_ERR) {
         file_lstclear(&lst, free);
         return (MALLOC_ERR);

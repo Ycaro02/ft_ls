@@ -187,7 +187,7 @@ int *get_max_by_column(t_list *lst, int nb_column, int nb_line)
 /**
  *          space_quote: quote present in lst dir 0 for no 1 for yes
 */
-static void display_column(t_list *lst, int** array, int* max_per_column, int flag, int space_quote)
+static void display_column(t_list *lst, int** array, int* max_per_column, int space_quote, t_context *c, t_file_context *file_c)
 {
     t_file *file = NULL;
 
@@ -205,7 +205,7 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
 
                 // printf("%sArray[%d][%d]: [%d]->[%s] max col:[%d]->[%d]\n%s", CYAN, i, j, array[i][j], file->name, column_max, nb_space, RESET);
                 // int perm = (file->perm & S_IXOTH) ? 1 : 0;
-                write_file_name(*file, flag, space_quote);
+                write_file_name(file, c, file_c, space_quote);
                 /* if is not the last name of line*/
                 if (array[i][j + 1] != -1) { 
                     if (space_quote == 1)
@@ -225,7 +225,7 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int fl
 /**
  * Entry point, compute and return double char ** (bad just need to return index tab/lst -> int**)
 */
-int manage_column(t_list *lst, int space_quote, int flag)
+int manage_column(t_list *lst, int space_quote, t_context *c, t_file_context *file_c)
 {
     int     **array = NULL; 
     int     stdout_width = get_stdout_width(), nb_line = 0, nb_column = 1, lst_len = ft_lstsize(lst);
@@ -247,7 +247,7 @@ int manage_column(t_list *lst, int space_quote, int flag)
     }
     array = create_column_array(lst, nb_column, nb_line);
     if (array) 
-        display_column(lst, array, tab_max_unit, flag, space_quote);
+        display_column(lst, array, tab_max_unit, space_quote, c, file_c);
     free_incomplete_array((void **)array, nb_line);
     free(tab_max_unit);
     file_lstclear(&lst, free);

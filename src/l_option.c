@@ -177,19 +177,19 @@ static int write_date(t_file file, int* space, int flag_nb)
  * HUB caller for all write functopm for l_option
  * Need to rework this to jsut display file_line
 */
-int fill_buffer_l_option(t_file file, int *space, int flag_nb)
+int fill_buffer_l_option(t_file file, int *space, t_context *c, t_file_context *file_c)
 {
     if (write_perm(file, space[S_PERM]) == MALLOC_ERR\
         || write_nb_link(file.nb_link, space[S_LINK]) == MALLOC_ERR)
         return (MALLOC_ERR);
-    if (!has_flag(flag_nb, G_OPTION))
-        write_user_name(file.user_id, space[S_USER], flag_nb);
-    write_group_name(file.group_id, space[S_GROUP], flag_nb);
+    if (!has_flag(c->flag_nb, G_OPTION))
+        write_user_name(file.user_id, space[S_USER], c->flag_nb);
+    write_group_name(file.group_id, space[S_GROUP], c->flag_nb);
     if (write_size(file, space) == MALLOC_ERR || \
-        write_date(file, space, flag_nb) == MALLOC_ERR || \
-        write_file_name(file, flag_nb, space[S_NAME_QUOTE]) == MALLOC_ERR)
+        write_date(file, space, c->flag_nb) == MALLOC_ERR || \
+        write_file_name(&file, c, file_c, space[S_NAME_QUOTE]) == MALLOC_ERR)
             return (MALLOC_ERR);
-    if (has_flag(flag_nb, Z_OPTION))
+    if (has_flag(c->flag_nb, Z_OPTION))
         diplay_xattr_acl(&file);
     return (0);
 }

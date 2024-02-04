@@ -1,7 +1,7 @@
 #include "../include/ft_ls.h"
 
 
-static int fill_name_and_parent(t_file *file, char *path, char *parent)
+int fill_name_and_quote(t_file *file, char *path, char *parent)
 {
     file->name = ft_strdup(path);
     if (!file->name)
@@ -15,6 +15,7 @@ static int fill_name_and_parent(t_file *file, char *path, char *parent)
     }
     else
         file->parrent = NULL;
+    file->quote = check_for_quote(file->name);
     return (0);
 }
 
@@ -73,7 +74,7 @@ int check_for_quote(char *str)
 */
 /* maybe we can remove parent and path and fill it after call, 3 call in parse, one in recurcive and one in write name no realy a pain */
 // t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink, t_context *c, t_file_context *file_c)
-t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink, t_file_context *file_c)
+t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_context *file_c)
 {
     t_file *file;
  
@@ -84,7 +85,8 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink,
     file->type = symlink == TRUE ? SYMLINK : get_type(*sb);
 
     // file->sb = sb; /* STOP FREE SB */
-
+    (void)c;
+    (void)file_c;
     file->perm = sb->st_mode;
     file->size = sb->st_size;
     file->nb_link = sb->st_nlink;
@@ -95,20 +97,16 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink,
     file->group_id = sb->st_gid;
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
-     if (file_c) {
-        printf("%sGot file_c for %s manage space here%s\n",GREEN, path, RESET);
+    //  if (file_c) {
+    //     printf("%sGot file_c manage space here%s\n",GREEN, RESET);
         // file->line = build_file_line(file, c, file_c);
         // build file->line with write l_option logi: so we need flag
-            // in build line if (get_size_bytype > space[type]):
-                // update space[type]
-                // like manage_space but don't need to realloc all string 
-                // or iter x time on lst, use build line before to store it to avoid iteration after store
+        //     in build line if (get_size_bytype > space[type]):
+        //         update space[type]
+        //         like manage_space but don't need to realloc all string 
+        //         or iter x time on lst, use build line before to store it to avoid iteration after store
+    // }
 
-    }
 
-
-    if (fill_name_and_parent(file, path, parent) == MALLOC_ERR)
-        return (NULL);
-    file->quote = check_for_quote(file->name);
     return (file);
 }

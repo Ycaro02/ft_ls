@@ -25,14 +25,14 @@ int ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_f
     return (err);
 }
 
-static int ls_only_dir(t_list *dir_lst, int flag_nb)
+static int ls_only_dir(t_list *dir_lst, t_context *c, t_file_context *file_c)
 {
     t_list  *current = dir_lst;
-    int     *space = get_all_space(dir_lst, flag_nb), err = 0;
+    int     *space = get_all_space(dir_lst, c->flag_nb), err = 0;
     int     lst_len = ft_lstsize(dir_lst), i = 0;
 
     while (current) {
-        err = fill_buffer_l_option(*(t_file *)current->content, space, flag_nb);
+        err = fill_buffer_l_option(*(t_file *)current->content, space, c, file_c);
         if (err == MALLOC_ERR) {
             break ;
         }
@@ -79,11 +79,11 @@ static void call_ls(t_list *dir_lst, t_context *c, t_file_context *file_c)
     if (file_c->call_flag != 0 && recursive_flag && !onlydir_flag)
         err = search_recurcive_dir(dir_lst, c, file_c->call_flag); /* Call recurcive */
     else if (file_c->call_flag != 0 && l_flag && onlydir_flag)
-        err = ls_only_dir(dir_lst, c->flag_nb); /* Call ls D + L option*/
+        err = ls_only_dir(dir_lst, c, file_c); /* Call ls D + L option*/
     else if (l_flag && file_c->call_flag != 0)
         err = ls(dir_lst, c, file_c, ls_l_one_dir); /* Call ls L option */
     else if (l_flag && file_c->call_flag == 0)
-        err = ls_only_file_L(dir_lst, c->flag_nb);  /* For mixed argument in cmd line */
+        err = ls_only_file_l(dir_lst, c, file_c);  /* For mixed argument in cmd line */
     else
         err = ls(dir_lst, c, file_c, ls_one_dir); /* Call classic ls option */
    
@@ -238,6 +238,6 @@ struct stat *check_for_stat(char* name, int flag, int *save_symlink)
 // else if (has_flag(c->flag_nb, L_OPTION) && call_flag != 0)
 //     err = ls(dir_lst, c, ls_l_one_dir, call_flag); /* Call ls L option */
 // else if (has_flag(c->flag_nb, L_OPTION) && call_flag == 0)
-//     err = ls_only_file_L(dir_lst, c->flag_nb);  /* For mixed argument in cmd line */
+//     err = ls_only_file_l(dir_lst, c->flag_nb);  /* For mixed argument in cmd line */
 // else
 //     err = ls(dir_lst, c, ls_one_dir, call_flag); /* Call classic ls option */

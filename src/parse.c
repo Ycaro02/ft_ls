@@ -1,22 +1,26 @@
 #include "../include/ft_ls.h"
 
-static t_file   *default_file_struct(int flag, t_file_context *file_c)
+static t_file   *default_file_struct(t_context *c, t_file_context *file_c)
 {
     t_file          *file = NULL;
     int             symlink = 0;
-    struct stat     *sb = check_for_stat(".", flag, &symlink);
+    struct stat     *sb = check_for_stat(".", c->flag_nb, &symlink);
 
     if (!sb)
         return (NULL);
-    if (has_flag(flag, L_OPTION))    
-        file = fill_file_struct(sb, ".", "..", symlink, file_c);
+    if (has_flag(c->flag_nb, L_OPTION))    
+        file = fill_file_struct(sb, symlink, c, file_c);
     else
-        file = fill_file_struct(sb, ".", "..", symlink, NULL);
-    if (!file || !(file->name)) {
+        file = fill_file_struct(sb, symlink, c, NULL);
+    if (!file) {
+        free(sb);
         ft_printf_fd(2, "Malloc error default file struct\n");
         return (NULL);
     }
-    free(sb);
+    if (fill_name_and_quote(file, ".", "..") == MALLOC_ERR) {
+        free(sb);
+        return (NULL);
+    }
     return (file);
 }
 
@@ -46,19 +50,26 @@ static int  check_args
         perror("'");
         return (0);
     }
+    
     if (has_flag(arg->c.flag_nb, L_OPTION))
-        file = fill_file_struct(sb, path, path, symlink, &arg->file_c);
+        file = fill_file_struct(sb, symlink, &arg->c, &arg->file_c);
     else
-        file = fill_file_struct(sb, path, path, symlink, NULL);
-    if (!file)
+        file = fill_file_struct(sb, symlink, &arg->c, NULL);
+    if (!file) {
+        free(sb);
         return (MALLOC_ERR);
+    }
+
+    if (fill_name_and_quote(file, path, path) == MALLOC_ERR) {
+        free(sb);
+        return (MALLOC_ERR);
+    }
     if (get_type(*sb) == DIRECTORY)
         ft_lstadd_back(&arg->dir_lst, ft_lstnew(file));
     else {
         *found = 1; /* signal we found another file not directory */
         ft_lstadd_back(&arg->simple_file, ft_lstnew(file));
     }
-    free(sb);
     return (0);
 }
 
@@ -85,7 +96,7 @@ t_int8 parse_cmd_args(char **argv, t_args *arg)
         ++i;
     }
     if (!arg->dir_lst && file_found == 0) /* default search if nothing found */
-        ft_lstadd_back(&arg->dir_lst, ft_lstnew(default_file_struct(arg->c.flag_nb, &arg->file_c)));
+        ft_lstadd_back(&arg->dir_lst, ft_lstnew(default_file_struct(&arg->c, &arg->file_c)));
     return (file_found);
 }
 
@@ -107,11 +118,16 @@ static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *f
     }
     free(full_path);
     if (has_flag(c->flag_nb, L_OPTION))
-        new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, file_c);
+        new_file = fill_file_struct(sb, symlink, c, file_c);
     else
-        new_file = fill_file_struct(sb, my_dir->d_name, file->name, symlink, NULL);
+        new_file = fill_file_struct(sb, symlink, c, NULL);
     if (!new_file) {
         free(sb);
+        return (MALLOC_ERR);
+    }
+     if (fill_name_and_quote(new_file, my_dir->d_name, file->name) == MALLOC_ERR) {
+        free(sb);
+        free(new_file);
         return (MALLOC_ERR);
     }
     ft_lstadd_back(all, ft_lstnew(new_file));
@@ -124,7 +140,6 @@ t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c)
     t_list *all = NULL;
     struct dirent *my_dir;
     DIR *dir = opendir(file->name);
-    (void)file_c;
     /* New call version check fir fill here */
     
     if (!dir) {
