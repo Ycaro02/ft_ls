@@ -3,7 +3,8 @@
 /** display_fcontext_flag
  * Basic debug function to display file_context
 */
-void display_fcontext_flag(t_file_context *file_c, char *str, int flag) {
+void display_fcontext_flag(t_file_context *file_c, char *str, int flag) 
+{
     ft_printf_fd(2, "%sCall: [%d]%s idx: %s[%d]%s\n", RED, file_c->call_flag, RESET, YELLOW, file_c->idx, RESET);
     display_flags(flag);
     ft_printf_fd(2, "for |%s%s%s|\n",CYAN, str, RESET);
@@ -118,12 +119,16 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     if (file_c->call_flag != 0 && file->type != DIRECTORY)
         return (0);
 
+
+    // display_fcontext_flag(file_c, file->name, c->flag_nb);
+
     if (!file_c->space) {
-        file_c->space = ft_calloc(sizeof(int), S_MAX);
+        file_c->space = malloc(sizeof(int) * S_MAX);
         if (!file_c->space)
             return (MALLOC_ERR);
     }
-
+    
+    ft_bzero(file_c->space, sizeof(int) * S_MAX); /* reset space array */
     lst = get_all_file_struct(file, c, file_c); /* NEED TO GIVE PTR TO FILE_C HERE */
 
     if (!lst && local_err == MALLOC_ERR) /* One case where int pointer error is mandatory */

@@ -71,6 +71,7 @@ static char *update_ultoa_value(t_int64 value, int *space, int idx, int symlink)
     int nb = ft_strlen(str);
     if (idx == S_MINOR_SIZE)
         nb += 2; /* add ', ' for minor */
+    // printf("alo %s len: %d\n", str, (int)ft_strlen(str));
     if (symlink != -1 && nb > space[idx])
         space[idx] = nb;
     return (str);

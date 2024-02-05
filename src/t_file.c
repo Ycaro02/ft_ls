@@ -75,13 +75,16 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
 
+
     if (fill_name_and_quote(file, file_c->path, file_c->parent_path, file_c, l_option) == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error fill file struct\n");
         free(sb);
         return (NULL);
     }   
+    // display_fcontext_flag(file_c, file->name, c->flag_nb);
 
-     if (l_option) {
+     if (file_c->call_flag != 0 && l_option) {
+        // if ()
         // printf("%sGot file_c manage space here%s\n",GREEN, RESET);
         build_file_line(file, c, file_c, symlink);
     }

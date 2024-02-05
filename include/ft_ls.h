@@ -35,6 +35,8 @@
 
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
 
+
+void display_fcontext_flag(t_file_context *file_c, char *str, int flag) ;
 int fill_name_and_quote(t_file *file, char *path, char *parent, t_file_context *file_c, int l_option);
 
 /* LS FUN */
