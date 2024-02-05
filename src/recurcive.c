@@ -23,7 +23,6 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
             file_c->path = str;
             file_c->parent_path = NULL;
             new_file = fill_file_struct(sb, symlink, c, file_c);
-
             if (!new_file) {
                 free(str);
                 free(sb);
@@ -31,7 +30,8 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
             }
             ft_lstadd_back(new, ft_lstnew(new_file));
     }
-    free(sb);
+    else
+        free(sb);
     free(str);
     return (error);
 }
