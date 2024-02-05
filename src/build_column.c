@@ -190,6 +190,7 @@ int *get_max_by_column(t_list *lst, int nb_column, int nb_line)
 static void display_column(t_list *lst, int** array, int* max_per_column, int space_quote, t_context *c, t_file_context *file_c)
 {
     t_file *file = NULL;
+    t_int8 l_option = has_flag(c->flag_nb, L_OPTION);
 
     /* i == line */
     for (int i = 0; array[i]; ++i) {
@@ -203,8 +204,6 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int sp
                 int column_max = max_per_column[j];
                 int nb_space = column_max - ft_strlen(file->name);
 
-                // printf("%sArray[%d][%d]: [%d]->[%s] max col:[%d]->[%d]\n%s", CYAN, i, j, array[i][j], file->name, column_max, nb_space, RESET);
-                // int perm = (file->perm & S_IXOTH) ? 1 : 0;
                 write_file_name(file, c, file_c, space_quote);
                 /* if is not the last name of line*/
                 if (array[i][j + 1] != -1) { 
@@ -216,7 +215,8 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int sp
                 }
             }
         }
-        if(array[i + 1])
+        /* If we have next elem in array or special case called from ls_only_file no l*/
+        if(array[i + 1] || (file_c->call_flag == 0 && !l_option))
             fill_buffer_char('\n');
 
     }

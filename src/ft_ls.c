@@ -152,6 +152,17 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     return (0);
 }
 
+int ls_only_file(t_list *lst, t_context *c, t_file_context *file_c)
+{
+    int err = 0;
+    t_list *current = lst;
+
+    if (current && store_in_buffer(current, c, file_c) == MALLOC_ERR)
+        err = MALLOC_ERR;
+    fill_buffer("\n");
+    return (err);
+}
+
 int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
     // int     r_flag = has_flag(c->flag_nb, R_OPTION); /* bool r_flag enable */
@@ -163,15 +174,6 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     
     // printf("%sCallC: %d idx: %d for %s%s\n", CYAN, call_flag, index, file->name, RESET);
     /* really ugly need to apply mange column here but still working */
-    if (file_c->call_flag == 0) {
-        int quote = quotes_required(file->name);
-        display_quote(quote);
-        fill_buffer(file->name);
-        display_quote(quote);
-        if (file_c->idx == file_c->lst_len - 1)
-            fill_buffer("\n\n");
-        return (0);
-    }
 
     lst = get_all_file_struct(file, c, file_c);
     if (!lst && local_err == MALLOC_ERR)
@@ -187,6 +189,18 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
             update_error(&c->error);
             return (0); /* classic denie error */
         }
+    }
+
+    if (file_c->call_flag == 0) {
+        if (lst && store_in_buffer(lst, c, file_c) == MALLOC_ERR)
+            return (MALLOC_ERR);
+        // int quote = quotes_required(file->name);
+        // display_quote(quote);
+        // fill_buffer(file->name);
+        // display_quote(quote);
+        // if (file_c->idx == file_c->lst_len - 1)
+        //     fill_buffer("\n\n");
+        return (0);
     }
 
     display_dir_header(*file, file_c, c->flag_nb, (lst == NULL));

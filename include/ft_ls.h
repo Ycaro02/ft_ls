@@ -64,6 +64,7 @@ char        get_type(struct stat sb);
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------
+int         ls_only_file(t_list *lst, t_context *c, t_file_context *file_c);
 int         ls_only_file_l(t_list *lst, t_context *c, t_file_context *file_c);
 int         ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c);
 int         ls_one_dir(t_file *file, t_context *c, t_file_context *file_c);

@@ -81,6 +81,8 @@ static void call_ls(t_list *lst, t_context *c, t_file_context *file_c)
         err = ls(lst, c, file_c, ls_l_one_dir); /* Call ls L option */
     else if (l_flag && file_c->call_flag == 0)
         err = ls_only_file_l(lst, c, file_c);  /* For mixed argument in cmd line */
+    else if (file_c->call_flag == 0)
+        err = ls_only_file(lst, c, file_c); /* Call classic ls option */
     else
         err = ls(lst, c, file_c, ls_one_dir); /* Call classic ls option */
    
@@ -89,7 +91,8 @@ static void call_ls(t_list *lst, t_context *c, t_file_context *file_c)
         file_c->space = NULL;
     }
 
-    ft_lstclear(&lst, destroy_file);
+    if (!(file_c->call_flag == 0 && !l_flag)) /* Don't free for ls only file, done in manage column */
+        ft_lstclear(&lst, destroy_file);
     if (err == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error exit\n");
         exit(MALLOC_ERR);
