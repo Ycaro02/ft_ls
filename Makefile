@@ -86,13 +86,9 @@ clean:
 
 test:	${NAME}
 		${DIFF_TEST}
-# ./${DIFF_LS} ${T_FLAG} ${T_DIR}
-# ./${DIFF_LS} -la ${T_DIR} /
-# ./${DIFF_LS} -lar / /dev
-# ./${DIFF_LS} -a / Makefile
 
 vtest:		${NAME}
-			./${VALGRIND_TEST}
+			${VALGRIND_TEST}
 
 fclean:		clean
 			@make -s -C libft fclean

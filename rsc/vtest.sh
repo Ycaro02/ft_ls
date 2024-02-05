@@ -8,15 +8,19 @@ LS="./ft_ls"
 
 ALL_FLAG="-latrRzucgfdnG"
 
-CHECK="0 bytes in 0 blocks"
+CHECK="All heap blocks were freed -- no leaks are possible"
 
-${VAL} ${LS} . -la > out && cat "${VAL_OUT}" | grep "${CHECK}"
-${VAL} ${LS} . -lartR > out && cat "${VAL_OUT}" | grep "${CHECK}"
-${VAL} ${LS} . ${ALL_FLAG} > out && cat "${VAL_OUT}" | grep "${CHECK}"
-${VAL} ${LS} / /dev /proc -lart > out && cat "${VAL_OUT}" | grep "${CHECK}"
-${VAL} ${LS} ls test/'"ahah"' . .. rsc/acl libft test/out -d libft/ft_atoi.c > out && cat "${VAL_OUT}" | grep "${CHECK}"
-${VAL} ${LS} -lRza > out && cat "${VAL_OUT}" | grep "${CHECK}"
-${VAL} ${LS} Makefile sda > out && cat "${VAL_OUT}" | grep "${CHECK}"
-${VAL} ${LS} sda > out && cat "${VAL_OUT}" | grep "${CHECK}"
-${VAL} ${LS} sda . > out && cat "${VAL_OUT}" | grep "${CHECK}"
-${VAL} ${LS} sda . / > out && cat "${VAL_OUT}" | grep "${CHECK}"
+NULL="/dev/null"
+
+
+${VAL} ${LS} . -la > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK1
+${VAL} ${LS} . -lartR > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK2
+${VAL} ${LS} . ${ALL_FLAG} > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK3
+${VAL} ${LS} / /dev /proc -lart > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK4
+${VAL} ${LS} ls test/'"ahah"' . .. rsc/acl libft test/out -d libft/ft_atoi.c > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK5
+${VAL} ${LS} -lRza > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK6
+${VAL} ${LS} Makefile sda > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK7
+${VAL} ${LS} sda > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK8
+${VAL} ${LS} sda . > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK9
+${VAL} ${LS} sda . / > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK10
+echo VALGRIND CHECK DONE

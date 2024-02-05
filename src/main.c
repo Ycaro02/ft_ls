@@ -158,6 +158,9 @@ static int ft_ls(char **argv, t_context *c)
         sort_lst(&arg->dir_lst, c->flag_nb);
         c->first_lst += 2; /* signal dir_lst present */
     }
+    if (arg->c.special_error == 1) /* set return cmd value for special err */
+        arg->c.error = NA_CMD_LINE_ERR;
+    int save_error = arg->c.error;
 
     if (arg->simple_file) { /* if other file found */
         sort_lst(&arg->simple_file, c->flag_nb);
@@ -177,10 +180,11 @@ static int ft_ls(char **argv, t_context *c)
         // call_ls(dir_lst, c, &file_c, call_value + 1);
     }
 
-    if (c->special_error == 1) /* set return cmd value for special err */
-        c->error = NA_CMD_LINE_ERR;
-    int save_error = c->error;
     free(arg);
+    // printf("save at the end %d\n", save_error);
+    // printf("1End context error = %d\n", c->error);
+    if (save_error < 2)
+        save_error = c->error;
     return (save_error);
 }
 
@@ -195,15 +199,6 @@ static int check_display_help(int argc, char**argv)
     return (1);
 }
 
-// t_context init_context(){
-//     t_context context;
-
-//     context.error = 0;
-//     context.special_error = 0;
-//     context.flag_nb = 0;
-//     return (context);
-// }
-
 int main (int argc, char **argv)
 {
     t_context c;
@@ -216,9 +211,9 @@ int main (int argc, char **argv)
     c.flag_nb = parse_flag(argc, argv, &c.special_error);
     if (c.flag_nb == -1)
         return (2);
-    c.error = ft_ls(argv, &c);
+    int ret = ft_ls(argv, &c);
     finish_print_buffer();
-    return (c.error);
+    return (ret);
 }
 
 struct stat *check_for_stat(char* name, int flag, int *save_symlink)

@@ -43,8 +43,12 @@ static int recurcive_readir(t_file *file, t_list **lst, t_context *c, t_file_con
     DIR             *dir = opendir(file->name);
     int             ret = 0;
     
-    if (!dir)
-        return (1);
+    if (!dir) {
+        ft_printf_fd(2, "ft_ls cannot access '%s", file->name);
+        perror("'");
+        update_error(&c->error);
+        return (0);
+    }
     do  {
         my_dir = readdir(dir);
         if (my_dir && is_point_dir(my_dir->d_name, c->flag_nb, 1) == 1) { /* if isn't . .. obsiously, check hiden accordate to flag*/
@@ -75,8 +79,6 @@ static t_list *get_recurcive_dir(t_file *file, t_context *c, t_file_context *fil
     if (ret != 0) {
         if (ret == MALLOC_ERR)
             c->special_error = MALLOC_ERR;
-        else
-            update_error(&c->error);
         return (NULL);
     }
     sort_lst(&lst, c->flag_nb);
@@ -139,7 +141,6 @@ int search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag)
         free(file_c.space);
         file_c.space = NULL;
     }
-
     ft_lstclear(&local_list, destroy_file);
     return (err);
 }
