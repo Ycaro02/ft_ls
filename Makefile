@@ -83,6 +83,7 @@ clean:
 test:	${NAME}
 			./${DIFF_LS} ${T_FLAG} ${T_DIR}
 			./${DIFF_LS} -aR ${T_DIR}
+			./${DIFF_LS} ${T_FLAG} /dev
 
 vtest:		${NAME}
 			valgrind ./ft_ls / -lR

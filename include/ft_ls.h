@@ -51,7 +51,7 @@ int         check_for_quote(char *str);
 //-------------------------------
 //      utils.c                 //
 //-------------------------------
-void        file_lstclear(t_list **lst, void (*del)(void*)); /* can be remove with create free file */
+void        destroy_file(void *file_ptr);
 int         ft_strlen_word(char *s);
 int         get_stdout_width();
 void        update_error(t_int8 *error);

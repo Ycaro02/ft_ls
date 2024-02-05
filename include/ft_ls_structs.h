@@ -62,7 +62,6 @@ typedef struct s_file
     t_timespec  last_status_change;
     t_timespec  last_access;
     t_timespec  last_change;
-    // struct stat *sb;
     char        *name;
     char        *parrent;
     t_int8      quote;

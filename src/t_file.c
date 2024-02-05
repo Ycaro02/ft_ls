@@ -62,8 +62,6 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     file->total_size = -1;
     file->type = symlink == TRUE ? SYMLINK : get_type(*sb);
 
-    // file->sb = sb; /* STOP FREE SB */
-
     file->perm = sb->st_mode;
     file->size = sb->st_size;
     file->nb_link = sb->st_nlink;
@@ -74,21 +72,14 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     file->group_id = sb->st_gid;
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
-
-
     if (fill_name_and_quote(file, file_c->path, file_c->parent_path, file_c, l_option) == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error fill file struct\n");
         free(sb);
         return (NULL);
     }   
     // display_fcontext_flag(file_c, file->name, c->flag_nb);
-
-     if (l_option) {
-        // if ()
-        // printf("%sGot file_c manage space here%s\n",GREEN, RESET);
+     if (l_option)
         build_file_line(file, c, file_c, symlink);
-    }
-
-
+    free(sb);
     return (file);
 }

@@ -82,34 +82,48 @@ int is_point_dir(char *path, int flag_nb, int display)
     return (1);
 }
 
-/** file_lstclear
+
+void destroy_file(void *file_ptr)
+{
+    t_file *file = file_ptr;
+    if (!file)
+        return ;
+    if (file->name)
+        free(file->name);
+    if (file->parrent)
+        free(file->parrent);
+    if (file->line)
+        ft_free_tab(file->line);
+}
+
+/** ft_lstclear
  * Clear t_file lst
  * Can be removed to create void destroy_tfile(void *) and give it to ft_lstclear
 */
-void	file_lstclear(t_list **lst, void (*del)(void*))
-{
-	t_list	*tmp = NULL, *current = NULL;
-    t_file  *file = NULL;
+// void	ft_lstclear(t_list **lst, void (*del)(void*))
+// {
+// 	t_list	*tmp = NULL, *current = NULL;
+//     t_file  *file = NULL;
 
-	if (del == NULL || lst == NULL || *lst == NULL)
-		return ;
-	current = *lst;
-	tmp = current;
-	while (tmp != NULL) {
-		tmp = current->next;
-        if (current->content) {
-            file = current->content;
-            del(file->name);
-            if (file->parrent)
-                del(file->parrent);
-            del(current->content);
-        }
-        // if (current->content)
-		free(current);
-		current = tmp;
-	}
-	*lst = NULL;
-}
+// 	if (del == NULL || lst == NULL || *lst == NULL)
+// 		return ;
+// 	current = *lst;
+// 	tmp = current;
+// 	while (tmp != NULL) {
+// 		tmp = current->next;
+//         if (current->content) {
+//             file = current->content;
+//             del(file->name);
+//             if (file->parrent)
+//                 del(file->parrent);
+//             del(current->content);
+//         }
+//         // if (current->content)
+// 		free(current);
+// 		current = tmp;
+// 	}
+// 	*lst = NULL;
+// }
 
 /** get_stdout_width
  * Get stdout width for manage column

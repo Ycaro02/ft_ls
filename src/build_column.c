@@ -242,7 +242,7 @@ int manage_column(t_list *lst, int space_quote, t_context *c, t_file_context *fi
     tab_max_unit = get_max_by_column(lst, nb_column, nb_line);
     if (!tab_max_unit) {
         free(all_len);
-        file_lstclear(&lst, free);
+        ft_lstclear(&lst, destroy_file);
         return (MALLOC_ERR);
     }
     array = create_column_array(lst, nb_column, nb_line);
@@ -250,7 +250,7 @@ int manage_column(t_list *lst, int space_quote, t_context *c, t_file_context *fi
         display_column(lst, array, tab_max_unit, space_quote, c, file_c);
     free_incomplete_array((void **)array, nb_line);
     free(tab_max_unit);
-    file_lstclear(&lst, free);
+    ft_lstclear(&lst, destroy_file);
     free(all_len);
     return (0);
 }

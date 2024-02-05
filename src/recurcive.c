@@ -20,25 +20,18 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
                         return (MALLOC_ERR);
                 }
             }
-
             file_c->path = str;
             file_c->parent_path = NULL;
             new_file = fill_file_struct(sb, symlink, c, file_c);
 
             if (!new_file) {
                 free(str);
-                free(sb);
+                // free(sb);
                 return (MALLOC_ERR);
             }
-            // if (fill_name_and_quote(new_file, str, NULL, file_c, l_option) == MALLOC_ERR) {
-            //     free(str);
-            //     free(sb);
-            //     return (MALLOC_ERR);
-            // }
             ft_lstadd_back(new, ft_lstnew(new_file));
     }
-    else
-        free(sb); /* if not dir free sb */
+    // free(sb);
     free(str);
     return (error);
 }
@@ -135,12 +128,18 @@ int search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag)
         err = safe_recurcive(local_list, c, file_c.call_flag);
         if (c->special_error == MALLOC_ERR || err == MALLOC_ERR)
             break ;
-        file_lstclear(&local_list, free);
+        ft_lstclear(&local_list, destroy_file);
         if (file_c.call_flag == 1) /* ONE TO REMOVE */
             ++(file_c.call_flag);
         ++(file_c.idx);
         dir_lst = dir_lst->next;
     }
-    file_lstclear(&local_list, free);
+
+    if (has_flag(c->flag_nb, L_OPTION) && file_c.space) {
+        free(file_c.space);
+        file_c.space = NULL;
+    }
+
+    ft_lstclear(&local_list, destroy_file);
     return (err);
 }

@@ -13,7 +13,7 @@ static void display_symlink(char *path, struct stat *sb, t_context *c, t_file_co
         free(file->name);
         free(file);
     } 
-    free(sb);
+    // free(sb); 
 }
 
 static char* remove_last_word(char *str, char sep)

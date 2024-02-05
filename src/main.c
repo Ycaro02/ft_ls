@@ -84,7 +84,12 @@ static void call_ls(t_list *lst, t_context *c, t_file_context *file_c)
     else
         err = ls(lst, c, file_c, ls_one_dir); /* Call classic ls option */
    
-    file_lstclear(&lst, free);
+    if (l_flag && file_c->space) {
+        free(file_c->space);
+        file_c->space = NULL;
+    }
+
+    ft_lstclear(&lst, destroy_file);
     if (err == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error exit\n");
         exit(MALLOC_ERR);
@@ -115,6 +120,7 @@ static int ft_ls(char **argv, t_context *c)
 {
     // BUILD args here 
     t_args *arg = init_args(c);
+
     // t_list  *dir_lst, *simple_file = NULL;
     // t_file_context file_c; /* first file_context */
     // ft_bzero(&file_c, sizeof(t_file_context));
@@ -122,13 +128,16 @@ static int ft_ls(char **argv, t_context *c)
     int     call_value = 0;
     
     args_found = parse_cmd_args(&argv[1], arg);
-    if (args_found == MALLOC_ERR)
+    if (args_found == MALLOC_ERR) {
+        free(arg);
         return (MALLOC_ERR);
+    }
 
     // dir_lst = parse_cmd_args(&argv[1], &simple_file, &args_found, c, &file_c);
     /* Error management */
     if (!(arg->dir_lst) && c->error == MALLOC_ERR) {
         ft_printf_fd (2, "Malloc Error ft_ls\n");
+        free(arg);
         return (MALLOC_ERR);
     }
     
@@ -139,6 +148,7 @@ static int ft_ls(char **argv, t_context *c)
             if (new) {
                 sort_lst(&new, c->flag_nb);
                 call_ls(new, c, &arg->file_c);
+                free(arg);
                 return (c->error);
             }
         }
@@ -164,6 +174,7 @@ static int ft_ls(char **argv, t_context *c)
 
     if (c->special_error == 1) /* set return cmd value for special err */
         c->error = NA_CMD_LINE_ERR;
+    free(arg);
     return (c->error);
 }
 

@@ -52,7 +52,7 @@ int fill_l_buffer(t_list *lst, t_context *c, t_file_context *file_c)
     }
     // free(space);
     if (file_c->call_flag != 0)
-        file_lstclear(&lst, free);
+        ft_lstclear(&lst, destroy_file);
     return (error);
 }
 
@@ -160,7 +160,7 @@ int store_in_buffer(t_list *lst, t_context *c, t_file_context *file_c)
 
     err = manage_column(lst, quote_space, c, file_c);
     if (err == MALLOC_ERR) {
-        file_lstclear(&lst, free);
+        ft_lstclear(&lst, destroy_file);
         return (MALLOC_ERR);
     }
     return (err);

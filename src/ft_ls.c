@@ -127,9 +127,6 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     // USELESS ???
     // if (file_c->call_flag != 0 && file->type != DIRECTORY)
     //     return (0);
-
-
-
     // display_fcontext_flag(file_c, file->name, c->flag_nb);
 
     if (!file_c->space) {
