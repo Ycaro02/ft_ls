@@ -39,12 +39,12 @@ int fill_l_buffer(t_list *lst, t_context *c, t_file_context *file_c)
         return (MALLOC_ERR);
     while (current) {
 
-        printf("%sIn fill Line for: |%s|%s\n",GREEN, ((t_file * )current->content)->name, RESET);
-        for (int i = 0; i <= S_MAJOR_SIZE; ++i) {
-            printf("%sLine de [%d]|%s|%s\n",CYAN, i, ((t_file * )current->content)->line[i], RESET);
-            printf("%sNEW Space de [%d]|%d|%s\n",YELLOW, i, file_c->space[i], RESET);
-            printf("%sOLD Space de [%d]|%d|%s\n",RED, i, space[i], RESET);
-        }
+        // printf("%sIn fill Line for: |%s|%s\n",GREEN, ((t_file * )current->content)->name, RESET);
+        // for (int i = 0; i <= S_MAJOR_SIZE; ++i) {
+        //     printf("%sLine de [%d]|%s|%s\n",CYAN, i, ((t_file * )current->content)->line[i], RESET);
+        //     printf("%sNEW Space de [%d]|%d|%s\n",YELLOW, i, file_c->space[i], RESET);
+        //     printf("%sOLD Space de [%d]|%d|%s\n",RED, i, space[i], RESET);
+        // }
 
         error = fill_buffer_l_option(*((t_file * )current->content), space, c, file_c); // change to int return for malloc check
         if (error == MALLOC_ERR)

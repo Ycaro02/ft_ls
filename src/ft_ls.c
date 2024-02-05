@@ -41,7 +41,7 @@ static int hard_display_d(t_file *file)
 static void display_dir_header(t_file file, t_file_context *file_c, int flag, t_int8 no_file)
 {
     int quote = quotes_required(file.name);
-    display_fcontext_flag(file_c, file.name, flag);
+    // display_fcontext_flag(file_c, file.name, flag);
 
     if (file_c->call_flag != 0) { /* if not only file call */
 
