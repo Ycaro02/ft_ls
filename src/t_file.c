@@ -57,8 +57,10 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     int l_option = has_flag(c->flag_nb, L_OPTION);
  
     file = ft_calloc(sizeof(t_file), 1);
-    if (!file)
+    if (!file) {
+        free(sb);
         return (NULL);
+    }
     file->total_size = -1;
     file->type = symlink == TRUE ? SYMLINK : get_type(*sb);
 

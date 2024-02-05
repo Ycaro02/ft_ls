@@ -51,7 +51,7 @@ static int ls_only_dir(t_list *dir_lst, t_context *c, t_file_context *file_c)
 */
 static void special_display_header(t_list *dir_lst, int args_found, int call_value)
 {
-    if (args_found && call_value == 0 && ft_lstsize(dir_lst) == 1) {
+    if (args_found && call_value == 1 && ft_lstsize(dir_lst) == 1) {
         t_file *file = dir_lst->content;
         int quote = quotes_required(file->name);
         if (quote > NOEFFECT_CHAR)

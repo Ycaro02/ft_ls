@@ -79,62 +79,6 @@ static int write_size(t_file *file, int *space)
     return (0);
 }
 
-void write_user_name(long user_id, int space, int flag_nb)
-{
-    if (has_flag(flag_nb, N_OPTION)) {
-        char *tmp = ft_ltoa(user_id);
-        insert_space(space - ft_strlen(tmp));
-        fill_buffer(tmp);
-        free(tmp);
-    }
-    else {
-        struct passwd* user = getpwuid(user_id);
-        if (!user) {
-            char *tmp_buff = ft_ltoa(user_id);
-            fill_buffer(tmp_buff);
-            insert_space(space - ft_strlen(tmp_buff));
-            free(tmp_buff);
-        }
-        else {
-            fill_buffer(user->pw_name);
-            insert_space(space - ft_strlen(user->pw_name));
-        }
-    }
-    if (space != -1)
-        fill_buffer_char(' ');
-}
-
-void write_group_name(long group_id, int space, int flag_nb)
-{
-    if (has_flag(flag_nb, N_OPTION))
-    {
-        char *tmp = ft_ltoa(group_id);
-        insert_space(space - ft_strlen(tmp));
-        fill_buffer(tmp);
-        free(tmp);
-    }
-    else
-    {
-        struct group* group = getgrgid(group_id);
-        if (!group)
-        {
-            char *tmp_buff = ft_ltoa(group_id);
-            fill_buffer(tmp_buff);
-            insert_space(space - ft_strlen(tmp_buff));
-            free(tmp_buff);
-        }
-        else
-        {
-            fill_buffer(group->gr_name);
-            insert_space(space - ft_strlen(group->gr_name));
-        }
-    }
-    if (space != -1)
-        fill_buffer_char(' ');
-}
-
-
-
 static int write_file_line(t_file *file, t_context *c, t_file_context *file_c)
 {
     /* display perm string and pad */
@@ -177,34 +121,3 @@ int fill_buffer_l_option(t_file *file, t_context *c, t_file_context *file_c)
         diplay_xattr_acl(file);
     return (err);
 }
-
-
-// static int write_perm(t_file file, int space)
-// {
-//     char    *tmp = perm_to_string(file.perm, file.type);
-//     fill_buffer(tmp);
-//     free(tmp);
-//     /* ACL management */
-//     int ret = check_acl(&file);
-//     if (ret == 0)
-//         fill_buffer_char('+');
-//     else if (ret == MALLOC_ERR)
-//         return (ret);
-//     /* insert max space - 10 (basic perm len) + bool acl*/
-//     insert_space(space - (10 + (ret == 0)));
-//     return (0);
-// }
-// static int write_nb_link(long long nb_link, int space)
-// {
-//     char *tmp;
-
-//     tmp = ft_itoa((int)nb_link);
-//     if (!tmp)
-//         return (MALLOC_ERR);
-//     fill_buffer_char(' ');
-//     insert_space(space - ft_strlen(tmp));
-//     fill_buffer(tmp);
-//     free(tmp);
-//     fill_buffer_char(' ');
-//     return (0);
-// }

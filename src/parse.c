@@ -12,21 +12,12 @@ static t_file   *default_file_struct(t_context *c, t_file_context *file_c)
         return (NULL);
     file_c->path = point_dir;
     file_c->parent_path = NULL;
-    // if (l_option) {
-    //     file_c->space = ft_calloc(sizeof(int), S_MAX);
-    //     if (!file_c->space) {
-    //         free(sb);
-    //         return (NULL);
-    //     }
-    // }
 
     file = fill_file_struct(sb, symlink, c, file_c);
     if (!file) {
-        // free(sb);
         ft_printf_fd(2, "Malloc error default file struct\n");
         return (NULL);
     }
-    // free(sb);
     return (file);
 }
 

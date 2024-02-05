@@ -48,7 +48,6 @@ LIB_LIST = libft/list/linked_list.a
 
 LIBACL = rsc/acl/libacl.a
 
-
 LS_OUTPUT = real_ls_out
 
 FT_LS_OUTPUT = myls_out
