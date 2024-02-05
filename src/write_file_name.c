@@ -8,13 +8,6 @@ static void display_symlink(char *path, struct stat *sb, t_context *c, t_file_co
     file_c->parent_path = NULL;
     t_file *file = fill_file_struct(sb, -1, c, file_c);
     
-    /* HARDCODE 0 for l_option need to check */
-    // if (fill_name_and_quote(file, path, NULL, file_c, 0) == MALLOC_ERR) {
-    //     free(sb);
-        // free(new_file);
-        // return ;
-    // }
-    //  NEED TO CALL FILL FILE NAME AND QUOTE before print
     if (file) {
         write_file_name(file, c, file_c, -1);
         free(file->name);

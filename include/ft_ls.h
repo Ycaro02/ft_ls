@@ -92,9 +92,9 @@ char        get_type(struct stat sb);
 //-------------------------------
 //      manage_space.c          //
 //-------------------------------
-int         get_nb_space(t_list *lst, int(*get_len_by_info)(t_file));
-int         get_len_name_quote(t_file file);
-int		    *get_all_space(t_list *lst, int flag_nb);
+// int         get_nb_space(t_list *lst, int(*get_len_by_info)(t_file));
+// int         get_len_name_quote(t_file file);
+// int		    *get_all_space(t_list *lst, int flag_nb);
 //-------------------------------
 //      time_gestion.c          //
 //-------------------------------
@@ -111,7 +111,7 @@ void        fill_buffer(char *str);
 int         fill_l_buffer(t_list *lst, t_context *c, t_file_context *file_c);
 void        fill_buffer_char(char c);
 void        fill_buffer_color(char *str, enum e_color color, int flag_nb, int space, int quote);
-int store_in_buffer(t_list *lst, t_context *c, t_file_context *file_c);
+int         store_in_buffer(t_list *lst, t_context *c, t_file_context *file_c);
 void        print_and_clear();
 void        finish_print_buffer();
 void        multiple_fill_buff(char *s1, char*s2, char *s3, char *s4);
