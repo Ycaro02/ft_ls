@@ -23,4 +23,6 @@ ${VAL} ${LS} Makefile sda > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${C
 ${VAL} ${LS} sda > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK8
 ${VAL} ${LS} sda . > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK9
 ${VAL} ${LS} sda . / > "${NULL}" 2> "${NULL}"; cat "${VAL_OUT}" | grep "${CHECK}" && echo OK10
+
+rm ${VAL_OUT}
 echo VALGRIND CHECK DONE
