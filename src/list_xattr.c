@@ -22,7 +22,7 @@ static int display_acl(t_file file, char *str, char* full_name)
         return (-1);
     }
     multiple_fill_buff(str, "\n# owner : ", NULL, NULL);
-    write_user_name(file.user_id, -1, 0);
+    write_user_name(file.user_id, -1, 0); // NEED TO REPLACE WRITE USER AND GROUP HERE
     multiple_fill_buff("\n", "# group : ", NULL, NULL);
     write_group_name(file.group_id, -1, 0);
     text = acl_to_text(acl, NULL);

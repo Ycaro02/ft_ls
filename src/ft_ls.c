@@ -122,8 +122,6 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
     t_list *lst = NULL;
     t_int8 local_err = 0;
-    // int r_flag = has_flag(c->flag_nb, R_OPTION); /* bool r_flag enable */
-
 
     // USELESS ???
     // if (file_c->call_flag != 0 && file->type != DIRECTORY)

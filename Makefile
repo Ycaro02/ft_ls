@@ -95,6 +95,7 @@ vtest:		${NAME}
 			valgrind ./ft_ls . -lartR
 			valgrind ./ft_ls . ${ALL_FLAG}
 			valgrind ./ft_ls / /dev /proc -lart
+			valgrind ./ft_ls ls test/'"ahah"' . .. rsc/acl libft test/out -d libft/ft_atoi.c
 
 fclean:		clean
 			@make -s -C libft fclean
