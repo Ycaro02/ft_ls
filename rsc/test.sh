@@ -28,6 +28,7 @@ ${DIFF_LS} -al / sda 2> $NULL
 ${DIFF_LS} -a / sda 2> $NULL
 
 echo Test Exit code 2
+mkdir -p noperm && chmod 000 noperm
 ${LS} dsa > "${NULL}" 2> "${NULL}"; echo Exit code $?
 ${LS} dsa / > "${NULL}" 2> "${NULL}"; echo Exit code $?
 ${LS} dsa Makefile > "${NULL}" 2> "${NULL}"; echo Exit code $?
@@ -38,7 +39,6 @@ ${LS} -l dsa > "${NULL}" 2> "${NULL}"; echo Exit code $?
 ${LS} -l dsa Makefile > "${NULL}" 2> "${NULL}"; echo Exit code $?
 ${LS} -l dsa Makefile / > "${NULL}" 2> "${NULL}"; echo Exit code $?
 
-# mkdir -p noperm && chmod 000 noperm
 ${LS} noperm > "${NULL}" 2> "${NULL}"; echo Exit code $?
 ${LS} noperm / > "${NULL}" 2> "${NULL}"; echo Exit code $?
 ${LS} noperm Makefile > "${NULL}" 2> "${NULL}"; echo Exit code $?
