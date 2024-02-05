@@ -16,7 +16,7 @@ static char *get_perm_string(t_file *file, int *space, int symlink)
         return (NULL);   
     /* ACL management */
     int ret = check_acl(file);
-    if (ret == 0)
+    if (ret == 1)
         tmp = ft_strjoin_free(tmp, "+", 'f');
     else if (ret == MALLOC_ERR)
         return (NULL);
