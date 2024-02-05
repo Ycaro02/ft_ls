@@ -4,14 +4,16 @@
 static void display_symlink(char *path, struct stat *sb, t_context *c, t_file_context *file_c)
 {
     /* call with symlink == -1 to avoid update space array */
+    file_c->path = ft_strdup(path);
+    file_c->parent_path = NULL;
     t_file *file = fill_file_struct(sb, -1, c, file_c);
     
     /* HARDCODE 0 for l_option need to check */
-    if (fill_name_and_quote(file, path, NULL, file_c, 0) == MALLOC_ERR) {
-        free(sb);
+    // if (fill_name_and_quote(file, path, NULL, file_c, 0) == MALLOC_ERR) {
+    //     free(sb);
         // free(new_file);
-        return ;
-    }
+        // return ;
+    // }
     //  NEED TO CALL FILL FILE NAME AND QUOTE before print
     if (file) {
         write_file_name(file, c, file_c, -1);
@@ -103,11 +105,7 @@ static int write_symlink(char *path, char *parrent_path, int space, t_context *c
             fill_buffer_char(' ');
         fill_buffer("->");
         int ret = readlink(tmp, buff, 199);
-        if (ret == -1) {
-            printf("For tmp: %s:", tmp);
-            perror(" readlink");
-        }
-        else {
+        if (ret != -1) {
             buff[ret] = '\0';
             stat_symlink(buff, parrent_path, path, c, file_c);
         }

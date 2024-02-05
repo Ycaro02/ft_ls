@@ -32,9 +32,11 @@ typedef struct s_context { /* Execution context */
 */
 typedef struct s_file_context { /* File context for each ls call*/
     int         call_flag;
-    int         idx;        /* idx: Index of file in lst */
-    int         lst_len;    /* lst_len: File's list len */
-    int         *space;     /* int array of max column/space for l option else NULL */
+    int         idx;            /* idx: Index of file in lst */
+    int         lst_len;        /* lst_len: File's list len */
+    int         *space;         /* int array of max column/space for l option else NULL */
+    char        *path;          /* ptr to path string */
+    char        *parent_path;   /* ptr to parent path string*/
 } t_file_context;
 
 // /* File line structure for l option */

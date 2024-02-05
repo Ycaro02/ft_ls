@@ -15,14 +15,14 @@ static char *get_perm_string(t_file *file, int *space, int symlink)
     if (!tmp)
         return (NULL);   
     /* ACL management */
-    // int ret = check_acl(file);
-    // if (ret == 0)
-    //     tmp = ft_strjoin_free(tmp, "+", 'f');
-    // else if (ret == MALLOC_ERR)
-    //     return (NULL);
+    int ret = check_acl(file);
+    if (ret == 0)
+        tmp = ft_strjoin_free(tmp, "+", 'f');
+    else if (ret == MALLOC_ERR)
+        return (NULL);
     // insert_space(space - (10 + (ret == 0)));
-    // int local_space = 10 + (ret == 0); /* 10 for classic len + return bool for acl '+'*/
-    int local_space = 10; /* 10 for classic len + return bool for acl '+'*/
+    int local_space = 10 + (ret == 0); /* 10 for classic len + return bool for acl '+'*/
+    // int local_space = 10; /* 10 for classic len + return bool for acl '+'*/
     if (symlink != -1 && local_space > space[S_PERM])
         space[S_PERM] = local_space;
     return (tmp);

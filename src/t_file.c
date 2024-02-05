@@ -51,10 +51,10 @@ int check_for_quote(char *str)
  *          display_symlink -> np for this 
 */
 /* maybe we can remove parent and path and fill it after call, 3 call in parse, one in recurcive and one in write name no realy a pain */
-// t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink, t_context *c, t_file_context *file_c)
 t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_context *file_c)
 {
     t_file *file;
+    int l_option = has_flag(c->flag_nb, L_OPTION);
  
     file = ft_calloc(sizeof(t_file), 1);
     if (!file)
@@ -74,7 +74,14 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     file->group_id = sb->st_gid;
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
-     if (file_c) {
+
+    if (fill_name_and_quote(file, file_c->path, file_c->path, file_c, l_option) == MALLOC_ERR) {
+        ft_printf_fd(2, "Malloc error fill file struct\n");
+        free(sb);
+        return (NULL);
+    }   
+
+     if (l_option) {
         // printf("%sGot file_c manage space here%s\n",GREEN, RESET);
         build_file_line(file, c, file_c, symlink);
     }

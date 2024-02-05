@@ -19,20 +19,22 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
                     if (!file_c->space)
                         return (MALLOC_ERR);
                 }
-                new_file = fill_file_struct(sb, symlink, c, file_c);
             }
-            else
-                new_file = fill_file_struct(sb, symlink, c, NULL);
+
+            file_c->path = ft_strdup(str);
+            file_c->parent_path = NULL;
+            new_file = fill_file_struct(sb, symlink, c, file_c);
+
             if (!new_file) {
                 free(str);
                 free(sb);
                 return (MALLOC_ERR);
             }
-            if (fill_name_and_quote(new_file, str, NULL, file_c, l_option) == MALLOC_ERR) {
-                free(str);
-                free(sb);
-                return (MALLOC_ERR);
-            }
+            // if (fill_name_and_quote(new_file, str, NULL, file_c, l_option) == MALLOC_ERR) {
+            //     free(str);
+            //     free(sb);
+            //     return (MALLOC_ERR);
+            // }
             ft_lstadd_back(new, ft_lstnew(new_file));
     }
     else
