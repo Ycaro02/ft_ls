@@ -55,6 +55,9 @@ FT_LS_OUTPUT = myls_out
 
 DIFF_LS = ./rsc/ls_diff.sh
 
+
+ALL_FLAG = -latrRzucgfdnG
+
 T_FLAG = -alr
 
 T_DIR = test
@@ -89,7 +92,9 @@ test:	${NAME}
 		./${DIFF_LS} -a / Makefile
 
 vtest:		${NAME}
-			valgrind ./ft_ls / -lR
+			valgrind ./ft_ls . -lartR
+			valgrind ./ft_ls . ${ALL_FLAG}
+			valgrind ./ft_ls / /dev /proc -lart
 
 fclean:		clean
 			@make -s -C libft fclean
