@@ -35,7 +35,7 @@
 
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
 
-int fill_name_and_quote(t_file *file, char *path, char *parent);
+int fill_name_and_quote(t_file *file, char *path, char *parent, t_file_context *file_c, int l_option);
 
 /* LS FUN */
 int ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_file*, t_context*, t_file_context*));
@@ -92,9 +92,9 @@ char        get_type(struct stat sb);
 //-------------------------------
 //      manage_space.c          //
 //-------------------------------
-int         get_nb_space(t_list *lst, int(*get_len_by_info)(t_file));
-int         get_len_name_quote(t_file file);
-int		    *get_all_space(t_list *lst, int flag_nb);
+// int         get_nb_space(t_list *lst, int(*get_len_by_info)(t_file));
+// int         get_len_name_quote(t_file file);
+// int		    *get_all_space(t_list *lst, int flag_nb);
 //-------------------------------
 //      time_gestion.c          //
 //-------------------------------
@@ -156,5 +156,7 @@ int         is_special_char(char c);
 void        display_quote(t_int8 quote);
 /*main*/
 struct stat *check_for_stat(char* name, int flag, int *save);
+
+int build_file_line(t_file *file, t_context *c, t_file_context *file_c);
 
 #endif /* FT_LS_H */

@@ -5,8 +5,7 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
 {
     t_file *new_file ;
     struct stat *sb;
-    int symlink = 0, error = 0;
-    (void)file_c;
+    int symlink = 0, error = 0, l_option = has_flag(c->flag_nb, L_OPTION);
     
     if (!str)
         return (MALLOC_ERR);
@@ -14,8 +13,14 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
     if (!sb)
         return (0);
     if (get_type(*sb) == DIRECTORY && !symlink) { /* if is directory and not symlink*/
-            if (has_flag(c->flag_nb, L_OPTION))
+            if (l_option) {
+                if (!file_c->space) {
+                    file_c->space = ft_calloc(sizeof(int), S_MAX);
+                    if (!file_c->space)
+                        return (MALLOC_ERR);
+                }
                 new_file = fill_file_struct(sb, symlink, c, file_c);
+            }
             else
                 new_file = fill_file_struct(sb, symlink, c, NULL);
             if (!new_file) {
@@ -23,7 +28,7 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
                 free(sb);
                 return (MALLOC_ERR);
             }
-            if (fill_name_and_quote(new_file, str, NULL) == MALLOC_ERR) {
+            if (fill_name_and_quote(new_file, str, NULL, file_c, l_option) == MALLOC_ERR) {
                 free(str);
                 free(sb);
                 return (MALLOC_ERR);
@@ -116,6 +121,7 @@ int search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag)
     int     err = 0;
     t_file_context file_c;
     file_c.idx = 0;
+    file_c.space = NULL;
     file_c.lst_len = ft_lstsize(dir_lst);
     file_c.call_flag = call_flag;
 

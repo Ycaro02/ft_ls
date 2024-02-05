@@ -118,6 +118,12 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     if (file_c->call_flag != 0 && file->type != DIRECTORY)
         return (0);
 
+    if (!file_c->space) {
+        file_c->space = ft_calloc(sizeof(int), S_MAX);
+        if (!file_c->space)
+            return (MALLOC_ERR);
+    }
+
     lst = get_all_file_struct(file, c, file_c); /* NEED TO GIVE PTR TO FILE_C HERE */
 
     if (!lst && local_err == MALLOC_ERR) /* One case where int pointer error is mandatory */
@@ -155,7 +161,7 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 
     if (has_flag(c->flag_nb, D_OPTION))
         return (hard_display_d(file));
-
+    
     // printf("%sCallC: %d idx: %d for %s%s\n", CYAN, call_flag, index, file->name, RESET);
     /* really ugly need to apply mange column here but still working */
     if (file_c->call_flag == 0) {

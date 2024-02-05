@@ -5,7 +5,8 @@ static void display_symlink(char *path, struct stat *sb, int sym_bool, t_context
 {
     t_file *file = fill_file_struct(sb, sym_bool, c, file_c);
     
-    if (fill_name_and_quote(file, path, NULL) == MALLOC_ERR) {
+    /* HARDCODE 0 for l_option need to check */
+    if (fill_name_and_quote(file, path, NULL, file_c, 0) == MALLOC_ERR) {
         free(sb);
         // free(new_file);
         return ;

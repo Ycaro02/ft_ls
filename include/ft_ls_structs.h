@@ -64,7 +64,7 @@ typedef struct s_file
     char        *name;
     char        *parrent;
     t_int8      quote;
-    char        **line; /* alloc of S_HOUR + 1, string idx matching with e_space enum, only for L_OPTION */
+    char        **line; /* alloc of S_MAJOR_SIZE + 1, string idx matching with e_space enum, only for L_OPTION */
 } t_file;
 
 /**

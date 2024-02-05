@@ -32,12 +32,21 @@ int fill_l_buffer(t_list *lst, t_context *c, t_file_context *file_c)
     t_list  *current = lst;
     int     lst_len = ft_lstsize(lst), i = 0, error = 0;
     /*CALL get_all_space HERE  */
-    int     *space = get_all_space(current, c->flag_nb);
+    // int     *space = get_all_space(current, c->flag_nb);
+    int *space = file_c->space;
 
     if (!space)
         return (MALLOC_ERR);
     while (current) {
-        error = fill_buffer_l_option(*((t_file *)current->content), space, c, file_c); // change to int return for malloc check
+
+        printf("%sIn fill Line for: |%s|%s\n",GREEN, ((t_file * )current->content)->name, RESET);
+        for (int i = 0; i <= S_MAJOR_SIZE; ++i) {
+            printf("%sLine de [%d]|%s|%s\n",CYAN, i, ((t_file * )current->content)->line[i], RESET);
+            printf("%sNEW Space de [%d]|%d|%s\n",YELLOW, i, file_c->space[i], RESET);
+            printf("%sOLD Space de [%d]|%d|%s\n",RED, i, space[i], RESET);
+        }
+
+        error = fill_buffer_l_option(*((t_file * )current->content), space, c, file_c); // change to int return for malloc check
         if (error == MALLOC_ERR)
             break ;
         ++i;
@@ -45,7 +54,7 @@ int fill_l_buffer(t_list *lst, t_context *c, t_file_context *file_c)
             fill_buffer("\n");
         current = current->next;
     }
-    free(space);
+    // free(space);
     if (file_c->call_flag != 0)
         file_lstclear(&lst, free);
     return (error);
@@ -133,11 +142,25 @@ void fill_buffer_char(char c)
 }
 
 
+static int check_lst_quote(t_list *lst)
+{
+    t_list *current = lst; 
+    while (current)
+    {
+        if (((t_file *) current->content)->quote > NOEFFECT_CHAR)
+            return (1);
+        current = current->next;
+    }
+    return (0);
+}
+
 int store_in_buffer(t_list *lst, t_context *c, t_file_context *file_c)
 {
     int     err = 0;
     /* check for quote in lst and give bool */
-    int quote_space = get_nb_space(lst, get_len_name_quote); 
+    // int quote_space = get_nb_space(lst, get_len_name_quote);
+
+    int quote_space = check_lst_quote(lst);
 
     err = manage_column(lst, quote_space, c, file_c);
     if (err == MALLOC_ERR) {

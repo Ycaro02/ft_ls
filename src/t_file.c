@@ -1,7 +1,11 @@
 #include "../include/ft_ls.h"
 
+int get_len_name_quote(t_file *file) /* old space quote for -l option */
+{
+    return (file->quote == NORMAL_CHAR ? 0 : 1);
+}
 
-int fill_name_and_quote(t_file *file, char *path, char *parent)
+int fill_name_and_quote(t_file *file, char *path, char *parent, t_file_context *file_c, int l_option)
 {
     file->name = ft_strdup(path);
     if (!file->name)
@@ -16,6 +20,8 @@ int fill_name_and_quote(t_file *file, char *path, char *parent)
     else
         file->parrent = NULL;
     file->quote = check_for_quote(file->name);
+    if (l_option == 1)
+        file_c->space[S_NAME_QUOTE] = get_len_name_quote(file);
     return (0);
 }
 
@@ -25,34 +31,6 @@ int check_for_quote(char *str)
     return (quote > NOEFFECT_CHAR ? quote : NORMAL_CHAR);
 }
 
-/** 
- * 
-*/
-// static int update_space_max(int idx, int test_value)
-// {
-
-// }
-
-// static void update_max_len_by_field(t_file *file, int *space, int flag)
-// {
-//     if (has_flag(flag_nb, N_OPTION)) {
-//          get_user_id_len;
-//          get_group_id_len;
-//     } 
-//     else {
-//          get_user_name_len;
-//          get_group_name_len;
-//     }
-//      get_len_size;
-//      get_len_nb_link;
-//      get_len_date_month;
-//      get_len_date_day;
-//      get_len_date_hour;
-
-//      get_minor_size;
-//      get_major_size;
-//      get_len_name_quote;
-// }
 /*
     Need to change all l option storage logic, if l_option build line here
         - create line structure 
@@ -85,8 +63,7 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     file->type = symlink == TRUE ? SYMLINK : get_type(*sb);
 
     // file->sb = sb; /* STOP FREE SB */
-    (void)c;
-    (void)file_c;
+
     file->perm = sb->st_mode;
     file->size = sb->st_size;
     file->nb_link = sb->st_nlink;
@@ -97,15 +74,17 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     file->group_id = sb->st_gid;
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
-    //  if (file_c) {
-    //     printf("%sGot file_c manage space here%s\n",GREEN, RESET);
+     if (file_c) {
+        printf("%sGot file_c manage space here%s\n",GREEN, RESET);
+        build_file_line(file, c, file_c);
+
         // file->line = build_file_line(file, c, file_c);
         // build file->line with write l_option logi: so we need flag
         //     in build line if (get_size_bytype > space[type]):
         //         update space[type]
         //         like manage_space but don't need to realloc all string 
         //         or iter x time on lst, use build line before to store it to avoid iteration after store
-    // }
+    }
 
 
     return (file);

@@ -29,11 +29,11 @@ SRCS	=	src/main.c\
 			src/buffer.c\
 			src/manage_column.c\
 			src/list_xattr.c\
-			src/manage_space.c\
 			src/build_column.c\
 			src/manage_perm.c\
 			src/write_file_name.c\
-			src/quote_gestion.c
+			src/quote_gestion.c\
+			src/file_line.c
 
 
 OBJ = $(SRCS:.c=.o)

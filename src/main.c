@@ -12,8 +12,6 @@ int ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_f
         return (err);
     file_c->idx = 0;
     file_c->lst_len = ft_lstsize(lst);
-    // t_file_context file_c;
-    // file_c->call_flag = call_flag;
 
     while (current) {
         err = ls_function(current->content, c, file_c);
@@ -28,7 +26,7 @@ int ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_f
 static int ls_only_dir(t_list *dir_lst, t_context *c, t_file_context *file_c)
 {
     t_list  *current = dir_lst;
-    int     *space = get_all_space(dir_lst, c->flag_nb), err = 0;
+    int     *space = file_c->space, err = 0;
     int     lst_len = ft_lstsize(dir_lst), i = 0;
 
     while (current) {
@@ -44,7 +42,6 @@ static int ls_only_dir(t_list *dir_lst, t_context *c, t_file_context *file_c)
     free(space);
     return (err);
 }
-
 
 /** special_display_header
  *  display new band before ls call if:
