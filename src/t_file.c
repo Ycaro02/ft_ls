@@ -75,7 +75,7 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
 
-    if (fill_name_and_quote(file, file_c->path, file_c->path, file_c, l_option) == MALLOC_ERR) {
+    if (fill_name_and_quote(file, file_c->path, file_c->parent_path, file_c, l_option) == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error fill file struct\n");
         free(sb);
         return (NULL);
