@@ -5,13 +5,13 @@ static t_file   *default_file_struct(t_context *c, t_file_context *file_c)
     t_file          *file = NULL;
     int             symlink = 0, l_option = has_flag(c->flag_nb, L_OPTION);;
     struct stat     *sb = check_for_stat(".", c->flag_nb, &symlink);
-
+    char *point_dir = ".";
 
 
     if (!sb)
         return (NULL);
-    file_c->path = ft_strdup(".");
-    file_c->parent_path = ft_strdup("..");
+    file_c->path = point_dir;
+    file_c->parent_path = NULL;
     if (l_option) {
         file_c->space = ft_calloc(sizeof(int), S_MAX);
         if (!file_c->space) {
@@ -66,8 +66,8 @@ static int  check_args
             return (MALLOC_ERR);
     }
 
-    arg->file_c.path = ft_strdup(path);
-    arg->file_c.parent_path = ft_strdup(path); /* NULL MAYBE */
+    arg->file_c.path = path;
+    arg->file_c.parent_path = path; /* NULL MAYBE */
 
     file = fill_file_struct(sb, symlink, &arg->c, &arg->file_c);
     if (!file) {

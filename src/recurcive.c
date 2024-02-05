@@ -21,7 +21,7 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
                 }
             }
 
-            file_c->path = ft_strdup(str);
+            file_c->path = str;
             file_c->parent_path = NULL;
             new_file = fill_file_struct(sb, symlink, c, file_c);
 

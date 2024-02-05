@@ -4,7 +4,7 @@
 static void display_symlink(char *path, struct stat *sb, t_context *c, t_file_context *file_c)
 {
     /* call with symlink == -1 to avoid update space array */
-    file_c->path = ft_strdup(path);
+    file_c->path = path;
     file_c->parent_path = NULL;
     t_file *file = fill_file_struct(sb, -1, c, file_c);
     
