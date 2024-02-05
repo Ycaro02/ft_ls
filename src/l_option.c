@@ -10,7 +10,6 @@ inline static void insert_space(int nb)
     }
 }
 
-
 void write_user_name(long user_id, int space, int flag_nb)
 {
     if (has_flag(flag_nb, N_OPTION)) {
@@ -65,18 +64,18 @@ void write_group_name(long group_id, int space, int flag_nb)
         fill_buffer_char(' ');
 }
 
-static int write_date(t_file file, int* space, int flag_nb)
+static int write_date(t_file *file, int* space, int flag_nb)
 {
     char **tmp = NULL;
     int i = 0;
     int j = S_MONTH;
 
     if (has_flag(flag_nb, U_OPTION))
-        tmp = get_printable_date(file.last_access);
+        tmp = get_printable_date(file->last_access);
     else if (has_flag(flag_nb, C_OPTION))
-        tmp = get_printable_date(file.last_status_change);
+        tmp = get_printable_date(file->last_status_change);
     else
-        tmp = get_printable_date(file.last_change);
+        tmp = get_printable_date(file->last_change);
     if (!tmp) {
         ft_printf_fd(2, "Malloc error\n");
         return (MALLOC_ERR);
@@ -136,8 +135,7 @@ static int write_size(t_file *file, int *space)
 }
 
 
-
-static void write_file_line(t_file *file, t_context *c, int *space)
+static int write_file_line(t_file *file, t_context *c, int *space)
 {
     /* display perm string and pad */
     fill_buffer(file->line[S_PERM]);
@@ -158,8 +156,13 @@ static void write_file_line(t_file *file, t_context *c, int *space)
     insert_space(space[S_GROUP] - ft_strlen(file->line[S_GROUP]));
     if (space[S_GROUP] != -1)
         fill_buffer_char(' ');
+    /* display size/MAJOR_MINOR string and pad */
     write_size(file, space);
-
+    /* display date string and pad */
+    if (write_date(file, space, c->flag_nb) == MALLOC_ERR)
+        return (MALLOC_ERR);
+    /* Finaly display file name */
+    return (0);
 }
 
 /** fill_buffer_l_option
@@ -168,18 +171,12 @@ static void write_file_line(t_file *file, t_context *c, int *space)
 */
 int fill_buffer_l_option(t_file file, int *space, t_context *c, t_file_context *file_c)
 {
-    write_file_line(&file, c, space);
-    // if (write_nb_link(file.nb_link, space[S_LINK]) == MALLOC_ERR)
-    //     return (MALLOC_ERR);
-    // if (!has_flag(c->flag_nb, G_OPTION))
-    //     write_user_name(file.user_id, space[S_USER], c->flag_nb);
-    // write_group_name(file.group_id, space[S_GROUP], c->flag_nb);
-    if (write_date(file, space, c->flag_nb) == MALLOC_ERR || \
-        write_file_name(&file, c, file_c, space[S_NAME_QUOTE]) == MALLOC_ERR)
+    int err = write_file_line(&file, c, space);
+    if (write_file_name(&file, c, file_c, space[S_NAME_QUOTE]) == MALLOC_ERR)
             return (MALLOC_ERR);
     if (has_flag(c->flag_nb, Z_OPTION))
         diplay_xattr_acl(&file);
-    return (0);
+    return (err);
 }
 
 
