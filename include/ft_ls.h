@@ -19,8 +19,6 @@
 # include "../rsc/acl/acl.h" // classic <sys/acl.h> not present on 42 computer, same for -lacl
 // # include <sys/acl.h> 
 
-
-
 # include "basic_define.h"
 # include "../libft/libft.h"
 # include "../libft/list/linked_list.h"
@@ -134,7 +132,6 @@ void        set_flag(int *flags, int flag_val);
 void        unset_flag(int *flags, int flag_val);
 t_int8      has_flag(int flags, int flag_val);
 t_int8      flag_already_present(int flags, int flag_val);
-
 //-------------------------------
 //    quote_gestion.c           //
 //-------------------------------
