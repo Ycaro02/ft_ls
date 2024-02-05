@@ -51,15 +51,17 @@ LS_OUTPUT = real_ls_out
 
 FT_LS_OUTPUT = myls_out
 
-DIFF_LS = ./rsc/ls_diff.sh
+# DIFF_LS = ./rsc/ls_diff.sh
 
-T_FLAG = -alr
+# T_FLAG = -alr
 
-T_DIR = test
+# T_DIR = test
 
-T_FLAG = -larR 
+# T_FLAG = -larR 
 
 VALGRIND_TEST = ./rsc/vtest.sh
+
+DIFF_TEST = ./rsc/test.sh
 
 all:		${NAME}
 
@@ -83,10 +85,11 @@ clean:
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
 test:	${NAME}
-		./${DIFF_LS} ${T_FLAG} ${T_DIR}
-		./${DIFF_LS} -la ${T_DIR} /
-		./${DIFF_LS} -lar / /dev
-		./${DIFF_LS} -a / Makefile
+		${DIFF_TEST}
+# ./${DIFF_LS} ${T_FLAG} ${T_DIR}
+# ./${DIFF_LS} -la ${T_DIR} /
+# ./${DIFF_LS} -lar / /dev
+# ./${DIFF_LS} -a / Makefile
 
 vtest:		${NAME}
 			./${VALGRIND_TEST}

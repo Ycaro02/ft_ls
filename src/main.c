@@ -51,7 +51,8 @@ static int ls_only_dir(t_list *dir_lst, t_context *c, t_file_context *file_c)
 */
 static void special_display_header(t_list *dir_lst, int args_found, int call_value)
 {
-    if (args_found && call_value == 1 && ft_lstsize(dir_lst) == 1) {
+    // printf("call: %d, args %d\n", call_value, args_found);
+    if (args_found == 1 && call_value <= 1 && ft_lstsize(dir_lst) == 1) {
         t_file *file = dir_lst->content;
         int quote = quotes_required(file->name);
         if (quote > NOEFFECT_CHAR)
@@ -178,8 +179,9 @@ static int ft_ls(char **argv, t_context *c)
 
     if (c->special_error == 1) /* set return cmd value for special err */
         c->error = NA_CMD_LINE_ERR;
+    int save_error = c->error;
     free(arg);
-    return (c->error);
+    return (save_error);
 }
 
 static int check_display_help(int argc, char**argv)
