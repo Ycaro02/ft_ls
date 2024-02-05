@@ -33,7 +33,8 @@ SRCS	=	src/main.c\
 			src/manage_perm.c\
 			src/write_file_name.c\
 			src/quote_gestion.c\
-			src/file_line.c
+			src/file_line.c\
+			src/manage_space.c
 
 
 OBJ = $(SRCS:.c=.o)

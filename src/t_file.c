@@ -1,6 +1,6 @@
 #include "../include/ft_ls.h"
 
-int get_len_name_quote(t_file *file) /* old space quote for -l option */
+int get_quote(t_file *file) /* old space quote for -l option */
 {
     return (file->quote == NORMAL_CHAR ? 0 : 1);
 }
@@ -21,7 +21,7 @@ int fill_name_and_quote(t_file *file, char *path, char *parent, t_file_context *
         file->parrent = NULL;
     file->quote = check_for_quote(file->name);
     if (l_option == 1)
-        file_c->space[S_NAME_QUOTE] = get_len_name_quote(file);
+        file_c->space[S_NAME_QUOTE] = get_quote(file);
     return (0);
 }
 
@@ -76,14 +76,7 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     file->rdev = sb->st_rdev;
      if (file_c) {
         // printf("%sGot file_c manage space here%s\n",GREEN, RESET);
-        build_file_line(file, c, file_c);
-
-        // file->line = build_file_line(file, c, file_c);
-        // build file->line with write l_option logi: so we need flag
-        //     in build line if (get_size_bytype > space[type]):
-        //         update space[type]
-        //         like manage_space but don't need to realloc all string 
-        //         or iter x time on lst, use build line before to store it to avoid iteration after store
+        build_file_line(file, c, file_c, symlink);
     }
 
 

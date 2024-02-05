@@ -1,9 +1,10 @@
 #include "../include/ft_ls.h"
 
 // static void display_symlink(struct stat *sb, int flag_nb, char *new, int sym_bool)
-static void display_symlink(char *path, struct stat *sb, int sym_bool, t_context *c, t_file_context *file_c)
+static void display_symlink(char *path, struct stat *sb, t_context *c, t_file_context *file_c)
 {
-    t_file *file = fill_file_struct(sb, sym_bool, c, file_c);
+    /* call with symlink == -1 to avoid update space array */
+    t_file *file = fill_file_struct(sb, -1, c, file_c);
     
     /* HARDCODE 0 for l_option need to check */
     if (fill_name_and_quote(file, path, NULL, file_c, 0) == MALLOC_ERR) {
@@ -53,7 +54,7 @@ static void stat_symlink(char* buff, char *parrent_path, char* path, t_context *
     // ft_printf_fd(2, "%sFor path: %s, parent |%s| buff|%s|%s\n", CYAN, path, parrent_path, buff, RESET);
     /* check for buff real path */
     if (sb)
-        display_symlink(buff, sb, sym_bool, c, file_c);
+        display_symlink(buff, sb, c, file_c);
     else { /* else check for add parrent path or / before */
         if (parrent_path && ft_strcmp(parrent_path, "/") == 0)
             new = ft_strjoin(parrent_path, buff);
@@ -65,14 +66,14 @@ static void stat_symlink(char* buff, char *parrent_path, char* path, t_context *
         sb = check_for_stat(new, c->flag_nb, &sym_bool);
         /* check for new path with parrent */
         if (sb)
-            display_symlink(buff, sb, sym_bool, c, file_c);
+            display_symlink(buff, sb, c, file_c);
         else { /* else check to remove last word of path, this will search in current dir */
             if (new)
                 free(new);
             new = remove_last_word(path, '/');
             sb = check_for_stat(new, c->flag_nb, &sym_bool);
             if (sb)
-                display_symlink(buff, sb, sym_bool, c, file_c);
+                display_symlink(buff, sb, c, file_c);
             else
                 multiple_fill_buff(" ", buff, NULL, NULL);  /* display brut buff nocare of color */
         }

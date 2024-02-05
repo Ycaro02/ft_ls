@@ -92,9 +92,9 @@ char        get_type(struct stat sb);
 //-------------------------------
 //      manage_space.c          //
 //-------------------------------
-// int         get_nb_space(t_list *lst, int(*get_len_by_info)(t_file));
-// int         get_len_name_quote(t_file file);
-// int		    *get_all_space(t_list *lst, int flag_nb);
+int         get_nb_space(t_list *lst, int(*get_len_by_info)(t_file));
+int         get_len_name_quote(t_file file);
+int		    *get_all_space(t_list *lst, int flag_nb);
 //-------------------------------
 //      time_gestion.c          //
 //-------------------------------
@@ -157,6 +157,6 @@ void        display_quote(t_int8 quote);
 /*main*/
 struct stat *check_for_stat(char* name, int flag, int *save);
 
-int build_file_line(t_file *file, t_context *c, t_file_context *file_c);
+int build_file_line(t_file *file, t_context *c, t_file_context *file_c, int symlink);
 
 #endif /* FT_LS_H */
