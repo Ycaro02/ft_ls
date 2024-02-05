@@ -23,9 +23,6 @@ static int display_acl(t_file file, char *str, char* full_name)
     }
     multiple_fill_buff(str, "\n# owner : ", NULL, NULL);
     multiple_fill_buff(file.line[S_USER], "\n", "# group : ", file.line[S_GROUP]);
-    // write_user_name(file.user_id, -1, 0); // NEED TO REPLACE WRITE USER AND GROUP HERE
-    // multiple_fill_buff("\n", "# group : ", NULL, NULL);
-    // write_group_name(file.group_id, -1, 0);
     text = acl_to_text(acl, NULL);
     multiple_fill_buff("\n", text, NULL, NULL);
     acl_free(text);
@@ -83,7 +80,7 @@ int diplay_xattr_acl(t_file *file)
         if (i == 0) {
             fill_buffer("\n\n# file :");
             // write_file_name(*file, COLOR_OPTION, -1);
-            (void)file;
+            (void)file;     /* NEED TO DISPLAY FILE HERE */
             fill_buffer("\n");
             // multiple_fill_buff("\n\n# file : ", file->name, "\n", NULL);
         }

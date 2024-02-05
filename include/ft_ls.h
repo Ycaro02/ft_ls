@@ -35,23 +35,18 @@
 
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
 
-
-void display_fcontext_flag(t_file_context *file_c, char *str, int flag) ;
-int fill_name_and_quote(t_file *file, char *path, char *parent, t_file_context *file_c, int l_option);
-
+/* DEBUG */
+void        display_fcontext_flag(t_file_context *file_c, char *str, int flag);
 /* LS FUN */
-int ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_file*, t_context*, t_file_context*));
+int         ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_file*, t_context*, t_file_context*));
 //-------------------------------
 //      t_file.c               //
 //-------------------------------
-// t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink, t_file_context *file_c);
-t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_context *file_c);
-char        *perm_to_string(mode_t mode, char type);
-int         check_for_quote(char *str);
+t_file      *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_context *file_c);
+void        destroy_file(void *file_ptr);
 //-------------------------------
 //      utils.c                 //
 //-------------------------------
-void        destroy_file(void *file_ptr);
 int         ft_strlen_word(char *s);
 int         get_stdout_width();
 void        update_error(t_int8 *error);
@@ -64,8 +59,10 @@ int         parse_flag(int argc, char **argv, t_int8 *special_err);
 //-------------------------------
 //      parse.c                //
 //-------------------------------
-t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c);
-t_int8 parse_cmd_args(char **argv, t_args *arg);
+t_list*     get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c);
+t_int8      parse_cmd_args(char **argv, t_args *arg);
+char        get_type(struct stat sb);
+
 //-------------------------------
 //      ft_ls.c                //
 //-------------------------------
@@ -79,22 +76,11 @@ int         search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag);
 //-------------------------------
 //      l_options.c            //
 //-------------------------------
-int fill_buffer_l_option(t_file *file, t_context *c, t_file_context *file_c);
+int         fill_buffer_l_option(t_file *file, t_context *c, t_file_context *file_c);
 //-------------------------------
 //      write_file_name.c      //
 //-------------------------------
-int write_file_name(t_file *file, t_context *c, t_file_context *file_c, int space);
-//-------------------------------
-//      l_option_utils.c       //
-//-------------------------------
-void        fill_buffer_perm(char c, int *is_exec, int display_flag);
-char        get_type(struct stat sb);
-//-------------------------------
-//      manage_space.c          //
-//-------------------------------
-// int         get_nb_space(t_list *lst, int(*get_len_by_info)(t_file));
-// int         get_len_name_quote(t_file file);
-// int		    *get_all_space(t_list *lst, int flag_nb);
+int         write_file_name(t_file *file, t_context *c, t_file_context *file_c, int space);
 //-------------------------------
 //      time_gestion.c          //
 //-------------------------------
@@ -112,14 +98,15 @@ int         fill_l_buffer(t_list *lst, t_context *c, t_file_context *file_c);
 void        fill_buffer_char(char c);
 void        fill_buffer_color(char *str, enum e_color color, int flag_nb, int space, int quote);
 int         store_in_buffer(t_list *lst, t_context *c, t_file_context *file_c);
-void        print_and_clear();
 void        finish_print_buffer();
 void        multiple_fill_buff(char *s1, char*s2, char *s3, char *s4);
-void        fill_color(enum e_color color);
+/* END CHECK PROTOTYPE HERE */
+/* END CHECK PROTOTYPE HERE */
+/* END CHECK PROTOTYPE HERE */
 //-------------------------------
 //      build_coloumn.c         //
 //-------------------------------
-int manage_column(t_list *lst, int space_quote, t_context *c, t_file_context *file_c);
+int         manage_column(t_list *lst, int space_quote, t_context *c, t_file_context *file_c);
 //-------------------------------
 //      manage_column.c         //
 //-------------------------------
@@ -149,14 +136,16 @@ t_int8      has_flag(int flags, int flag_val);
 t_int8      flag_already_present(int flags, int flag_val);
 
 //-------------------------------
-//    quote_gestion.c     //
+//    quote_gestion.c           //
 //-------------------------------
-int         quotes_required(char *str);
 int         is_special_char(char c);
+int         quotes_required(char *str);
+int         check_for_quote(char *str);
 void        display_quote(t_int8 quote);
+
 /*main*/
 struct stat *check_for_stat(char* name, int flag, int *save);
-
-int build_file_line(t_file *file, t_context *c, t_file_context *file_c, int symlink);
+/* File line */
+int         build_file_line(t_file *file, t_context *c, t_file_context *file_c, int symlink);
 
 #endif /* FT_LS_H */

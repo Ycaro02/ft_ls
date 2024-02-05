@@ -1,15 +1,5 @@
 #include "../include/ft_ls.h"
 
-/** display_fcontext_flag
- * Basic debug function to display file_context
-*/
-void display_fcontext_flag(t_file_context *file_c, char *str, int flag) 
-{
-    ft_printf_fd(2, "%sCall: [%d]%s idx: %s[%d]%s\n", RED, file_c->call_flag, RESET, YELLOW, file_c->idx, RESET);
-    display_flags(flag);
-    ft_printf_fd(2, "for |%s%s%s|\n",CYAN, str, RESET);
-}
-
 /**
  * Hardcode display for -d need to refact (use manage Column)
 */
@@ -97,7 +87,6 @@ static int display_total_size(t_file *file, t_int8 no_file)
     return (0);
 }
 
-
 int ls_only_file_l(t_list *lst, t_context *c, t_file_context *file_c)
 {
     int error = 0;
@@ -162,7 +151,6 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
         ++(file_c->call_flag);
     return (0);
 }
-
 
 int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {

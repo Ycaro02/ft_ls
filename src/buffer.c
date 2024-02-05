@@ -1,18 +1,30 @@
 #include "../include/ft_ls.h"
 
-void multiple_fill_buff(char *s1, char*s2, char *s3, char *s4)
+static void fill_color(enum e_color color)
 {
-    if (s1)
-        fill_buffer(s1);
-    if (s2)
-        fill_buffer(s2);
-    if (s3)
-        fill_buffer(s3);
-    if (s4)
-        fill_buffer(s4);
+    if (color == E_RED)
+        fill_buffer(RED);
+    if (color == E_BLUE)
+        fill_buffer(BLUE);
+    if (color == E_GREEN)
+        fill_buffer(GREEN);
+    if (color == E_YELLOW)
+        fill_buffer(YELLOW);
+    if (color == E_PURPLE)
+        fill_buffer(PURPLE);
+    if (color == E_CYAN)
+        fill_buffer(CYAN);
+    if (color == E_FILL_GREEN)
+        fill_buffer(FILL_GREEN);
+    if (color == E_FILL_YELLOW)
+        fill_buffer(FILL_YELLOW);
+    if (color == E_FILL_RED)
+        fill_buffer(FILL_RED);
+    if (color == E_YELLOW_BLACK)
+        fill_buffer(FILL_YELBLACK);
 }
 
-void    print_and_clear()
+static void    print_and_clear()
 {
     write(1, g_buff.buffer, g_buff.i);
     ft_bzero(g_buff.buffer, g_buff.i);
@@ -70,29 +82,6 @@ void fill_buffer(char *str)
     }
 }
 
-void fill_color(enum e_color color)
-{
-    if (color == E_RED)
-        fill_buffer(RED);
-    if (color == E_BLUE)
-        fill_buffer(BLUE);
-    if (color == E_GREEN)
-        fill_buffer(GREEN);
-    if (color == E_YELLOW)
-        fill_buffer(YELLOW);
-    if (color == E_PURPLE)
-        fill_buffer(PURPLE);
-    if (color == E_CYAN)
-        fill_buffer(CYAN);
-    if (color == E_FILL_GREEN)
-        fill_buffer(FILL_GREEN);
-    if (color == E_FILL_YELLOW)
-        fill_buffer(FILL_YELLOW);
-    if (color == E_FILL_RED)
-        fill_buffer(FILL_RED);
-    if (color == E_YELLOW_BLACK)
-        fill_buffer(FILL_YELBLACK);
-}
 
 void fill_buffer_color(char *str, enum e_color color, int flag_nb, int space, int quote)
 {
@@ -153,8 +142,6 @@ static int check_lst_quote(t_list *lst)
 int store_in_buffer(t_list *lst, t_context *c, t_file_context *file_c)
 {
     int     err = 0;
-    /* check for quote in lst and give bool */
-    // int quote_space = get_nb_space(lst, get_len_name_quote);
 
     int quote_space = check_lst_quote(lst);
 
@@ -178,9 +165,14 @@ void finish_print_buffer()
     }
 }
 
-/* ACL attr */
-//         if (has_flag(flag_nb, Z_OPTION)) {
-//             fill_buffer_char('\n');
-//             diplay_xattr_acl(file);
-//             fill_buffer_char('\n');
-//         }
+void multiple_fill_buff(char *s1, char*s2, char *s3, char *s4)
+{
+    if (s1)
+        fill_buffer(s1);
+    if (s2)
+        fill_buffer(s2);
+    if (s3)
+        fill_buffer(s3);
+    if (s4)
+        fill_buffer(s4);
+}

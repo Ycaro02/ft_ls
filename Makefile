@@ -23,7 +23,6 @@ SRCS	=	src/main.c\
 			src/ft_ls.c\
 			src/t_file.c\
 			src/l_option.c\
-			src/l_option_utils.c\
 			src/time_gestion.c\
 			src/sort.c\
 			src/buffer.c\

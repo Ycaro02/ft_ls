@@ -6,3 +6,12 @@
 20000 size 10000 print: ./ft_ls -G .. ../.. -R 2.73s user 0.84s system 99% cpu 3.567 total
 
 2000 size 400 print: ./ft_ls -G .. ../.. -R 2.64s user 1.31s system 99% cpu 3.952 total
+
+WITH new optimisation 
+
+10000 size 5000 print: ./ft_ls .. ../.. -R  2.46s user 0.57s system 99% cpu 3.029 total
+MIN
+./ft_ls .. ../.. -Rl  5.61s user 2.24s system 99% cpu 7.864 total
+
+MAX
+./ft_ls .. ../.. -Rl  6.38s user 1.68s system 99% cpu 8.078 total

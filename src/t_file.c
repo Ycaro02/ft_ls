@@ -5,7 +5,7 @@ int get_quote(t_file *file) /* old space quote for -l option */
     return (file->quote == NORMAL_CHAR ? 0 : 1);
 }
 
-int fill_name_and_quote(t_file *file, char *path, char *parent, t_file_context *file_c, int l_option)
+static int fill_name_and_quote(t_file *file, char *path, char *parent, t_file_context *file_c, int l_option)
 {
     file->name = ft_strdup(path);
     if (!file->name)
@@ -25,10 +25,18 @@ int fill_name_and_quote(t_file *file, char *path, char *parent, t_file_context *
     return (0);
 }
 
-int check_for_quote(char *str)
+void destroy_file(void *file_ptr)
 {
-    int quote = quotes_required(str);
-    return (quote > NOEFFECT_CHAR ? quote : NORMAL_CHAR);
+    t_file *file = file_ptr;
+    if (!file)
+        return ;
+    if (file->name)
+        free(file->name);
+    if (file->parrent)
+        free(file->parrent);
+    if (file->line)
+        free_incomplete_array((void **) file->line, S_MAJOR_SIZE + 1);
+    free(file_ptr);
 }
 
 /*

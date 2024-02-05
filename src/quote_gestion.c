@@ -1,5 +1,10 @@
 #include "../include/ft_ls.h"
 
+int check_for_quote(char *str)
+{
+    int quote = quotes_required(str);
+    return (quote > NOEFFECT_CHAR ? quote : NORMAL_CHAR);
+}
 /**
  * Basic display quote
 */
