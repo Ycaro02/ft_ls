@@ -26,12 +26,12 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
 
             if (!new_file) {
                 free(str);
-                // free(sb);
+                free(sb);
                 return (MALLOC_ERR);
             }
             ft_lstadd_back(new, ft_lstnew(new_file));
     }
-    // free(sb);
+    free(sb);
     free(str);
     return (error);
 }

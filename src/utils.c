@@ -93,7 +93,8 @@ void destroy_file(void *file_ptr)
     if (file->parrent)
         free(file->parrent);
     if (file->line)
-        ft_free_tab(file->line);
+        free_incomplete_array((void **) file->line, S_MAJOR_SIZE + 1);
+    free(file_ptr);
 }
 
 /** ft_lstclear

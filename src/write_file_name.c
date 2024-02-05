@@ -10,10 +10,8 @@ static void display_symlink(char *path, struct stat *sb, t_context *c, t_file_co
     
     if (file) {
         write_file_name(file, c, file_c, -1);
-        free(file->name);
-        free(file);
-    } 
-    // free(sb); 
+        destroy_file(file);
+    }
 }
 
 static char* remove_last_word(char *str, char sep)

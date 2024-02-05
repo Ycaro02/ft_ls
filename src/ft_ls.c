@@ -100,7 +100,7 @@ static int display_total_size(t_file *file, t_int8 no_file)
 
 int ls_only_file_l(t_list *lst, t_context *c, t_file_context *file_c)
 {
-    // file_c->call_flag = 0; //
+    int error = 0;
     if (!file_c->space) {
         file_c->space = malloc(sizeof(int) * S_MAX);
         if (!file_c->space)
@@ -109,9 +109,10 @@ int ls_only_file_l(t_list *lst, t_context *c, t_file_context *file_c)
     ft_bzero(file_c->space, sizeof(int) * S_MAX); /* reset space array */
    
     if (fill_l_buffer(lst, c, file_c) == MALLOC_ERR)
-        return (MALLOC_ERR);
+        error = MALLOC_ERR;
+    // free_incomplete_array((void **)file_c->space, S_MAX);
     fill_buffer("\n");
-    return (0);
+    return (error);
 }
 
 /** ls_l_one_dir : ls_function, give in argument to ls() and call manualy in recurcive_ls()

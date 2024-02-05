@@ -41,7 +41,7 @@ static t_file   *default_file_struct(t_context *c, t_file_context *file_c)
  *              - update c->space in fill_file
  * Ret: MALLOC_ERR for malloc error otherwise 0
 */
-static int  check_args (char *path, t_args *arg, t_int8 *found)
+static int  check_args(char *path, t_args *arg, t_int8 *found)
 {
     int             symlink = 0;
     t_file          *file = NULL;
@@ -56,20 +56,12 @@ static int  check_args (char *path, t_args *arg, t_int8 *found)
         return (0);
     }
     is_directory = get_type(*sb) == DIRECTORY; /* get dir type for add in lst */
-    if (has_flag(arg->c.flag_nb, L_OPTION)) {
-        arg->file_c.space = ft_calloc(sizeof(int), S_MAX);
-        if (!arg->file_c.space)
-            return (MALLOC_ERR);
-    }
 
     arg->file_c.path = path;
     arg->file_c.parent_path = path; /* NULL MAYBE */
-
     file = fill_file_struct(sb, symlink, &arg->c, &arg->file_c);
-    if (!file) {
-        // free(sb);
+    if (!file)
         return (MALLOC_ERR);
-    }
     if (is_directory)
         ft_lstadd_back(&arg->dir_lst, ft_lstnew(file));
     else {
@@ -95,6 +87,12 @@ t_int8 parse_cmd_args(char **argv, t_args *arg)
     t_int8      file_found = 0; /*default ret value update if args found or malloc error */
     int         i = 0;
 
+
+    if (has_flag(arg->c.flag_nb, L_OPTION)) {
+        arg->file_c.space = ft_calloc(sizeof(int), S_MAX);
+        if (!arg->file_c.space)
+            return (MALLOC_ERR);
+    }
     while (argv && argv[i]) {
         if (argv[i][0] != '-') {
             if (check_args(argv[i], arg, &file_found) == MALLOC_ERR)
