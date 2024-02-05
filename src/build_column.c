@@ -216,7 +216,7 @@ static void display_column(t_list *lst, int** array, int* max_per_column, int sp
             }
         }
         /* If we have next elem in array or special case called from ls_only_file no l*/
-        if(array[i + 1] || (file_c->call_flag == 0 && !l_option))
+        if(array[i + 1] || (file_c->call_flag == 0 && !l_option && c->first_lst >= 2))
             fill_buffer_char('\n');
 
     }

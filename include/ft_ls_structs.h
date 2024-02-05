@@ -22,6 +22,7 @@ typedef struct s_context { /* Execution context */
     t_int8      error;              /* Exit error code */
     t_int8      special_error;      /* special error to manage -- and special display */
     int         flag_nb;            /* flags value (ls option) */
+    t_int8      first_lst;          /* 0 for nothing, 1 for only file present, 2 for dir present, 3 for all*/
 } t_context;
 
 /** 

@@ -135,7 +135,6 @@ static int ft_ls(char **argv, t_context *c)
         free(arg);
         return (MALLOC_ERR);
     }
-
     // dir_lst = parse_cmd_args(&argv[1], &simple_file, &args_found, c, &file_c);
     /* Error management */
     if (!(arg->dir_lst) && c->error == MALLOC_ERR) {
@@ -156,6 +155,7 @@ static int ft_ls(char **argv, t_context *c)
             }
         }
         sort_lst(&arg->dir_lst, c->flag_nb);
+        c->first_lst += 2; /* signal dir_lst present */
     }
 
     if (arg->simple_file) { /* if other file found */
@@ -164,6 +164,7 @@ static int ft_ls(char **argv, t_context *c)
         ++call_value;
         if (has_flag(c->flag_nb, L_OPTION) && arg->dir_lst)
             fill_buffer("\n");
+        c->first_lst += 1;
     }
 
 

@@ -99,8 +99,8 @@ int ls_only_file_l(t_list *lst, t_context *c, t_file_context *file_c)
    
     if (fill_l_buffer(lst, c, file_c) == MALLOC_ERR)
         error = MALLOC_ERR;
-    // free_incomplete_array((void **)file_c->space, S_MAX);
-    fill_buffer("\n");
+    if (c->first_lst >= 2)
+        fill_buffer("\n");
     return (error);
 }
 
@@ -159,7 +159,8 @@ int ls_only_file(t_list *lst, t_context *c, t_file_context *file_c)
 
     if (current && store_in_buffer(current, c, file_c) == MALLOC_ERR)
         err = MALLOC_ERR;
-    fill_buffer("\n");
+    if (c->first_lst >= 2) /* if we have dir_lst after */
+        fill_buffer("\n");
     return (err);
 }
 
