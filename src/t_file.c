@@ -75,7 +75,7 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
      if (file_c) {
-        printf("%sGot file_c manage space here%s\n",GREEN, RESET);
+        // printf("%sGot file_c manage space here%s\n",GREEN, RESET);
         build_file_line(file, c, file_c);
 
         // file->line = build_file_line(file, c, file_c);
