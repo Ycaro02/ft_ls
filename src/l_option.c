@@ -135,33 +135,34 @@ static int write_size(t_file *file, int *space)
 }
 
 
-static int write_file_line(t_file *file, t_context *c, int *space)
+static int write_file_line(t_file *file, t_context *c, t_file_context *file_c)
 {
     /* display perm string and pad */
     fill_buffer(file->line[S_PERM]);
-    insert_space(space[S_PERM] - ft_strlen(file->line[S_PERM]));
+    insert_space(file_c->space[S_PERM] - ft_strlen(file->line[S_PERM]));
     /* display nb_link string and pad */
     fill_buffer_char(' ');
-    insert_space(space[S_LINK] - ft_strlen(file->line[S_LINK]));
+    insert_space(file_c->space[S_LINK] - ft_strlen(file->line[S_LINK]));
     multiple_fill_buff(file->line[S_LINK], " ", NULL, NULL);
     /* display user id/name string and pad */
     if (!has_flag(c->flag_nb, G_OPTION)) {
         fill_buffer(file->line[S_USER]);
-        insert_space(space[S_USER] - ft_strlen(file->line[S_USER]));
-        if (space[S_USER] != -1)
+        insert_space(file_c->space[S_USER] - ft_strlen(file->line[S_USER]));
+        if (file_c->space[S_USER] != -1)
             fill_buffer_char(' ');
     }
     /* display group id/name string and pad */
     fill_buffer(file->line[S_GROUP]);
-    insert_space(space[S_GROUP] - ft_strlen(file->line[S_GROUP]));
-    if (space[S_GROUP] != -1)
+    insert_space(file_c->space[S_GROUP] - ft_strlen(file->line[S_GROUP]));
+    if (file_c->space[S_GROUP] != -1)
         fill_buffer_char(' ');
     /* display size/MAJOR_MINOR string and pad */
-    write_size(file, space);
+    write_size(file, file_c->space);
     /* display date string and pad */
-    if (write_date(file, space, c->flag_nb) == MALLOC_ERR)
+    if (write_date(file, file_c->space, c->flag_nb) == MALLOC_ERR)
         return (MALLOC_ERR);
-    /* Finaly display file name */
+    if (write_file_name(file, c, file_c, file_c->space[S_NAME_QUOTE]) == MALLOC_ERR)
+        return (MALLOC_ERR);
     return (0);
 }
 
@@ -169,13 +170,11 @@ static int write_file_line(t_file *file, t_context *c, int *space)
  * HUB caller for all write functopm for l_option
  * Need to rework this to jsut display file_line
 */
-int fill_buffer_l_option(t_file file, int *space, t_context *c, t_file_context *file_c)
+int fill_buffer_l_option(t_file *file, t_context *c, t_file_context *file_c)
 {
-    int err = write_file_line(&file, c, space);
-    if (write_file_name(&file, c, file_c, space[S_NAME_QUOTE]) == MALLOC_ERR)
-            return (MALLOC_ERR);
+    int err = write_file_line(file, c, file_c);
     if (has_flag(c->flag_nb, Z_OPTION))
-        diplay_xattr_acl(&file);
+        diplay_xattr_acl(file);
     return (err);
 }
 

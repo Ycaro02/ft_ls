@@ -100,7 +100,14 @@ static int display_total_size(t_file *file, t_int8 no_file)
 
 int ls_only_file_l(t_list *lst, t_context *c, t_file_context *file_c)
 {
-    file_c->call_flag = 0;
+    // file_c->call_flag = 0; //
+    if (!file_c->space) {
+        file_c->space = malloc(sizeof(int) * S_MAX);
+        if (!file_c->space)
+            return (MALLOC_ERR);
+    }
+    ft_bzero(file_c->space, sizeof(int) * S_MAX); /* reset space array */
+   
     if (fill_l_buffer(lst, c, file_c) == MALLOC_ERR)
         return (MALLOC_ERR);
     fill_buffer("\n");
@@ -116,8 +123,11 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     t_int8 local_err = 0;
     // int r_flag = has_flag(c->flag_nb, R_OPTION); /* bool r_flag enable */
 
-    if (file_c->call_flag != 0 && file->type != DIRECTORY)
-        return (0);
+
+    // USELESS ???
+    // if (file_c->call_flag != 0 && file->type != DIRECTORY)
+    //     return (0);
+
 
 
     // display_fcontext_flag(file_c, file->name, c->flag_nb);
@@ -129,8 +139,8 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     }
     
     ft_bzero(file_c->space, sizeof(int) * S_MAX); /* reset space array */
-    lst = get_all_file_struct(file, c, file_c); /* NEED TO GIVE PTR TO FILE_C HERE */
 
+    lst = get_all_file_struct(file, c, file_c); /* Get all all file in directory */
     if (!lst && local_err == MALLOC_ERR) /* One case where int pointer error is mandatory */
         return (MALLOC_ERR);
     else if (!lst) { /* Here we use NULL return to check if directory can't be read or empty */

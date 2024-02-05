@@ -83,7 +83,7 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
     }   
     // display_fcontext_flag(file_c, file->name, c->flag_nb);
 
-     if (file_c->call_flag != 0 && l_option) {
+     if (l_option) {
         // if ()
         // printf("%sGot file_c manage space here%s\n",GREEN, RESET);
         build_file_line(file, c, file_c, symlink);

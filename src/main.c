@@ -30,7 +30,7 @@ static int ls_only_dir(t_list *dir_lst, t_context *c, t_file_context *file_c)
     int     lst_len = ft_lstsize(dir_lst), i = 0;
 
     while (current) {
-        err = fill_buffer_l_option(*(t_file *)current->content, space, c, file_c);
+        err = fill_buffer_l_option((t_file *)current->content, c, file_c);
         if (err == MALLOC_ERR) {
             break ;
         }
@@ -66,7 +66,7 @@ static void special_display_header(t_list *dir_lst, int args_found, int call_val
 /** call_ls
  * ls HUB to choice which ls version call
 */
-static void call_ls(t_list *dir_lst, t_context *c, t_file_context *file_c)
+static void call_ls(t_list *lst, t_context *c, t_file_context *file_c)
 {
     int     err = 0;
     t_int8  recursive_flag = has_flag(c->flag_nb, R_OPTION);
@@ -74,17 +74,17 @@ static void call_ls(t_list *dir_lst, t_context *c, t_file_context *file_c)
     t_int8  onlydir_flag = has_flag(c->flag_nb, D_OPTION); 
 
     if (file_c->call_flag != 0 && recursive_flag && !onlydir_flag)
-        err = search_recurcive_dir(dir_lst, c, file_c->call_flag); /* Call recurcive */
+        err = search_recurcive_dir(lst, c, file_c->call_flag); /* Call recurcive */
     else if (file_c->call_flag != 0 && l_flag && onlydir_flag)
-        err = ls_only_dir(dir_lst, c, file_c); /* Call ls D + L option*/
+        err = ls_only_dir(lst, c, file_c); /* Call ls D + L option*/
     else if (l_flag && file_c->call_flag != 0)
-        err = ls(dir_lst, c, file_c, ls_l_one_dir); /* Call ls L option */
+        err = ls(lst, c, file_c, ls_l_one_dir); /* Call ls L option */
     else if (l_flag && file_c->call_flag == 0)
-        err = ls_only_file_l(dir_lst, c, file_c);  /* For mixed argument in cmd line */
+        err = ls_only_file_l(lst, c, file_c);  /* For mixed argument in cmd line */
     else
-        err = ls(dir_lst, c, file_c, ls_one_dir); /* Call classic ls option */
+        err = ls(lst, c, file_c, ls_one_dir); /* Call classic ls option */
    
-    file_lstclear(&dir_lst, free);
+    file_lstclear(&lst, free);
     if (err == MALLOC_ERR) {
         ft_printf_fd(2, "Malloc error exit\n");
         exit(MALLOC_ERR);

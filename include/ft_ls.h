@@ -79,7 +79,7 @@ int         search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag);
 //-------------------------------
 //      l_options.c            //
 //-------------------------------
-int fill_buffer_l_option(t_file file, int *space, t_context *c, t_file_context *file_c);
+int fill_buffer_l_option(t_file *file, t_context *c, t_file_context *file_c);
 void        write_user_name(long user_id, int space, int flag_nb);
 void        write_group_name(long group_id, int space, int flag_nb);
 //-------------------------------
