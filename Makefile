@@ -53,11 +53,13 @@ LS_OUTPUT = real_ls_out
 
 FT_LS_OUTPUT = myls_out
 
-DIFF_LS = rsc/ls_diff.sh
+DIFF_LS = ./rsc/ls_diff.sh
 
-T_FLAG	= -alr
+T_FLAG = -alr
 
-T_DIR	= test
+T_DIR = test
+
+T_FLAG = -larR 
 
 all:		${NAME}
 
@@ -81,9 +83,10 @@ clean:
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
 test:	${NAME}
-			./${DIFF_LS} ${T_FLAG} ${T_DIR}
-			./${DIFF_LS} -aR ${T_DIR}
-			./${DIFF_LS} ${T_FLAG} /dev
+		./${DIFF_LS} ${T_FLAG} ${T_DIR}
+		./${DIFF_LS} -la ${T_DIR} /
+		./${DIFF_LS} -lar / /dev
+		./${DIFF_LS} -a / Makefile
 
 vtest:		${NAME}
 			valgrind ./ft_ls / -lR
