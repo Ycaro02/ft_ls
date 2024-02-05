@@ -4,18 +4,15 @@ need to check minor major padding in /dev : check on 42 computer and vm for size
 bug: ls -l /bin link at the root of directory --> DONE
 file in futur same logic for oldest file (+ 6 month) print year
 	to change date touch -d "20250805" futur,05/08/2025 -> DONE
-
 // Need to fix display nothing when no directory -> DONE
 ./ft_ls count.sh -G /proc/self . -> print all good
 ./ft_ls count.sh -G /proc/self -> don't print
 ./ft_ls count.sh -G /proc/self -l . -h
-
 need to fix this regulat file mixed with dir with d OPTION ... {
 ➜  ft_ls git:(main) ✗ ls '"ahah"' . .. acl libft out -d libft/ft_atoi.c  -> DONE
  .   ..   acl  '"ahah"'   libft   libft/ft_atoi.c   out
-
-- owerflow on itoa get size in manage column for -l need to change it-> DONE ?
-
+- owerflow on itoa get size in manage column for -l need to change it-> DONE 
+Investigate on call_flag value for -l option ./ft_ls Makefile . don't display .: -> DONE
 Acces denie gestion, stop displaying perror(opendir) -> DONE
 
 mkdir koala
@@ -24,3 +21,5 @@ need to do nothing
 
 EVERYTHINK still be ok need to replace hard display in ft_ls.c:
 ls_one_dir for call_flag == 0 ~ line 156/157
+
+need to investigate on -lt ?? diff are not ok but is with -lu or -lc -> maybe just acces time change need to check

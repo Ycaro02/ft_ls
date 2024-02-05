@@ -28,6 +28,7 @@ static int get_len_size(t_file file)
     return (max);
 }
 
+/* --------------------------------------------------------------------------------*/
 static int get_user_id_len(t_file file)
 {
     char *tmp = ft_ltoa(file.user_id);
@@ -68,6 +69,7 @@ static int get_user_name_len(t_file file)
     int nb = ft_strlen(user->pw_name);
     return (nb);
 }
+/* --------------------------------------------------------------------------------*/
 
 static int get_len_date_month(t_file file)
 {
@@ -98,7 +100,6 @@ static int get_len_date_hour(t_file file)
     ft_free_tab(tmp);
     return (nb);
 }
-
 
 static int get_len_nb_link(t_file file)
 {
@@ -144,7 +145,6 @@ static int check_malloc_err(int *array)
     return (0);
 }
 
-
 int get_minor_size(t_file file)
 {
     int ret = 0;
@@ -157,7 +157,6 @@ int get_minor_size(t_file file)
     }
     return (ret); // + 2 for ', '
 }
-
 
 int get_major_size(t_file file)
 {
@@ -179,22 +178,24 @@ int get_len_name_quote(t_file file)
     return (file.quote == NORMAL_CHAR ? 0 : 1);
 }
 
-
 int *get_all_space(t_list *lst, int flag_nb)
 {
     int *array = NULL;
     array = ft_calloc(sizeof(int), S_MAX);
     if (!array) {
-        file_lstclear(&lst, free);
+        ft_lstclear(&lst, free);
         ft_printf_fd(2, "Malloc error get all space\n");
         return (NULL);
     }
+    /* --------------------------------------------------------------------------------*/
+    /* check perm size done */
     array[S_PERM] = 10;
     int ret = check_lst_acl(lst);
     if (ret == 0)
         array[S_PERM] = 11;
     else if (ret == MALLOC_ERR)
         return (NULL);
+    /* check for group and user id/name */
     if (has_flag(flag_nb, N_OPTION)) {
         array[S_USER] = get_nb_space(lst, get_user_id_len);
         array[S_GROUP] = get_nb_space(lst, get_group_id_len);
@@ -203,14 +204,22 @@ int *get_all_space(t_list *lst, int flag_nb)
         array[S_USER] = get_nb_space(lst, get_user_name_len);
         array[S_GROUP] = get_nb_space(lst, get_group_name_len);
     }
+    /* check size, major minor */
     array[S_SIZE] = get_nb_space(lst, get_len_size);
+    /* check nb link */
     array[S_LINK] = get_nb_space(lst, get_len_nb_link);
+    /* --------------------------------------------------------------------------------*/
+    /* check date */
     array[S_MONTH] = get_nb_space(lst, get_len_date_month);
     array[S_DAY] = get_nb_space(lst, get_len_date_day);
     array[S_HOUR] = get_nb_space(lst, get_len_date_hour);
 
+    /* --------------------------------------------------------------------------------*/
+    /* Not te replique */
     array[S_MINOR_SIZE] = get_nb_space(lst, get_minor_size);
     array[S_MAJOR_SIZE] = get_nb_space(lst, get_major_size);
+    /* --------------------------------------------------------------------------------*/
+    
     array[S_NAME_QUOTE] = get_nb_space(lst, get_len_name_quote);
     
     if (check_malloc_err(array) == MALLOC_ERR)

@@ -1,44 +1,43 @@
 #include "../include/ft_ls.h"
 
-static int create_new_file(struct stat sb, t_list **new, char *str, int symlink)
+// static int parse_directory(char *str, t_list **new, int flag)
+static int parse_directory(char *str, t_list **new, t_context *c, t_file_context *file_c)
 {
-    t_file *new_file;
-    
-    new_file = fill_file_struct(&sb, str, NULL, symlink);
-    if (!new_file || !new_file->name) {
-        ft_printf_fd(2, "Malloc error\n");
-        free(new_file->name);
-        free(new_file);
-        return (MALLOC_ERR);
-    }
-    if (new_file->type == DIRECTORY)
-        ft_lstadd_back(new, ft_lstnew(new_file));
-    else {
-        free(new_file->name);
-        free(new_file);
-    }
-    return (0);
-}
-
-static int parse_directory(t_file *file, struct dirent* my_dir, t_list **new, int flag)
-{
+    t_file *new_file ;
     struct stat *sb;
-    int symlink = 0, error = 0;
-    char *str = join_parent_name(file->name, my_dir->d_name);
+    int symlink = 0, error = 0, l_option = has_flag(c->flag_nb, L_OPTION);
     
     if (!str)
         return (MALLOC_ERR);
-    sb = check_for_stat(str, flag, &symlink);
+    sb = check_for_stat(str, c->flag_nb, &symlink);
     if (!sb)
         return (0);
-    if (create_new_file(*sb, new, str, symlink) == MALLOC_ERR)
-        error = (MALLOC_ERR);
-    free(sb);
+    if (get_type(*sb) == DIRECTORY && !symlink) { /* if is directory and not symlink*/
+            if (l_option) {
+                if (!file_c->space) {
+                    file_c->space = ft_calloc(sizeof(int), S_MAX);
+                    if (!file_c->space)
+                        return (MALLOC_ERR);
+                }
+            }
+            file_c->path = str;
+            file_c->parent_path = NULL;
+            new_file = fill_file_struct(sb, symlink, c, file_c);
+            if (!new_file) {
+                free(str);
+                free(sb);
+                return (MALLOC_ERR);
+            }
+            ft_lstadd_back(new, ft_lstnew(new_file));
+    }
+    else
+        free(sb);
     free(str);
     return (error);
 }
 
-static int read_dir(t_file *file, t_list **new, int flag_nb)
+// static int recurcive_readir(t_file *file, t_list **new, int flag_nb)
+static int recurcive_readir(t_file *file, t_list **lst, t_context *c, t_file_context *file_c)
 {
     struct dirent   *my_dir = NULL;
     DIR             *dir = opendir(file->name);
@@ -48,8 +47,9 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
         return (1);
     do  {
         my_dir = readdir(dir);
-        if (my_dir && is_point_dir(my_dir->d_name, flag_nb, 1) == 1) {
-            ret = parse_directory(file, my_dir, new, flag_nb);
+        if (my_dir && is_point_dir(my_dir->d_name, c->flag_nb, 1) == 1) { /* if isn't . .. obsiously, check hiden accordate to flag*/
+            char *str = join_parent_name(file->name, my_dir->d_name);
+            ret = parse_directory(str, lst, c, file_c);
             if (ret != 0) {
                 ft_printf_fd(2, "Malloc error\n");
                 break;
@@ -60,22 +60,27 @@ static int read_dir(t_file *file, t_list **new, int flag_nb)
     return (ret);
 }
 
-static t_list *get_recurcive_dir(t_file *file, int flag_nb, t_int8 *error)
+/** get recursive dir
+ * Call recurcive_readir function and check result to update error or sort
+ * Ret: t_list *
+*/
+// static t_list *get_recurcive_dir(t_file *file, int flag_nb, t_int8 *error)
+static t_list *get_recurcive_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
-    t_list  *new = NULL;
+    t_list  *lst = NULL;
 
-    if (file->type != DIRECTORY)
+    if (file->type != DIRECTORY) /* i mean not mandatory, directory already slect before push in lst */
         return (NULL);
-    int ret = read_dir(file, &new, flag_nb) == 1;
+    int ret = recurcive_readir(file, &lst, c, file_c) == 1;
     if (ret != 0) {
         if (ret == MALLOC_ERR)
-            *error = MALLOC_ERR;
+            c->special_error = MALLOC_ERR;
         else
-            update_error(error);
+            update_error(&c->error);
         return (NULL);
     }
-    sort_lst(&new, flag_nb);
-    return (new);
+    sort_lst(&lst, c->flag_nb);
+    return (lst);
 }
 
 static int recurcive_ls(t_list *dir_lst, t_context *c, t_file_context *file_c)
@@ -87,7 +92,7 @@ static int recurcive_ls(t_list *dir_lst, t_context *c, t_file_context *file_c)
     else {
         err = ls_one_dir(dir_lst->content, c, file_c);
     }
-    if (file_c->call_flag == 1)
+    if (file_c->call_flag == 1) /* ONE TO REMOVE */
         file_c->call_flag = 2;
     if (err == MALLOC_ERR)
         return (err);
@@ -111,6 +116,7 @@ int search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag)
     int     err = 0;
     t_file_context file_c;
     file_c.idx = 0;
+    file_c.space = NULL;
     file_c.lst_len = ft_lstsize(dir_lst);
     file_c.call_flag = call_flag;
 
@@ -118,16 +124,22 @@ int search_recurcive_dir(t_list *dir_lst, t_context *c, int call_flag)
         err = recurcive_ls(dir_lst, c, &file_c);
         if (err == MALLOC_ERR)
             break ;
-        local_list = get_recurcive_dir(dir_lst->content, c->flag_nb, &c->error);
+        local_list = get_recurcive_dir(dir_lst->content, c, &file_c);
         err = safe_recurcive(local_list, c, file_c.call_flag);
-        if (file_c.call_flag == 1)
-            ++(file_c.call_flag);
-        if (c->error == MALLOC_ERR || err == MALLOC_ERR)
+        if (c->special_error == MALLOC_ERR || err == MALLOC_ERR)
             break ;
-        file_lstclear(&local_list, free);
+        ft_lstclear(&local_list, destroy_file);
+        if (file_c.call_flag == 1) /* ONE TO REMOVE */
+            ++(file_c.call_flag);
         ++(file_c.idx);
         dir_lst = dir_lst->next;
     }
-    file_lstclear(&local_list, free);
+
+    if (has_flag(c->flag_nb, L_OPTION) && file_c.space) {
+        free(file_c.space);
+        file_c.space = NULL;
+    }
+
+    ft_lstclear(&local_list, destroy_file);
     return (err);
 }

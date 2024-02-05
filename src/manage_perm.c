@@ -1,6 +1,21 @@
 #include "../include/ft_ls.h"
 
-inline static void read_write_perm(mode_t mode, char *str, int first, int second)
+/* for last x perm (other) S_IXOTH, STICKY
+        if just exec:   x
+        if just sticky: T
+        if sticky + x:  t
+        
+        for second x perm (group) S_IXGRP, GID
+        if just exec:   x
+        if just GID: S
+        if GID + x:  s
+
+        for first x perm (group) S_IXGRP, SUID
+        if just exec:   x
+        if just GID: S
+        if GID + x:  s
+*/
+static void read_write_perm(mode_t mode, char *str, int first, int second)
 {
     if (mode & first)
         str[0] = 'r';

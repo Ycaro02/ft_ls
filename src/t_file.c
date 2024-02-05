@@ -1,22 +1,11 @@
 #include "../include/ft_ls.h"
 
-/* for last x perm (other) S_IXOTH, STICKY
-        if just exec:   x
-        if just sticky: T
-        if sticky + x:  t
-        
-        for second x perm (group) S_IXGRP, GID
-        if just exec:   x
-        if just GID: S
-        if GID + x:  s
+int get_quote(t_file *file) /* old space quote for -l option */
+{
+    return (file->quote == NORMAL_CHAR ? 0 : 1);
+}
 
-        for first x perm (group) S_IXGRP, SUID
-        if just exec:   x
-        if just GID: S
-        if GID + x:  s
-    */
-
-static int fill_name_and_parent(t_file *file, char *path, char *parent)
+static int fill_name_and_quote(t_file *file, char *path, char *parent, t_file_context *file_c, int l_option)
 {
     file->name = ft_strdup(path);
     if (!file->name)
@@ -30,43 +19,26 @@ static int fill_name_and_parent(t_file *file, char *path, char *parent)
     }
     else
         file->parrent = NULL;
+    file->quote = check_for_quote(file->name);
+    if (l_option == 1)
+        file_c->space[S_NAME_QUOTE] = get_quote(file);
     return (0);
 }
 
-int check_for_quote(char *str)
+void destroy_file(void *file_ptr)
 {
-    int quote = quotes_required(str);
-    return (quote > NOEFFECT_CHAR ? quote : NORMAL_CHAR);
+    t_file *file = file_ptr;
+    if (!file)
+        return ;
+    if (file->name)
+        free(file->name);
+    if (file->parrent)
+        free(file->parrent);
+    if (file->line)
+        free_incomplete_array((void **) file->line, S_MAJOR_SIZE + 1);
+    free(file_ptr);
 }
 
-/** 
- * 
-*/
-// static int update_space_max(int idx, int test_value)
-// {
-
-// }
-
-// static void update_max_len_by_field(t_file *file, int *space, int flag)
-// {
-//     if (has_flag(flag_nb, N_OPTION)) {
-//          get_user_id_len;
-//          get_group_id_len;
-//     } 
-//     else {
-//          get_user_name_len;
-//          get_group_name_len;
-//     }
-//      get_len_size;
-//      get_len_nb_link;
-//      get_len_date_month;
-//      get_len_date_day;
-//      get_len_date_hour;
-
-//      get_minor_size;
-//      get_major_size;
-//      get_len_name_quote;
-// }
 /*
     Need to change all l option storage logic, if l_option build line here
         - create line structure 
@@ -77,15 +49,29 @@ int check_for_quote(char *str)
     like getpwuid ...
 */
 /* int * space */
-t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
+
+/**
+ * Call in: 
+ *          default_file_struct -> check_args -> np
+ *          check_args -> np
+ *          check_for_fill_struct in main ls function one -> np
+ *          create_new_file(recurcive routine) -> like cmd args create
+ *          display_symlink -> np for this 
+*/
+/* maybe we can remove parent and path and fill it after call, 3 call in parse, one in recurcive and one in write name no realy a pain */
+t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_context *file_c)
 {
     t_file *file;
-
+    int l_option = has_flag(c->flag_nb, L_OPTION);
+ 
     file = ft_calloc(sizeof(t_file), 1);
-    if (!file)
+    if (!file) {
+        free(sb);
         return (NULL);
+    }
     file->total_size = -1;
     file->type = symlink == TRUE ? SYMLINK : get_type(*sb);
+
     file->perm = sb->st_mode;
     file->size = sb->st_size;
     file->nb_link = sb->st_nlink;
@@ -96,19 +82,14 @@ t_file *fill_file_struct(struct stat *sb, char *path, char *parent, int symlink)
     file->group_id = sb->st_gid;
     file->nb_block = sb->st_blocks;
     file->rdev = sb->st_rdev;
-    /*
-        if (l_option) ??
-        update_max_len_by_field();
-    */
-    // if (size type > space[type])
-        // update
-
-    if (fill_name_and_parent(file, path, parent) == MALLOC_ERR)
+    if (fill_name_and_quote(file, file_c->path, file_c->parent_path, file_c, l_option) == MALLOC_ERR) {
+        ft_printf_fd(2, "Malloc error fill file struct\n");
+        free(sb);
         return (NULL);
-    file->quote = check_for_quote(file->name);
+    }   
+    // display_fcontext_flag(file_c, file->name, c->flag_nb);
+     if (l_option)
+        build_file_line(file, c, file_c, symlink);
+    free(sb);
     return (file);
 }
-
-// #if defined __USE_MISC || defined __USE_XOPEN
-    // S_ISVTX /* sticky bits*/
-// #endif

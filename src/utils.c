@@ -1,5 +1,29 @@
 #include "../include/ft_ls.h"
 
+char get_type(struct stat sb)
+{
+    switch (sb.st_mode & S_IFMT) 
+    {
+        case S_IFBLK:  
+            return (BLOCK);
+        case S_IFCHR:  
+            return (CHARACTER);
+        case S_IFDIR:
+            return (DIRECTORY);
+        case S_IFIFO:  
+            return (FIFO);
+        case S_IFLNK:  
+            return (SYMLINK);
+        case S_IFREG:  
+            return (REGULAR);
+        case S_IFSOCK: 
+            return (SOCKET);
+        default:
+            return (UNDIFINED);
+    }
+    return (UNDIFINED);
+}
+
 /** last_char_is_slash
  * Basic check if last char is '/'
 */
@@ -82,33 +106,14 @@ int is_point_dir(char *path, int flag_nb, int display)
     return (1);
 }
 
-/** file_lstclear
- * Clear t_file lst
- * Can be removed to create void destroy_tfile(void *) and give it to ft_lstclear
+/** display_fcontext_flag
+ * Basic debug function to display file_context
 */
-void	file_lstclear(t_list **lst, void (*del)(void*))
+void display_fcontext_flag(t_file_context *file_c, char *str, int flag) 
 {
-	t_list	*tmp = NULL, *current = NULL;
-    t_file  *file = NULL;
-
-	if (del == NULL || lst == NULL || *lst == NULL)
-		return ;
-	current = *lst;
-	tmp = current;
-	while (tmp != NULL) {
-		tmp = current->next;
-        if (current->content) {
-            file = current->content;
-            del(file->name);
-            if (file->parrent)
-                del(file->parrent);
-            del(current->content);
-        }
-        // if (current->content)
-		free(current);
-		current = tmp;
-	}
-	*lst = NULL;
+    ft_printf_fd(2, "%sCall: [%d]%s idx: %s[%d]%s\n", RED, file_c->call_flag, RESET, YELLOW, file_c->idx, RESET);
+    display_flags(flag);
+    ft_printf_fd(2, "for |%s%s%s|\n",CYAN, str, RESET);
 }
 
 /** get_stdout_width

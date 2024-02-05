@@ -19,7 +19,9 @@ void free_incomplete_array(void **array, int max)
 {
     if (!array || !(*array) || max < 0)
         return ;
-    for (int i = 0; i < max; ++i)
-        free(array[i]);
+    for (int i = 0; i < max; ++i) {
+        if (array[i])
+           free(array[i]);
+    }
     free(array);
 }

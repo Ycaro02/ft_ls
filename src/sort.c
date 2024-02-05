@@ -1,52 +1,6 @@
 #include "../include/ft_ls.h"
 
-/** safe_reverse_lst
- * Classic reverse lst content
- * MOVE TO LIST LIB
-*/
-void safe_reverse_lst(t_list **lst, int flag_nb)
-{
-    t_list *prev = NULL, *next = NULL, *current = *lst;
-    
-    if (has_flag(flag_nb, F_OPTION))
-        return ;
-    while (current) {
-        next = current->next; /* save next ptr */
-        current->next = prev; /* reverse */
-        /* move ptr */
-        prev = current;
-        current = next;
-    }    
-    *lst = prev;
-    return ;
-}
-
-/**
-* parse special char
-*/
-int is_special_char(char c)
-{
-    /* all no care char */
-    if (c == '@' || c == '%' || c == '-'\
-        || c == '_' || c == '+' || c == '.' || c == ',' || c == ':')
-        return (NOEFFECT_CHAR);
-    /* special rule */
-    if ( c == '{' || c == '}')
-        return (BRACKET_CHAR);
-    if (c == '#')
-        return (DIEZE_CHAR);
-    if (c == '\'')
-        return (ADD_DOUBLE_QUOTE_CHAR);
-    /* alway add quote. special rule for ' or "*/
-    if (c == '!' || c == '$' || c == '^' || c == '&' || c == '*' || c == '('\
-        || c == ')' || c == '=' || c == '<' || c == '>' || c == '?' || c == ';'\
-        || c == '[' || c == ']' || c == '`' || c == '~' || c == '\"')
-            return (ADD_SIMPLE_QUOTE_CHAR);
-    return (NORMAL_CHAR);
-}
-
-
-int special_strcmp(char *s1, char *s2, int flag)
+static int special_strcmp(char *s1, char *s2, int flag)
 {
     char first = 0;
     char second = 0;
@@ -92,7 +46,7 @@ int special_strcmp(char *s1, char *s2, int flag)
     return (s1[i] - s2[j]);
 }
 
-int special_char_gestion(char *current, char* min)
+static int special_char_gestion(char *current, char* min)
 {
     /*  if is same letter no case sentive no special char exemple: ..a == _A */
     int ret = special_strcmp(current, min, TOKEN_NO_CASE_SENSITIVE); 
@@ -112,7 +66,7 @@ int special_char_gestion(char *current, char* min)
     return (0);
 }
 
-void sort_by_name(t_list *lst, int flag_nb)
+static void sort_by_name(t_list *lst, int flag_nb)
 {
     if (!lst)
         return ;
@@ -163,7 +117,7 @@ static t_list *get_min_value(t_list *min, t_list *lst, char option)
     return (min);
 }
 
-void sort_by_time(t_list *lst, int flag_nb, char option)
+static void sort_by_time(t_list *lst, int flag_nb, char option)
 {
     if (!lst)
         return ;
@@ -183,6 +137,30 @@ void sort_by_time(t_list *lst, int flag_nb, char option)
 }
 
 
+/** safe_reverse_lst
+ * Classic reverse lst content
+ * MOVE TO LIST LIB
+*/
+void safe_reverse_lst(t_list **lst, int flag_nb)
+{
+    t_list *prev = NULL, *next = NULL, *current = *lst;
+    
+    if (has_flag(flag_nb, F_OPTION))
+        return ;
+    while (current) {
+        next = current->next; /* save next ptr */
+        current->next = prev; /* reverse */
+        /* move ptr */
+        prev = current;
+        current = next;
+    }    
+    *lst = prev;
+    return ;
+}
+
+/** sort lst HUB
+ * Check flag and sort in consequence
+*/
 void sort_lst(t_list **lst, int flag_nb)
 {
     if (has_flag(flag_nb, F_OPTION))

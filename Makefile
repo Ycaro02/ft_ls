@@ -23,16 +23,16 @@ SRCS	=	src/main.c\
 			src/ft_ls.c\
 			src/t_file.c\
 			src/l_option.c\
-			src/l_option_utils.c\
 			src/time_gestion.c\
 			src/sort.c\
 			src/buffer.c\
 			src/manage_column.c\
 			src/list_xattr.c\
-			src/manage_space.c\
 			src/build_column.c\
 			src/manage_perm.c\
-			src/write_file_name.c
+			src/write_file_name.c\
+			src/quote_gestion.c\
+			src/file_line.c\
 
 
 OBJ = $(SRCS:.c=.o)
@@ -47,16 +47,19 @@ LIB_LIST = libft/list/linked_list.a
 
 LIBACL = rsc/acl/libacl.a
 
-
 LS_OUTPUT = real_ls_out
 
 FT_LS_OUTPUT = myls_out
 
-DIFF_LS = rsc/ls_diff.sh
+DIFF_LS = ./rsc/ls_diff.sh
 
-T_FLAG	= -alr
+T_FLAG = -alr
 
-T_DIR	= test
+T_DIR = test
+
+T_FLAG = -larR 
+
+VALGRIND_TEST = ./rsc/vtest.sh
 
 all:		${NAME}
 
@@ -80,10 +83,13 @@ clean:
 			@echo "\033[7;33m -----  Cleaning done  ----- \033[0m\n"
 
 test:	${NAME}
-			./${DIFF_LS} ${T_FLAG} ${T_DIR}
+		./${DIFF_LS} ${T_FLAG} ${T_DIR}
+		./${DIFF_LS} -la ${T_DIR} /
+		./${DIFF_LS} -lar / /dev
+		./${DIFF_LS} -a / Makefile
 
 vtest:		${NAME}
-			valgrind ./ft_ls / -lR
+			./${VALGRIND_TEST}
 
 fclean:		clean
 			@make -s -C libft fclean

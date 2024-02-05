@@ -17,14 +17,12 @@ static int display_acl(t_file file, char *str, char* full_name)
     acl_t acl = acl_get_file(full_name, ACL_TYPE_ACCESS);
     char *text = NULL;
     
-    if (!acl) {
-        ft_printf_fd(2, "ACL NULL for %s\n", full_name);
+    if (!acl || !file.line || !file.line[S_USER] || !file.line[S_GROUP]) {
+        ft_printf_fd(2, "ACL or file line NULL for %s\n", full_name);
         return (-1);
     }
     multiple_fill_buff(str, "\n# owner : ", NULL, NULL);
-    write_user_name(file.user_id, -1, 0);
-    multiple_fill_buff("\n", "# group : ", NULL, NULL);
-    write_group_name(file.group_id, -1, 0);
+    multiple_fill_buff(file.line[S_USER], "\n", "# group : ", file.line[S_GROUP]);
     text = acl_to_text(acl, NULL);
     multiple_fill_buff("\n", text, NULL, NULL);
     acl_free(text);
@@ -81,7 +79,8 @@ int diplay_xattr_acl(t_file *file)
     while (i < listen_len) {
         if (i == 0) {
             fill_buffer("\n\n# file :");
-            write_file_name(*file, COLOR_OPTION, -1);
+            // write_file_name(*file, COLOR_OPTION, -1);
+            (void)file;     /* NEED TO DISPLAY FILE HERE */
             fill_buffer("\n");
             // multiple_fill_buff("\n\n# file : ", file->name, "\n", NULL);
         }

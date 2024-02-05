@@ -1,14 +1,5 @@
 #include "../include/ft_ls.h"
 
-/** display_fcontext_flag
- * Basic debug function to display file_context
-*/
-void display_fcontext_flag(t_file_context *file_c, char *str, int flag) {
-    ft_printf_fd(2, "%sCall: [%d]%s idx: %s[%d]%s\n", RED, file_c->call_flag, RESET, YELLOW, file_c->idx, RESET);
-    display_flags(flag);
-    ft_printf_fd(2, "for |%s%s%s|\n",CYAN, str, RESET);
-}
-
 /**
  * Hardcode display for -d need to refact (use manage Column)
 */
@@ -96,12 +87,21 @@ static int display_total_size(t_file *file, t_int8 no_file)
     return (0);
 }
 
-
-int ls_only_file_L(t_list *lst, int flag_nb)
+int ls_only_file_l(t_list *lst, t_context *c, t_file_context *file_c)
 {
-    if (fill_l_buffer(lst, flag_nb, 0) == MALLOC_ERR)
-        return (MALLOC_ERR);
-    return (0);
+    int error = 0;
+    if (!file_c->space) {
+        file_c->space = malloc(sizeof(int) * S_MAX);
+        if (!file_c->space)
+            return (MALLOC_ERR);
+    }
+    ft_bzero(file_c->space, sizeof(int) * S_MAX); /* reset space array */
+   
+    if (fill_l_buffer(lst, c, file_c) == MALLOC_ERR)
+        error = MALLOC_ERR;
+    // free_incomplete_array((void **)file_c->space, S_MAX);
+    fill_buffer("\n");
+    return (error);
 }
 
 /** ls_l_one_dir : ls_function, give in argument to ls() and call manualy in recurcive_ls()
@@ -111,11 +111,21 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
     t_list *lst = NULL;
     t_int8 local_err = 0;
-    // int r_flag = has_flag(c->flag_nb, R_OPTION); /* bool r_flag enable */
 
-    if (file_c->call_flag != 0 && file->type != DIRECTORY)
-        return (0);
-    lst = get_all_file_struct(file, c->flag_nb, &local_err); /* NEED TO GIVE PTR TO FILE_C HERE */
+    // USELESS ???
+    // if (file_c->call_flag != 0 && file->type != DIRECTORY)
+    //     return (0);
+    // display_fcontext_flag(file_c, file->name, c->flag_nb);
+
+    if (!file_c->space) {
+        file_c->space = malloc(sizeof(int) * S_MAX);
+        if (!file_c->space)
+            return (MALLOC_ERR);
+    }
+    
+    ft_bzero(file_c->space, sizeof(int) * S_MAX); /* reset space array */
+
+    lst = get_all_file_struct(file, c, file_c); /* Get all all file in directory */
     if (!lst && local_err == MALLOC_ERR) /* One case where int pointer error is mandatory */
         return (MALLOC_ERR);
     else if (!lst) { /* Here we use NULL return to check if directory can't be read or empty */
@@ -135,13 +145,12 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     if (display_total_size(file, (lst == NULL)) == MALLOC_ERR)
         return (MALLOC_ERR);
 
-    if (lst && fill_l_buffer(lst, c->flag_nb, file_c->call_flag) == MALLOC_ERR)
+    if (lst && fill_l_buffer(lst, c, file_c) == MALLOC_ERR)
             return (MALLOC_ERR);
     if (file_c->call_flag == 1)
         ++(file_c->call_flag);
     return (0);
 }
-
 
 int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 {
@@ -151,7 +160,7 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
 
     if (has_flag(c->flag_nb, D_OPTION))
         return (hard_display_d(file));
-
+    
     // printf("%sCallC: %d idx: %d for %s%s\n", CYAN, call_flag, index, file->name, RESET);
     /* really ugly need to apply mange column here but still working */
     if (file_c->call_flag == 0) {
@@ -159,11 +168,12 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
         display_quote(quote);
         fill_buffer(file->name);
         display_quote(quote);
-        // store_in_buffer(lst, c->flag_nb); // maybe just that
+        if (file_c->idx == file_c->lst_len - 1)
+            fill_buffer("\n\n");
         return (0);
     }
 
-    lst = get_all_file_struct(file, c->flag_nb, &local_err);
+    lst = get_all_file_struct(file, c, file_c);
     if (!lst && local_err == MALLOC_ERR)
         return (MALLOC_ERR);
     else if (!lst) {
@@ -180,20 +190,8 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     }
 
     display_dir_header(*file, file_c, c->flag_nb, (lst == NULL));
-    if (lst && store_in_buffer(lst, c->flag_nb) == MALLOC_ERR)
+    if (lst && store_in_buffer(lst, c, file_c) == MALLOC_ERR)
         return (MALLOC_ERR);
     return (0);
 }
 
-/**
- * Basic display quote
-*/
-void display_quote(int quote)
-{
-    if (quote == ADD_SIMPLE_QUOTE_CHAR)
-        fill_buffer_char('\'');
-    else if (quote == ADD_DOUBLE_QUOTE_CHAR)
-        fill_buffer_char('\"');
-    else
-        fill_buffer_char(' ');
-}
