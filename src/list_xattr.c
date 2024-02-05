@@ -17,14 +17,15 @@ static int display_acl(t_file file, char *str, char* full_name)
     acl_t acl = acl_get_file(full_name, ACL_TYPE_ACCESS);
     char *text = NULL;
     
-    if (!acl) {
-        ft_printf_fd(2, "ACL NULL for %s\n", full_name);
+    if (!acl || !file.line || !file.line[S_USER] || !file.line[S_GROUP]) {
+        ft_printf_fd(2, "ACL or file line NULL for %s\n", full_name);
         return (-1);
     }
     multiple_fill_buff(str, "\n# owner : ", NULL, NULL);
-    write_user_name(file.user_id, -1, 0); // NEED TO REPLACE WRITE USER AND GROUP HERE
-    multiple_fill_buff("\n", "# group : ", NULL, NULL);
-    write_group_name(file.group_id, -1, 0);
+    multiple_fill_buff(file.line[S_USER], "\n", "# group : ", file.line[S_GROUP]);
+    // write_user_name(file.user_id, -1, 0); // NEED TO REPLACE WRITE USER AND GROUP HERE
+    // multiple_fill_buff("\n", "# group : ", NULL, NULL);
+    // write_group_name(file.group_id, -1, 0);
     text = acl_to_text(acl, NULL);
     multiple_fill_buff("\n", text, NULL, NULL);
     acl_free(text);

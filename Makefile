@@ -55,14 +55,13 @@ FT_LS_OUTPUT = myls_out
 
 DIFF_LS = ./rsc/ls_diff.sh
 
-
-ALL_FLAG = -latrRzucgfdnG
-
 T_FLAG = -alr
 
 T_DIR = test
 
 T_FLAG = -larR 
+
+VALGRIND_TEST = ./rsc/vtest.sh
 
 all:		${NAME}
 
@@ -92,10 +91,7 @@ test:	${NAME}
 		./${DIFF_LS} -a / Makefile
 
 vtest:		${NAME}
-			valgrind ./ft_ls . -lartR
-			valgrind ./ft_ls . ${ALL_FLAG}
-			valgrind ./ft_ls / /dev /proc -lart
-			valgrind ./ft_ls ls test/'"ahah"' . .. rsc/acl libft test/out -d libft/ft_atoi.c
+			./${VALGRIND_TEST}
 
 fclean:		clean
 			@make -s -C libft fclean

@@ -10,6 +10,75 @@ inline static void insert_space(int nb)
     }
 }
 
+static int write_date(t_file *file, int* space, int flag_nb)
+{
+    char **tmp = NULL;
+    int i = 0;
+    int j = S_MONTH;
+
+    if (has_flag(flag_nb, U_OPTION))
+        tmp = get_printable_date(file->last_access);
+    else if (has_flag(flag_nb, C_OPTION))
+        tmp = get_printable_date(file->last_status_change);
+    else
+        tmp = get_printable_date(file->last_change);
+    if (!tmp) {
+        ft_printf_fd(2, "Malloc error\n");
+        return (MALLOC_ERR);
+    }
+    while (tmp[i]) {
+        insert_space(space[j] - ft_strlen(tmp[i]));
+        fill_buffer(tmp[i]);
+        fill_buffer_char(' ');
+        i++;
+        j++;
+    }
+    ft_free_tab(tmp);
+    return (0);
+}
+
+static int write_size(t_file *file, int *space)
+{
+    // printf("name %s size: %d minor:%d major: %d\n", file->name, space[S_SIZE], space[S_MINOR_SIZE], space[S_MAJOR_SIZE]);
+    if (file->type == CHARACTER || file->type == BLOCK) {
+        // printf("for %s size :%ld\n", file->name, (space[S_MAJOR_SIZE] - ft_strlen(size)));
+        if (space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] > space[S_SIZE]) {
+            insert_space(space[S_MAJOR_SIZE] - ft_strlen(file->line[S_MAJOR_SIZE]));
+            fill_buffer(file->line[S_MAJOR_SIZE]);
+            fill_buffer(", ");
+            insert_space((space[S_MINOR_SIZE])- ft_strlen(file->line[S_MINOR_SIZE]));
+            fill_buffer(file->line[S_MINOR_SIZE]);
+        }
+        else {
+            int pad_len = space[S_MINOR_SIZE] + ft_strlen(file->line[S_MAJOR_SIZE]);
+            insert_space(space[S_SIZE] - pad_len);
+            fill_buffer(file->line[S_MAJOR_SIZE]);
+            fill_buffer(", ");
+            insert_space(space[S_MINOR_SIZE] - ft_strlen(file->line[S_MINOR_SIZE]) - 2);
+            fill_buffer(file->line[S_MINOR_SIZE]);
+        }
+        fill_buffer_char(' ');
+        // ft_printf_fd(2, "MINOR :%d\n", minor(file->rdev));
+        // ft_printf_fd(2, "MAJOR :%d\n", major(file->rdev));
+        return (0);
+    }
+    else { /* just classic size */
+        if (space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] != 0\
+            && space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] + 2 > space[S_SIZE])
+            insert_space(space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] + 2 - ft_strlen(file->line[S_SIZE]));
+        else {
+            // if ((int)ft_strlen(file->line[S_SIZE]) != space[S_SIZE])
+            // if ((int)ft_strlen(file->line[S_SIZE]) == space[S_SIZE])
+                // insert_space(space[S_SIZE] - 2 - ft_strlen(file->line[S_SIZE])); // DEVIL - 1
+            // else
+                insert_space(space[S_SIZE] - ft_strlen(file->line[S_SIZE])); // DEVIL - 1
+        }
+        fill_buffer(file->line[S_SIZE]);
+    }
+    fill_buffer_char(' ');
+    return (0);
+}
+
 void write_user_name(long user_id, int space, int flag_nb)
 {
     if (has_flag(flag_nb, N_OPTION)) {
@@ -64,75 +133,6 @@ void write_group_name(long group_id, int space, int flag_nb)
         fill_buffer_char(' ');
 }
 
-static int write_date(t_file *file, int* space, int flag_nb)
-{
-    char **tmp = NULL;
-    int i = 0;
-    int j = S_MONTH;
-
-    if (has_flag(flag_nb, U_OPTION))
-        tmp = get_printable_date(file->last_access);
-    else if (has_flag(flag_nb, C_OPTION))
-        tmp = get_printable_date(file->last_status_change);
-    else
-        tmp = get_printable_date(file->last_change);
-    if (!tmp) {
-        ft_printf_fd(2, "Malloc error\n");
-        return (MALLOC_ERR);
-    }
-    while (tmp[i]) {
-        insert_space(space[j] - ft_strlen(tmp[i]));
-        fill_buffer(tmp[i]);
-        fill_buffer_char(' ');
-        i++;
-        j++;
-    }
-    ft_free_tab(tmp);
-    return (0);
-}
-
-
-static int write_size(t_file *file, int *space)
-{
-    // printf("name %s size: %d minor:%d major: %d\n", file->name, space[S_SIZE], space[S_MINOR_SIZE], space[S_MAJOR_SIZE]);
-    if (file->type == CHARACTER || file->type == BLOCK) {
-        // printf("for %s size :%ld\n", file->name, (space[S_MAJOR_SIZE] - ft_strlen(size)));
-        if (space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] > space[S_SIZE]) {
-            insert_space(space[S_MAJOR_SIZE] - ft_strlen(file->line[S_MAJOR_SIZE]));
-            fill_buffer(file->line[S_MAJOR_SIZE]);
-            fill_buffer(", ");
-            insert_space((space[S_MINOR_SIZE])- ft_strlen(file->line[S_MINOR_SIZE]));
-            fill_buffer(file->line[S_MINOR_SIZE]);
-        }
-        else {
-            int pad_len = space[S_MINOR_SIZE] + ft_strlen(file->line[S_MAJOR_SIZE]);
-            insert_space(space[S_SIZE] - pad_len);
-            fill_buffer(file->line[S_MAJOR_SIZE]);
-            fill_buffer(", ");
-            insert_space(space[S_MINOR_SIZE] - ft_strlen(file->line[S_MINOR_SIZE]) - 2);
-            fill_buffer(file->line[S_MINOR_SIZE]);
-        }
-        fill_buffer_char(' ');
-        // ft_printf_fd(2, "MINOR :%d\n", minor(file->rdev));
-        // ft_printf_fd(2, "MAJOR :%d\n", major(file->rdev));
-        return (0);
-    }
-    else { /* just classic size */
-        if (space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] != 0\
-            && space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] + 2 > space[S_SIZE])
-            insert_space(space[S_MAJOR_SIZE] + space[S_MINOR_SIZE] + 2 - ft_strlen(file->line[S_SIZE]));
-        else {
-            // if ((int)ft_strlen(file->line[S_SIZE]) != space[S_SIZE])
-            // if ((int)ft_strlen(file->line[S_SIZE]) == space[S_SIZE])
-                // insert_space(space[S_SIZE] - 2 - ft_strlen(file->line[S_SIZE])); // DEVIL - 1
-            // else
-                insert_space(space[S_SIZE] - ft_strlen(file->line[S_SIZE])); // DEVIL - 1
-        }
-        fill_buffer(file->line[S_SIZE]);
-    }
-    fill_buffer_char(' ');
-    return (0);
-}
 
 
 static int write_file_line(t_file *file, t_context *c, t_file_context *file_c)

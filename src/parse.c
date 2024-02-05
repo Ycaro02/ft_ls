@@ -7,18 +7,18 @@ static t_file   *default_file_struct(t_context *c, t_file_context *file_c)
     char            *point_dir = ".";
     struct stat     *sb = check_for_stat(point_dir, c->flag_nb, &symlink);
 
-
+    (void)l_option;
     if (!sb)
         return (NULL);
     file_c->path = point_dir;
     file_c->parent_path = NULL;
-    if (l_option) {
-        file_c->space = ft_calloc(sizeof(int), S_MAX);
-        if (!file_c->space) {
-            free(sb);
-            return (NULL);
-        }
-    }
+    // if (l_option) {
+    //     file_c->space = ft_calloc(sizeof(int), S_MAX);
+    //     if (!file_c->space) {
+    //         free(sb);
+    //         return (NULL);
+    //     }
+    // }
 
     file = fill_file_struct(sb, symlink, c, file_c);
     if (!file) {
