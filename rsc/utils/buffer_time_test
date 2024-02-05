@@ -1,17 +1,27 @@
 
 8000 size 2000 print: ./ft_ls -G .. ../.. -R 2.58s user 0.87s system 99% cpu 3.450 total
 
-10000 size 5000 print: ./ft_ls -G .. ../.. -R 2.56s user 0.66s system 99% cpu 3.223 total
-
 20000 size 10000 print: ./ft_ls -G .. ../.. -R 2.73s user 0.84s system 99% cpu 3.567 total
 
 2000 size 400 print: ./ft_ls -G .. ../.. -R 2.64s user 1.31s system 99% cpu 3.952 total
 
-WITH new optimisation 
+KEEP 10000 5000
 
-10000 size 5000 print: ./ft_ls .. ../.. -R  2.46s user 0.57s system 99% cpu 3.029 total
+10000 size 5000 print:  {
+CLASSIC
+./ft_ls -G .. ../.. -R 2.56s user 0.66s system 99% cpu 3.223 total
 MIN
-./ft_ls .. ../.. -Rl  5.61s user 2.24s system 99% cpu 7.864 total
-
+./ft_ls .. ../.. -Rl  8.89s user 2.37s system 99% cpu 11.292 total
 MAX
-./ft_ls .. ../.. -Rl  6.38s user 1.68s system 99% cpu 8.078 total
+./ft_ls .. ../.. -Rl  9.34s user 2.09s system 99% cpu 11.467 total
+}
+
+WITH new optimisation 
+10000 size 5000 print{
+CLASSIC R
+./ft_ls .. ../.. -R  2.46s user 0.57s system 99% cpu 3.029 total
+MIN RL
+./ft_ls .. ../.. -Rl  5.61s user 2.24s system 99% cpu 7.864 total
+MAX RL
+./ft_ls .. ../.. -Rl  6.51s user 1.69s system 99% cpu 8.225 total
+} 
