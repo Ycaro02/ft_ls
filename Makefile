@@ -6,13 +6,15 @@
 #    By: nfour <nfour@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/12 16:33:38 by nfour             #+#    #+#              #
-#    Updated: 2024/02/06 11:38:00 by nfour            ###   ########.fr        #
+#    Updated: 2024/02/06 12:51:33 by nfour            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC		= gcc
 
-CFLAGS	= -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror -g
+
+# CFLAGS	= -Wall -Wextra -Werror -g -fsanitize=address
 
 SRCS	=	src/main.c\
 			src/basic_flag_gestion.c\

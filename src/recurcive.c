@@ -10,8 +10,10 @@ static int parse_directory(char *str, t_list **new, t_context *c, t_file_context
     if (!str)
         return (MALLOC_ERR);
     sb = check_for_stat(str, c->flag_nb, &symlink);
-    if (!sb)
+    if (!sb) {
+        free(str);
         return (0);
+    }
     if (get_type(*sb) == DIRECTORY && !symlink) { /* if is directory and not symlink*/
             if (l_option) {
                 if (!file_c->space) {
@@ -53,9 +55,11 @@ static int recurcive_readir(t_file *file, t_list **lst, t_context *c, t_file_con
             char *str = join_parent_name(file->name, my_dir->d_name);
             ret = parse_directory(str, lst, c, file_c);
             if (ret != 0) {
+                free(str);
                 ft_printf_fd(2, "Malloc error\n");
                 break;
             }
+            // free(str);
         }
     } while (my_dir != NULL);
     closedir(dir);

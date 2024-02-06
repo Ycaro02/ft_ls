@@ -70,9 +70,16 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
         return (NULL);
     }
     file->total_size = -1;
-    
-    file->type = symlink == TRUE ? SYMLINK : get_type(*sb);
 
+    if (!sb) {
+        if (fill_name_and_quote(file, file_c->path, file_c->parent_path, file_c, l_option) == MALLOC_ERR)
+            return (NULL);
+        if (l_option)
+            build_file_line(file, c, file_c, -2);
+        return (file);
+    }
+
+    file->type = symlink == TRUE ? SYMLINK : get_type(*sb);
     file->perm = sb->st_mode;
     file->size = sb->st_size;
     file->nb_link = sb->st_nlink;

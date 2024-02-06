@@ -103,11 +103,26 @@ static int update_date_value(t_file *file, int *space, int symlink) /* need to t
     return (0);
 }
 
-/* if symlink == -1 don't update space */
+/* if symlink == -1 don't update space, -2 for special no x perm */
 int build_file_line(t_file *file, t_context *c, t_file_context *file_c, int symlink)
 {
     // int max = S_MINOR_SIZE;
     file->line = ft_calloc(sizeof(char *), S_MAJOR_SIZE + 1);
+    if (!file->line)
+        return (MALLOC_ERR);
+
+    if (symlink == -2) {
+        file->type = -2;
+        file->line[S_PERM] = ft_strdup("??????????");
+        file->line[S_GROUP] = ft_strdup("?");
+        file->line[S_USER] = ft_strdup("?");
+        file->line[S_LINK] = ft_strdup("?");
+        file->line[S_SIZE] = ft_strdup("?            ?");
+        ft_bzero(file_c->space, sizeof(int) * S_MAX);
+        file_c->space[S_MONTH] = 5;
+        return (0);
+    }
+
     file->line[S_PERM] = get_perm_string(file, file_c->space, symlink);
     if (has_flag(c->flag_nb, N_OPTION)) {
         file->line[S_USER] =  update_ltoa_value(file->user_id, file_c->space, S_USER, symlink);

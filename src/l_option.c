@@ -16,6 +16,9 @@ static int write_date(t_file *file, int* space, int flag_nb)
     int i = 0;
     int j = S_MONTH;
 
+    if (file->type == -2) {
+        multiple_fill_buff(file->line[S_DAY], file->line[S_MONTH], file->line[S_HOUR], NULL);
+    }
     if (has_flag(flag_nb, U_OPTION))
         tmp = get_printable_date(file->last_access);
     else if (has_flag(flag_nb, C_OPTION))
@@ -103,7 +106,7 @@ static int write_file_line(t_file *file, t_context *c, t_file_context *file_c)
     /* display size/MAJOR_MINOR string and pad */
     write_size(file, file_c->space);
     /* display date string and pad */
-    if (write_date(file, file_c->space, c->flag_nb) == MALLOC_ERR)
+    if (file->type != -2 && write_date(file, file_c->space, c->flag_nb) == MALLOC_ERR)
         return (MALLOC_ERR);
     if (write_file_name(file, c, file_c, file_c->space[S_NAME_QUOTE]) == MALLOC_ERR)
         return (MALLOC_ERR);

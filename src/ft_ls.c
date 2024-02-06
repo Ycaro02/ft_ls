@@ -130,6 +130,7 @@ int ls_l_one_dir(t_file *file, t_context *c, t_file_context *file_c)
         return (MALLOC_ERR);
     else if (!lst) { /* Here we use NULL return to check if directory can't be read or empty */
         if (c->error == 1) {
+            // printf("REJECT IN LS L ONE DIR\n");
             multiple_fill_buff("\nft_ls: cannot open directory '"\
                 , file->name, "': Permission denied", NULL);
             if (!has_flag(c->flag_nb, R_OPTION)){
@@ -174,7 +175,7 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
     if (has_flag(c->flag_nb, D_OPTION))
         return (hard_display_d(file));
     
-    // printf("%sCallC: %d idx: %d for %s%s\n", CYAN, call_flag, index, file->name, RESET);
+    // printf("%sCallC: %d idx: %d for %s%s\n", CYAN, file_c->call_flag, file_c->idx, file->name, RESET);
     /* really ugly need to apply mange column here but still working */
 
     lst = get_all_file_struct(file, c, file_c);
@@ -182,6 +183,7 @@ int ls_one_dir(t_file *file, t_context *c, t_file_context *file_c)
         return (MALLOC_ERR);
     else if (!lst) {
         if (c->error == 1) {
+            printf("REJECT IN LS ONE DIR\n");
             multiple_fill_buff("\nft_ls: cannot open directory '"\
                 , file->name, "': Permission denied", NULL);
             if (!has_flag(c->flag_nb, R_OPTION)){

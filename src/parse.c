@@ -67,19 +67,13 @@ static int  check_args(char *path, t_args *arg, t_int8 *found)
     if (!file)
         return (MALLOC_ERR);
     if (is_directory){
-        // int open = try_opendir(file->name, &arg->c);
-        // if (open == FALSE) {
-        //     *found = 1; /* signal we found another file but can't  be acces*/
-        //     free(arg->file_c.space);
-        //     destroy_file(file);
-        //     return (0);
-        // }
         ft_lstadd_back(&arg->dir_lst, ft_lstnew(file));
     }
     else {
         *found = 1; /* signal we found another file not directory */
         ft_lstadd_back(&arg->simple_file, ft_lstnew(file));
     }
+
     // free(sb);
     return (0);
 }
@@ -114,7 +108,8 @@ t_int8 parse_cmd_args(char **argv, t_args *arg)
     }
     if (!arg->dir_lst && file_found == 0) /* default search if nothing found */
         ft_lstadd_back(&arg->dir_lst, ft_lstnew(default_file_struct(&arg->c, &arg->file_c)));
-    
+    if (!arg->simple_file && !arg->dir_lst && arg->file_c.space != NULL)
+        free(arg->file_c.space);
     return (file_found);
 }
 
@@ -131,8 +126,12 @@ static int  check_for_fill_struct(t_list **all, struct dirent *my_dir, t_file *f
         return (MALLOC_ERR);
     sb = check_for_stat(full_path, c->flag_nb, &symlink);
     if (!sb) {
+        if (has_flag(c->flag_nb, L_OPTION)) {
+            ft_printf_fd(2, "ft_ls: cannot open directory '%s", full_path);
+            perror("'");
+        }
         update_error(&c->error);    /* Error update here if syscall stat fail */
-        return (0);
+        // return (0);
     }
     free(full_path);
 
@@ -154,7 +153,7 @@ t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c)
     /* New call version check fir fill here */
     
     if (!dir) {
-        // printf("TO failled on file->name %s\n", file->name);
+        // printf("opendir failled: %s\n", file->name);
         update_error(&c->error); /* try to set error to 1 */
         return (NULL);
     }
@@ -168,8 +167,10 @@ t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c)
         }
     } while (my_dir != NULL);
     closedir(dir);
-    if (!all)
+    if (!all) {
+        printf("can't read failled: %s\n", file->name);
         return (NULL);
+    }
     sort_lst(&all, c->flag_nb);
     return(all);    /* Default return, if NULL just can't open file or empty file */
 }
