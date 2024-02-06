@@ -44,8 +44,6 @@ static int recurcive_readir(t_file *file, t_list **lst, t_context *c, t_file_con
     int             ret = 0;
     
     if (!dir) {
-        ft_printf_fd(2, "ft_ls cannot access '%s", file->name);
-        perror("'");
         update_error(&c->error);
         return (0);
     }

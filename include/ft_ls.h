@@ -131,7 +131,7 @@ t_int8      is_executable_file(mode_t mode);
 void        display_flags(int flags);
 void        set_flag(int *flags, int flag_val);
 void        unset_flag(int *flags, int flag_val);
-t_int8      has_flag(int flags, int flag_val);
+int8_t 		has_flag(int flags, int flag_val);
 t_int8      flag_already_present(int flags, int flag_val);
 //-------------------------------
 //    quote_gestion.c           //

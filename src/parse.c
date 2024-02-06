@@ -22,19 +22,19 @@ static t_file   *default_file_struct(t_context *c, t_file_context *file_c)
 }
 
 
-static int try_opendir(char *path, t_context *c)
-{
-    DIR *dir = opendir(path);
-    if (!dir) {
-        ft_printf_fd(2, "ft_ls cannot access '%s", path);
-        perror("'");
-        c->error = 2;
-        closedir(dir);
-        return (FALSE);
-    }
-    closedir(dir);
-    return (TRUE);
-}
+// static int try_opendir(char *path, t_context *c)
+// {
+//     DIR *dir = opendir(path);
+//     if (!dir) {
+//         ft_printf_fd(2, "ft_ls cannot access '%s", path);
+//         perror("'");
+//         c->error = 2;
+//         closedir(dir);
+//         return (FALSE);
+//     }
+//     closedir(dir);
+//     return (TRUE);
+// }
 
 /** check_args
  *  Check path, push dir or simple list in consequence, same for found and c->error update
@@ -67,12 +67,13 @@ static int  check_args(char *path, t_args *arg, t_int8 *found)
     if (!file)
         return (MALLOC_ERR);
     if (is_directory){
-        int open = try_opendir(file->name, &arg->c);
-        if (open == FALSE) {
-            *found = 1; /* signal we found another file but can't  be acces*/
-            destroy_file(file);
-            return (0);
-        }
+        // int open = try_opendir(file->name, &arg->c);
+        // if (open == FALSE) {
+        //     *found = 1; /* signal we found another file but can't  be acces*/
+        //     free(arg->file_c.space);
+        //     destroy_file(file);
+        //     return (0);
+        // }
         ft_lstadd_back(&arg->dir_lst, ft_lstnew(file));
     }
     else {
@@ -113,6 +114,7 @@ t_int8 parse_cmd_args(char **argv, t_args *arg)
     }
     if (!arg->dir_lst && file_found == 0) /* default search if nothing found */
         ft_lstadd_back(&arg->dir_lst, ft_lstnew(default_file_struct(&arg->c, &arg->file_c)));
+    
     return (file_found);
 }
 
@@ -152,6 +154,7 @@ t_list* get_all_file_struct(t_file *file, t_context *c, t_file_context *file_c)
     /* New call version check fir fill here */
     
     if (!dir) {
+        // printf("TO failled on file->name %s\n", file->name);
         update_error(&c->error); /* try to set error to 1 */
         return (NULL);
     }

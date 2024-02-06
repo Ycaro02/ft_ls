@@ -49,10 +49,12 @@ static int ls_only_dir(t_list *dir_lst, t_context *c, t_file_context *file_c)
  *      - no simple file found (call value == 0)
  *      - lst_size != 1 
 */
-static void special_display_header(t_list *dir_lst, int args_found, int call_value)
+static void special_display_header(t_list *dir_lst, int args_found, int call_value, int r_flag)
 {
-    // printf("call: %d, args %d\n", call_value, args_found);
-    if (args_found == 1 && call_value <= 1 && ft_lstsize(dir_lst) == 1) {
+    int lst_len = ft_lstsize(dir_lst);
+    // printf("call: %d, args %d, r_flag %d, lst_len%d\n", call_value, args_found, r_flag, lst_len);
+    if ((args_found == 1 && call_value <= 1 && lst_len == 1)\
+        || r_flag) {
         t_file *file = dir_lst->content;
         int quote = quotes_required(file->name);
         if (quote > NOEFFECT_CHAR)
@@ -173,8 +175,8 @@ static int ft_ls(char **argv, t_context *c)
 
 
     if (arg->dir_lst) {
-        if (!has_flag(c->flag_nb, R_OPTION))
-            special_display_header(arg->dir_lst, args_found, call_value);
+        // if (!has_flag(c->flag_nb, R_OPTION))
+        special_display_header(arg->dir_lst, args_found, call_value, has_flag(arg->c.flag_nb, R_OPTION));
         arg->file_c.call_flag += 1;
         call_ls(arg->dir_lst, c, &arg->file_c);
         // call_ls(dir_lst, c, &file_c, call_value + 1);

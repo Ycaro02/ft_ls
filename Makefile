@@ -6,13 +6,13 @@
 #    By: nfour <nfour@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/12 16:33:38 by nfour             #+#    #+#              #
-#    Updated: 2023/09/16 10:24:18 by nfour            ###   ########.fr        #
+#    Updated: 2024/02/06 11:38:00 by nfour            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC		= gcc
 
-CFLAGS	= -Wall -Wextra -Werror -g
+CFLAGS	= -Wall -Wextra -Werror -g -fsanitize=address
 
 SRCS	=	src/main.c\
 			src/basic_flag_gestion.c\
@@ -76,6 +76,7 @@ ${NAME}:	$(OBJ)
 			@echo " \033[5;36m ----- Compiling ft_ls project...  ----- \033[0m\n"
 			@${CC} $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) $(LIBACL) $(LIB_LIST)
 			@echo "\033[7;32m -----  Compiling ft_ls done  ----- \033[0m\n"
+
 
 clean:
 			@echo "\033[7;31m\n -----  Cleaning all objects...  ----- \033[0m\n"

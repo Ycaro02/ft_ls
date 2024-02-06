@@ -70,6 +70,7 @@ t_file *fill_file_struct(struct stat *sb, int symlink, t_context *c, t_file_cont
         return (NULL);
     }
     file->total_size = -1;
+    
     file->type = symlink == TRUE ? SYMLINK : get_type(*sb);
 
     file->perm = sb->st_mode;
