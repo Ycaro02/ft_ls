@@ -135,9 +135,6 @@ int build_file_line(t_file *file, t_context *c, t_file_context *file_c, int syml
     if (file->type == CHARACTER || file->type == BLOCK) { /* store classic size, no major minor */
         file->line[S_MINOR_SIZE] = update_ultoa_value(minor(file->rdev), file_c->space, S_MINOR_SIZE, symlink);
         file->line[S_MAJOR_SIZE] = update_ultoa_value(major(file->rdev), file_c->space, S_MAJOR_SIZE, symlink);
-        // maybe check for this update
-        // file_c->space[S_SIZE] = file_c->space[S_MINOR_SIZE] + file_c->space[S_MAJOR_SIZE];
-        // max = S_MAJOR_SIZE + 1;
     } 
     else
         file->line[S_SIZE] = update_ultoa_value(file->size, file_c->space, S_SIZE, symlink);
@@ -145,8 +142,5 @@ int build_file_line(t_file *file, t_context *c, t_file_context *file_c, int syml
 
     if (update_date_value(file, file_c->space, symlink) == MALLOC_ERR)
         return (MALLOC_ERR);
-    // for (int i = 0; i < max; ++i)
-    //     if (!file->line[i])
-    //         printf("Error alloc\n");
     return (0);
 }

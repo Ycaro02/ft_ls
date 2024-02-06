@@ -130,3 +130,26 @@ int get_stdout_width()
     width = win.ws_col; 
     return (width);
 }
+
+struct stat *check_for_stat(char* name, int flag, int *save_symlink)
+{
+    struct stat *sb = ft_calloc(sizeof(struct stat), 1);
+
+    if (!sb)
+        return (NULL);
+
+    if (lstat(name, sb) == -1) {
+        // printf("%sName: %s%s\n",RED, name, RESET);
+        free(sb);
+        return (NULL);
+    }
+    /* store symlink type before call stat */
+    *save_symlink = get_type(*sb) == SYMLINK;
+
+    if (!has_flag(flag, L_OPTION))
+        if (stat(name, sb) == -1){
+            free(sb);
+            return (NULL);
+        }
+    return (sb);
+}

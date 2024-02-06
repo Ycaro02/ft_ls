@@ -21,31 +21,6 @@ static t_file   *default_file_struct(t_context *c, t_file_context *file_c)
     return (file);
 }
 
-
-// static int try_opendir(char *path, t_context *c)
-// {
-//     DIR *dir = opendir(path);
-//     if (!dir) {
-//         ft_printf_fd(2, "ft_ls cannot access '%s", path);
-//         perror("'");
-//         c->error = 2;
-//         closedir(dir);
-//         return (FALSE);
-//     }
-//     closedir(dir);
-//     return (TRUE);
-// }
-
-/** check_args
- *  Check path, push dir or simple list in consequence, same for found and c->error update
- * Args:    - argv from main
- *          - simple_lst: ptr on t_list ptr declare in ft_ls, push no directory file here
- *          - found: pointer on bool, update to 1 if file found
- *          - c: ptr on t_context up
- *              - update c->error to NA_CMD_LINE_ERR if can't access file
- *              - update c->space in fill_file
- * Ret: MALLOC_ERR for malloc error otherwise 0
-*/
 static int  check_args(char *path, t_args *arg, t_int8 *found)
 {
     int             symlink = 0;

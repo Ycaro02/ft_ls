@@ -254,7 +254,3 @@ int manage_column(t_list *lst, int space_quote, t_context *c, t_file_context *fi
     free(all_len);
     return (0);
 }
-
-/* Protection after max_per_raw affectation, not sure is mandatory
-        if (max_per_raw <= 0)
-            max_per_raw = 1; */

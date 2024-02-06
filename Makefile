@@ -6,7 +6,7 @@
 #    By: nfour <nfour@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/12 16:33:38 by nfour             #+#    #+#              #
-#    Updated: 2024/02/06 12:51:33 by nfour            ###   ########.fr        #
+#    Updated: 2024/02/06 16:43:35 by nfour            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,8 @@ SRCS	=	src/main.c\
 			src/write_file_name.c\
 			src/quote_gestion.c\
 			src/file_line.c\
-
+			src/ls_function.c\
+			
 
 OBJ = $(SRCS:.c=.o)
 

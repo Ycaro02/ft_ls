@@ -33,10 +33,7 @@
 
 extern t_buff g_buff; // GLOBAL VARIABLE buffer 
 
-/* DEBUG */
-void        display_fcontext_flag(t_file_context *file_c, char *str, int flag);
-/* LS FUN */
-int         ls(t_list *lst, t_context *c, t_file_context *file_c, int (*ls_function)(t_file*, t_context*, t_file_context*));
+
 //-------------------------------
 //      t_file.c               //
 //-------------------------------
@@ -50,6 +47,7 @@ int         get_stdout_width();
 void        update_error(t_int8 *error);
 int         is_point_dir(char *path, int flag_nb, int display);
 char        *join_parent_name(char* parent_name, char* path);
+struct stat *check_for_stat(char* name, int flag, int *save);
 //-------------------------------
 //      flag_gestion.c          //
 //-------------------------------
@@ -62,7 +60,11 @@ t_int8      parse_cmd_args(char **argv, t_args *arg);
 char        get_type(struct stat sb);
 
 //-------------------------------
-//      ft_ls.c                //
+//      ft_ls.c		           //
+//-------------------------------
+int 		ft_ls(char **argv, t_context *c);
+//-------------------------------
+//      ls_function.c           //
 //-------------------------------
 int         ls_only_file(t_list *lst, t_context *c, t_file_context *file_c);
 int         ls_only_file_l(t_list *lst, t_context *c, t_file_context *file_c);
@@ -99,17 +101,14 @@ void        fill_buffer_color(char *str, enum e_color color, int flag_nb, int sp
 int         store_in_buffer(t_list *lst, t_context *c, t_file_context *file_c);
 void        finish_print_buffer();
 void        multiple_fill_buff(char *s1, char*s2, char *s3, char *s4);
-/* END CHECK PROTOTYPE HERE */
-/* END CHECK PROTOTYPE HERE */
-/* END CHECK PROTOTYPE HERE */
 //-------------------------------
 //      build_coloumn.c         //
 //-------------------------------
 int         manage_column(t_list *lst, int space_quote, t_context *c, t_file_context *file_c);
+int         *get_max_by_column(t_list *lst, int nb_column, int nb_line);
 //-------------------------------
 //      manage_column.c         //
 //-------------------------------
-int         *get_max_by_column(t_list *lst, int nb_column, int nb_line);
 int         **create_column_array (t_list *lst, int nb_column_max, int nb_line);
 //-------------------------------
 //      list_xattr.c           //
@@ -140,10 +139,11 @@ int         is_special_char(char c);
 int         quotes_required(char *str);
 int         check_for_quote(char *str);
 void        display_quote(t_int8 quote);
-
-/*main*/
-struct stat *check_for_stat(char* name, int flag, int *save);
-/* File line */
+/* DEBUG */
+void		display_fcontext_flag(t_file_context *file_c, char *str, int flag);
+//-------------------------------
+//    File line .c             //
+//-------------------------------
 int         build_file_line(t_file *file, t_context *c, t_file_context *file_c, int symlink);
 
 #endif /* FT_LS_H */
